@@ -6,6 +6,7 @@
 
 	<link rel="stylesheet" href="/styles/main.css">
 	{% block stylesheets %} <!-- Additional stylesheets --> {% endblock %}
+	{% block parallax_logo %} <link rel="stylesheet" href="/styles/parallax-logo.css"> {% endblock %}
 
 	<link rel="shortcut icon" href="/assets/favicon.ico" />
 	<title>{% block title %} Short Link UGR {% endblock %}</title>
@@ -16,7 +17,7 @@
 <body>
 	<header>
 		<a href="https://www.ugr.es/">
-			<img src="/assets/logo-ugr.svg" alt="Logo UGR">
+			<img src="/assets/logo-ugr-negativo.svg" alt="Logo UGR">
 		</a>
 
 		<a href="/index.php"><span>Inicio</span></a>
