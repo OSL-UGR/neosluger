@@ -1,7 +1,19 @@
+@font-face
+{
+	font-family: "Garamond";
+	src: url("/fonts/EBGaramond/EBGaramond-VariableFont_wght.ttf");
+}
+
+@font-face
+{
+	font-family: "LatoRegular";
+	src: url("/fonts/Lato/Lato-Regular.ttf");
+}
+
 body
 {
 	display: grid;
-	font-family: 'Open Sans';
+	font-family: "LatoRegular", sans-serif;
 	grid-template-rows: max-content auto;
 	margin: 0;
 	min-height: 100vh;
@@ -9,8 +21,12 @@ body
 
 header
 {
-	background: #CA2D30;
-	display: flex;
+	background-color: #CA2D30;
+	display: grid;
+	font-family: "Garamond", serif;
+	grid-template-areas: "index help api licence spacer ugr";
+	grid-template-columns: min-content min-content min-content min-content auto 233px;
+	grid-template-rows: 60px;
 	height: 60px;
 	position: sticky;
 	top: 0;
@@ -18,31 +34,57 @@ header
 
 header a
 {
-	height: 100%;
+	align-items: center;
+	color: white;
+	display: grid;
+	font-size: 25px;
+	height: 55px;
+	justify-items: center;
 	padding: 0 30px;
-	position: relative;
+	padding-bottom: 5px;
 	text-decoration: none;
+	transition: background-color .3s ease-out;
 }
 
 header a:hover
 {
+	border-radius: 0px;
 	background-color: #393536;
-	transition: background linear .35s;
 }
 
 header img
 {
 	height: 80%;
-	position: inherit;
-	top: 50%;
-	transform: translate(0, -50%);
 }
 
-header a span
+main
 {
-	align-items: center;
-	color: white;
-	display: inline-flex;
-	font-size: 20px;
-	height: 100%;
+	background-color: #EFEFEF;
+}
+
+#header-api
+{
+	grid-area: api;
+}
+
+#header-help
+{
+	grid-area: help;
+}
+
+#header-index
+{
+	grid-area: index;
+}
+
+#header-licence
+{
+	grid-area: licence;
+}
+
+#header-ugr
+{
+	grid-area: ugr;
+	height: 60px;
+	padding-bottom: 0;
 }
