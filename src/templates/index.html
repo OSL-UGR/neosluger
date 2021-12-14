@@ -1,9 +1,20 @@
 {% extends "main.html" %}
 
+{% block stylesheets %}
+	<link rel="stylesheet" href="/styles/index.css">
+{% endblock %}
+
 {% block main %}
-	<center>
-		<h1>Neosluger</h1>
-		<hr>
-		Site under construction!
-	</center>
+	<div id="main-panel">
+		<h1>Acortador de URLs</h1>
+		<form action="login.php" method="post">
+			<h4>Introduce la URL a acortar:</h4>
+			<input type="url" name="neosluger-url" autofocus/>
+
+			<h4>(Opcional) Elige el nombre de tu URL:</h4>
+			<input type="text" name="neosluger-short-name"/>
+
+			<button type="submit">Generar enlace</button>
+		</form>
+	</div>
 {% endblock %}

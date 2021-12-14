@@ -4,6 +4,7 @@ body
 	font-family: 'Open Sans';
 	grid-template-rows: max-content auto;
 	margin: 0;
+	min-height: 100vh;
 }
 
 header
@@ -11,10 +12,8 @@ header
 	background: #CA2D30;
 	display: flex;
 	height: 60px;
-	position: fixed;
+	position: sticky;
 	top: 0;
-	width: 100%;
-	z-index: 1;
 }
 
 header a
@@ -46,12 +45,4 @@ header a span
 	display: inline-flex;
 	font-size: 20px;
 	height: 100%;
-}
-
-main
-{
-	min-height: 100%;
-	position: absolute;
-	top: 60px;
-	width: 100%;
 }
