@@ -1,0 +1,30 @@
+<svg id="Capa_1" data-name="Capa 1" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="2.52 2.1 723.07 184.8">
+  <defs id="defs1015">
+    <style id="style1002">.cls-1{fill:url(#Degradado_sin_nombre_17);}.cls-2,.cls-5{fill:#3f3f3f;}.cls-3{fill:#fff;}.cls-4{fill:#ff9c5c;}.cls-5{font-size:34.53px;font-family:FreeSans;}.cls-6{font-weight:700;}</style>
+    <radialGradient id="Degradado_sin_nombre_17" cx="380.5" cy="274.79999" r="80.650002" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#da8300" id="stop1004"/>
+      <stop offset="0.15" stop-color="#e79807" id="stop1006"/>
+      <stop offset="0.47" stop-color="#ffc015" id="stop1008"/>
+      <stop offset="0.76" stop-color="#ffe398" id="stop1010"/>
+      <stop offset="1" stop-color="#fff" id="stop1012"/>
+    </radialGradient>
+  </defs>
+  <title id="title1017">osl_logo</title>
+  <g id="g4055" transform="translate(-78.476979,-166.7469)">
+    <ellipse class="cls-1" cx="380.5" cy="274.79999" rx="82.440002" ry="78.82" id="ellipse1019" style="fill:url(#Degradado_sin_nombre_17)"/>
+    <path class="cls-2" d="m 143.91,217.32 c 28.26,10.84 52.47,16.57 82.29,48.05 29.82,31.48 32.74,59.63 32.74,59.63 0,0 15.87,-2.76 27.46,0 11.59,2.76 40.32,17.67 63.52,7.18 23.2,-10.49 24.85,-72.35 40.32,-81.19 15.47,-8.84 38.66,-5.52 108.25,62.41 0,0 -55.11,-122.26 -124.27,-138.08 -84.5,-19.32 -112.11,10.52 -138.07,13.28 -25.96,2.76 -92.24,-1.1 -104.39,-0.55 -12.15,0.55 -44.76,8.28 -50.76,21.53 0,0 34.66,-3.11 62.91,7.74 z" id="path1021"/>
+    <path class="cls-3" d="m 288.07,225 c 0,0 5,-7.73 14.36,-8.28 9.36,-0.55 18.22,8.28 18.22,8.28 0,0 -6.08,11 -16.29,11 -10.21,0 -16.29,-11 -16.29,-11 z" id="path1023"/>
+    <path class="cls-4" d="m 146.67,209 c 0,0 24.3,4.92 32.59,7.71 8.29,2.79 21,9.68 21,9.68 0,0 28.17,4.15 34.8,6.36 6.63,2.21 33.14,12.15 33.14,12.15 0,0 -30.38,-25.41 -60.75,-32 -30.37,-6.59 -60.78,-3.9 -60.78,-3.9 z" id="path1025"/>
+    <path class="cls-3" d="m 413.76,233.32 q 26,0 40.38,15.61 14.38,15.61 14.41,43.56 0,26.53 -14.72,42 -14.72,15.47 -39.83,15.51 -25.56,0 -40.07,-15.69 -14.51,-15.69 -14.51,-42.67 0,-27 14.51,-42.67 14.51,-15.67 39.83,-15.65 z m 0.24,23.26 q -11.59,0 -18.7,9.74 -7.11,9.74 -7.11,25.36 0,15.62 7.11,25.36 7.11,9.74 18.7,9.74 11.38,0 18.6,-9.64 7.22,-9.64 7.21,-25.06 0,-16.23 -7,-25.86 A 22.1,22.1 0 0 0 414,256.58 Z" id="path1027"/>
+    <path class="cls-2" d="m 499.13,313.31 q 1.43,7.34 5.8,11.22 4.37,3.88 16.59,3.88 9.95,0 15.53,-3 5.58,-3 5.58,-8.28 a 7.44,7.44 0 0 0 -2.14,-5.52 q -2.14,-2.12 -7.45,-3.83 L 499,297.19 a 22.78,22.78 0 0 1 -2.45,-0.73 q -2.25,-0.73 -3.16,-1.14 -0.91,-0.41 -3.39,-1.32 a 14.56,14.56 0 0 1 -3.77,-2 l -3.37,-2.6 a 12.33,12.33 0 0 1 -3.16,-3.43 q -1.12,-1.87 -2.35,-4.26 a 20.84,20.84 0 0 1 -1.84,-5.51 34.43,34.43 0 0 1 -0.61,-6.65 q 0,-16.71 12.17,-26.47 12.17,-9.76 33.25,-9.77 22.27,0 34.94,9.9 12.67,9.9 13.08,27.45 h -27.75 q -0.21,-15.71 -20.5,-15.71 -7.51,0 -12,2.76 -4.49,2.76 -4.46,7.47 a 6.22,6.22 0 0 0 2,5 q 2,1.74 8,3.58 l 36.13,10.39 q 21.59,6.61 21.59,29 a 34.19,34.19 0 0 1 -2.25,12.19 40.06,40.06 0 0 1 -7.26,11.78 q -5,5.84 -15,9.37 -10,3.53 -23.7,3.51 -50.74,0 -52,-36.73 h 28 z" id="path1029"/>
+    <path class="cls-2" d="m 608.74,196.59 v 131.5 c 0,15.33 10.39,22.8 10.39,22.8 h -28.77 c 0,0 -10.36,-5.14 -10.36,-22.8 v -131.5 h 28.77 z" id="path1031"/>
+    <text class="cls-5" id="text1041-3" style="font-size:35.704px;line-height:1.1;font-family:FreeSans;fill:#3f3f3f;stroke-width:1.034" x="629.67303" y="265.19839"><tspan id="tspan2630" x="629.67303" y="265.19839" style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:FreeSans;-inkscape-font-specification:'FreeSans Bold';stroke-width:1.034">Oficina de</tspan><tspan id="tspan2632" x="629.67303" y="304.47281" style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:FreeSans;-inkscape-font-specification:'FreeSans Bold';stroke-width:1.034">Software</tspan><tspan x="629.67303" y="343.74719" id="tspan2634" style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:FreeSans;-inkscape-font-specification:'FreeSans Bold';stroke-width:1.034">Libre</tspan></text>
+  </g>
+  <metadata id="metadata1126">
+    <rdf:RDF>
+      <cc:Work rdf:about="">
+        <dc:title>osl_logo</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+</svg>
