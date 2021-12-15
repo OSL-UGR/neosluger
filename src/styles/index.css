@@ -5,12 +5,6 @@ form
 	width: 100%;
 }
 
-h1
-{
-	margin-top: 0;
-	text-align: center;
-}
-
 h4
 {
 	margin-top: 22px;
@@ -43,13 +37,6 @@ input:hover
 	box-shadow: 0 0 4px #A8A8A8;
 	margin: 4px;
 	padding: 12px 17px;
-}
-
-main
-{
-	align-items: center;
-	display: grid;
-	justify-items: center;
 }
 
 .form-bottom
@@ -104,7 +91,7 @@ main
 	padding-bottom: 24px;
 }
 
-#logo-osl
+#logo-osl-form
 {
 	align-items: center;
 	display: grid;
@@ -113,14 +100,4 @@ main
 	justify-items: center;
 	height: 100%;
 	width: 80%;
-}
-
-#main-panel
-{
-	background: white;
-	border-radius: 30px;
-	box-shadow: 1px 2px 1px rgba(0, 0, 0, 0.3), -1px 2px 1px rgba(0, 0, 0, 0.3);
-	margin: auto;
-	padding: 20px;
-	width: 500px;
 }

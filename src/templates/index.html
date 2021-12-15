@@ -1,26 +1,31 @@
 {% extends "main.html" %}
+{% use "main-panel.html" %}
 
 {% block stylesheets %}
+	{{ parent() }}
 	<link rel="stylesheet" href="/styles/index.css">
 {% endblock %}
 
-{% block main %}
-	<div id="main-panel">
-		<h1>Acortador de URLs</h1>
-		<form action="login.php" method="post">
-			<h4>Introduce la URL a acortar:</h4>
-			<input type="url" name="neosluger-url" autofocus/>
-
-			<h4>(Opcional) Elige el nombre de tu URL:</h4>
-			<input type="text" name="neosluger-short-name"/>
-
-			<div class="form-bottom">
-				<button id="advanced">Opciones avanzadas</button>
-				<button type="submit" id="gen-link">Generar enlace</button>
-				<a href="https://osl.ugr.es/" target="_blank" id="logo-osl">
-					<img src="/assets/logo-osl.svg" alt="Logo OSL">
-				</a>
-			</div>
-		</form>
-	</div>
+{% block main_panel_title %}
+	Acortador de URLs
 {% endblock %}
+
+{% block main_panel_content %}
+	<form action="login.php" method="post">
+		<h4>Introduce la URL a acortar:</h4>
+		<input type="url" name="neosluger-url" autofocus/>
+
+		<h4>(Opcional) Elige el nombre de tu URL:</h4>
+		<input type="text" name="neosluger-short-name"/>
+
+		<div class="form-bottom">
+			<button id="advanced">Opciones avanzadas</button>
+			<button type="submit" id="gen-link">Generar enlace</button>
+			<a href="https://osl.ugr.es/" target="_blank" id="logo-osl-form">
+				<img src="/assets/logo-osl.svg" alt="Logo OSL">
+			</a>
+		</div>
+	</form>
+{% endblock %}
+
+{% block main_panel_logo_osl %}{% endblock %}
