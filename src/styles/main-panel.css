@@ -40,3 +40,8 @@ main
 	padding: 20px;
 	width: 500px;
 }
+
+#main-panel-content
+{
+	margin: 0 4px;
+}
