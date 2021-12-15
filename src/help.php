@@ -8,8 +8,8 @@ function main ()
 	$loader = new \Twig\Loader\FilesystemLoader('templates');
 	$twig   = new \Twig\Environment($loader);
 
-	echo $twig->render('index.html', [
-		'index_tab' => "active-tab",
+	echo $twig->render('help.html', [
+		'help_tab' => "active-tab",
 	]);
 }
 

@@ -8,7 +8,9 @@ function main ()
 	$loader = new \Twig\Loader\FilesystemLoader('templates');
 	$twig   = new \Twig\Environment($loader);
 
-	echo $twig->render('licence.html');
+	echo $twig->render('licence.html', [
+		'licence_tab' => "active-tab",
+	]);
 }
 
 main();

@@ -62,6 +62,11 @@ main
 	background-color: #EFEFEF;
 }
 
+.active-tab
+{
+	background-color: #912024;
+}
+
 #header-api
 {
 	grid-area: api;
