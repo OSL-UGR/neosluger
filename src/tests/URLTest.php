@@ -42,6 +42,15 @@ final class URLTest extends TestCase
 		$this->assertNotEquals($handle1, $handle2);
 	}
 
+	public function test_full_handle_contains_sites_address (): void
+	{
+		$handle = $this->url->handle();
+		$this->assertEquals(
+			$this->url->full_handle(),
+			URL::SITE_ADDRESS . $handle
+		);
+	}
+
 	public function test_a_custom_handle_can_be_passed_on_construction (): void
 	{
 		$handle  = "My_Handle-01";

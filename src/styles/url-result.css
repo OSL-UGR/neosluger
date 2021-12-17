@@ -1,0 +1,17 @@
+#destination
+{
+	color: purple;
+	display: block;
+	text-align: center;
+	text-decoration: none;
+}
+
+#short-url
+{
+	color: blue;
+	display: block;
+	font-weight: bold;
+	font-size: 20px;
+	text-align: center;
+	text-decoration: none;
+}

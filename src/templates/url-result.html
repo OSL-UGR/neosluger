@@ -1,0 +1,30 @@
+{% extends "main.html" %}
+{% use "main-panel.html" %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="/styles/url-result.css">
+{% endblock %}
+
+{% block main_panel_title %}
+	Enlace acortado con éxito
+{% endblock %}
+
+{% block main_panel_content %}
+	<p>
+		Gracias por usar nuestro servicio.
+		Aquí tienes tu enlace corto:
+	</p>
+
+	<a href="{{ url.destination() }}" target="_blank" id="short-url">
+		{{ url.full_handle() }}
+	</a>
+
+	<p>
+		Este enlace redirigirá a todos sus usuarios a la siguiente dirección:
+	</p>
+
+	<a href="{{ url.destination() }}" target="_blank" id="destination">
+		{{ url.destination() }}
+	</a>
+{% endblock %}

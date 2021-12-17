@@ -2,11 +2,12 @@
 
 final class URL
 {
-	const HASH_LENGTH = 6;
+	const HASH_LENGTH  = 6;
+	const SITE_ADDRESS = "https://sl.ugr.es/";
 
 	private DateTime $creation_datetime;
-	private string $handle = "";
 	private string $destination  = "";
+	private string $handle = "";
 	private string $password = "";
 
 	public function __construct (string $destination, string $handle = "", string $password = "")
@@ -32,6 +33,11 @@ final class URL
 	public function destination (): string
 	{
 		return $this->destination;
+	}
+
+	public function full_handle (): string
+	{
+		return URL::SITE_ADDRESS . $this->handle;
 	}
 
 	public function handle (): string
