@@ -8,6 +8,11 @@ use chillerlan\QRCode\{QRCode, QROptions};
 
 function generate_qr (URL $url)
 {
+	$cache_directory = "cache/qr/";
+
+	if (!file_exists($cache_directory))
+		mkdir($cache_directory, 0775, true);
+
 	$qr_path    = "cache/qr/qr-" . $url->handle() . ".png";
 	$qr_options = new QROptions([
 		'outputType'       => QRCode::OUTPUT_IMAGE_PNG,
