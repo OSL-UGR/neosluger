@@ -27,4 +27,16 @@
 	<a href="{{ url.destination() }}" target="_blank" id="destination">
 		{{ url.destination() }}
 	</a>
+
+	<p>
+		También puedes usar este código QR para acceder al enlace corto:
+	</p>
+
+	<a href="/{{ qr_path }}" download id="save-qr">
+		Descargar QR
+	</a>
+
+	<a href="/{{ qr_path }}" download id="qr-img">
+		<img src="/{{ qr_path }}" alt="Código QR">
+	</a>
 {% endblock %}
