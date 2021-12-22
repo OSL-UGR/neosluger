@@ -1,15 +1,15 @@
-<?php
+<?php declare(strict_types=1);
 
-ini_set('display_errors', 1);
-require_once('vendor/autoload.php');
+ini_set("display_errors", '1');
+require_once("vendor/autoload.php");
 
 function main ()
 {
-	$loader = new \Twig\Loader\FilesystemLoader('templates');
+	$loader = new \Twig\Loader\FilesystemLoader("templates");
 	$twig   = new \Twig\Environment($loader);
 
-	echo $twig->render('licence.html', [
-		'licence_tab' => "active-tab",
+	echo $twig->render("licence.html", [
+		"licence_tab" => "active-tab",
 	]);
 }
 

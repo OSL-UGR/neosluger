@@ -1,6 +1,6 @@
-<?php
+<?php declare(strict_types=1);
 
-ini_set("display_errors", 1);
+ini_set("display_errors", '1');
 require_once("vendor/autoload.php");
 require_once("php/url.php");
 
@@ -15,10 +15,10 @@ function generate_qr (URL $url)
 
 	$qr_path    = "cache/qr/qr-" . $url->handle() . ".png";
 	$qr_options = new QROptions([
-		'outputType'       => QRCode::OUTPUT_IMAGE_PNG,
-		'eccLevel'         => QRCode::ECC_L,
-		'imageTransparent' => false,
-		'pngCompression'   => 9,
+		"outputType"       => QRCode::OUTPUT_IMAGE_PNG,
+		"eccLevel"         => QRCode::ECC_L,
+		"imageTransparent" => false,
+		"pngCompression"   => 9,
 	]);
 
 	(new QRCode($qr_options))->render($url->full_handle(), $qr_path);
