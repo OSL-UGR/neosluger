@@ -1,10 +1,13 @@
 <?php declare(strict_types=1);
 
+
 ini_set("display_errors", '1');
 require_once("vendor/autoload.php");
 require_once("php/url.php");
 
+
 use chillerlan\QRCode\{QRCode, QROptions};
+
 
 function generate_qr (URL $url)
 {
@@ -25,6 +28,7 @@ function generate_qr (URL $url)
 	return $qr_path;
 }
 
+
 function read_form ()
 {
 	return array(
@@ -32,6 +36,7 @@ function read_form ()
 		"url"    => $_POST["neosluger-url"],
 	);
 }
+
 
 function main ()
 {
@@ -49,6 +54,8 @@ function main ()
 	]);
 }
 
+
 main();
+
 
 ?>

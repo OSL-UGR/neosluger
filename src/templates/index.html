@@ -1,14 +1,17 @@
 {% extends "main.html" %}
 {% use "main-panel.html" %}
 
+
 {% block stylesheets %}
 	{{ parent() }}
 	<link rel="stylesheet" href="/styles/index.css">
 {% endblock %}
 
+
 {% block main_panel_title %}
 	Acortador de enlaces
 {% endblock %}
+
 
 {% block main_panel_content %}
 	<form action="url-result.php" method="post">

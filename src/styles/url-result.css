@@ -3,6 +3,7 @@ p
 	margin-bottom: 0;
 }
 
+
 #destination
 {
 	color: purple;
@@ -11,10 +12,12 @@ p
 	text-decoration: none;
 }
 
+
 #destination:hover
 {
 	text-decoration: underline;
 }
+
 
 #main-panel-content
 {
@@ -22,10 +25,12 @@ p
 	justify-items: center;
 }
 
+
 #qr-img
 {
 	image-rendering: pixelated;
 }
+
 
 #save-qr
 {
@@ -39,6 +44,8 @@ p
 	text-decoration: none;
 	padding: 3px 7px;
 }
+
+
 #save-qr:hover
 {
 	border-radius: 12px;
@@ -46,6 +53,7 @@ p
 	margin: 6px;
 	padding: 7px 11px;
 }
+
 
 #short-url
 {
@@ -56,6 +64,7 @@ p
 	margin-bottom: 10px;
 	text-decoration: none;
 }
+
 
 #short-url:hover
 {

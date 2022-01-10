@@ -1,7 +1,9 @@
 <?php declare(strict_types=1);
 
+
 ini_set("display_errors", '1');
 require_once("vendor/autoload.php");
+
 
 function main ()
 {
@@ -11,6 +13,8 @@ function main ()
 	echo $twig->render("licence-raw.html");
 }
 
+
 main();
+
 
 ?>

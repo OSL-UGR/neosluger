@@ -4,12 +4,14 @@ h1
 	text-align: center;
 }
 
+
 main
 {
 	align-items: center;
 	display: grid;
 	justify-items: center;
 }
+
 
 #logo-osl
 {
@@ -24,10 +26,12 @@ main
 	width: 100%;
 }
 
+
 #logo-osl img
 {
 	width: 50%;
 }
+
 
 #main-panel
 {
@@ -40,6 +44,7 @@ main
 	padding: 20px;
 	width: 500px;
 }
+
 
 #main-panel-content
 {
