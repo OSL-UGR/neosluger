@@ -2,7 +2,6 @@
 
 
 use MongoDB\Client as Mongo;
-use MongoDB\BSON\UTCDateTime as MongoDateTime;
 
 
 final class URL
@@ -84,6 +83,20 @@ final class URL
 	}
 
 
+	public function log_access (): DateTime
+	{
+		$mongo = new Mongo("mongodb://localhost:27017");
+		$log_collection  = $mongo->neosluger->access_logs;
+		$access_datetime = new DateTime("NOW", new DateTimeZone(date("T")));
+
+		$log_collection->updateOne(["handle" => $this->handle], [
+			'$push' => ["accesses" => $access_datetime->format("Y-m-d H:i:s.u")]
+		]);
+
+		return $access_datetime;
+	}
+
+
 	public function password (): string
 	{
 		return $this->password;
@@ -92,7 +105,7 @@ final class URL
 
 	private function add_to_database (): void
 	{
-		$mongo      = new Mongo("mongodb://localhost:27017");
+		$mongo = new Mongo("mongodb://localhost:27017");
 		$url_collection = $mongo->neosluger->urls;
 		$log_collection = $mongo->neosluger->access_logs;
 

@@ -70,6 +70,22 @@ final class URLDatabaseTest extends TestCase
 
 		$this->assertEquals($datetime, $this->url->creation_datetime());
 	}
+
+
+	public function test_accessing_a_url_logs_its_access_time (): void
+	{
+		$access_datetime = $this->url->log_access();
+		$result = $this->log_collection->find(["handle" => $this->url->handle()]);
+
+		$log_fields = $result->toArray();
+		$first_log  = $log_fields[0];
+		$accesses   = iterator_to_array($first_log["accesses"]);
+
+		$this->assertEquals(2, count($accesses));
+
+		$logged_datetime = new DateTime($accesses[1]);
+		$this->assertEquals($logged_datetime, $access_datetime);
+	}
 }
 
 
