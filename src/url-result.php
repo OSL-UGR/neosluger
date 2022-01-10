@@ -39,7 +39,7 @@ function main ()
 	$twig   = new \Twig\Environment($loader);
 
 	$form_fields = read_form();
-	$url         = new URL($form_fields["url"], $form_fields["handle"]);
+	$url         = URL::from_form($form_fields["url"], $form_fields["handle"]);
 	$qr_path     = generate_qr($url);
 
 	echo $twig->render("url-result.html", [

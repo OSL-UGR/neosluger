@@ -1,7 +1,8 @@
 {
     "require": {
         "twig/twig": "^2.0",
-        "chillerlan/php-qrcode": "dev-main#06730361508c283a02bbf9cbc9e4b55e7b3bc88b"
+        "chillerlan/php-qrcode": "dev-main#06730361508c283a02bbf9cbc9e4b55e7b3bc88b",
+        "mongodb/mongodb": "^1.11"
     },
     "require-dev": {
         "phpunit/phpunit": "^9"

@@ -7,24 +7,24 @@ use PHPUnit\Framework\TestCase;
 
 final class URLTest extends TestCase
 {
-	private $destination_text = "https://www.ugr.es/";
-	private $url;
+	private string $destination_text = "https://www.ugr.es/";
+	private URL $url;
 
 	protected function setUp (): void
 	{
-		$this->url = new URL($this->destination_text);
+		$this->url = URL::from_form($this->destination_text);
 	}
 
 	public function test_url_is_built_from_a_string (): void
 	{
-		$new_url = new URL($this->destination_text);
+		$new_url = URL::from_form($this->destination_text);
 		$this->assertEquals($new_url->destination(), $this->destination_text);
 	}
 
 	public function test_url_build_from_not_url_string_aborts (): void
 	{
 		$this->expectException(InvalidArgumentException::class);
-		new URL("ROFL COPTER!!!");
+		URL::from_form("ROFL COPTER!!!");
 	}
 
 	public function test_url_handle_is_set_on_construction (): void
@@ -35,7 +35,7 @@ final class URLTest extends TestCase
 
 	public function test_two_equal_destinations_dont_produce_the_same_handle (): void
 	{
-		$other_url = new URL($this->destination_text);
+		$other_url = URL::from_form($this->destination_text);
 		$handle1 = $this->url->handle();
 		$handle2 = $other_url->handle();
 
@@ -54,7 +54,7 @@ final class URLTest extends TestCase
 	public function test_a_custom_handle_can_be_passed_on_construction (): void
 	{
 		$handle  = "My_Handle-01";
-		$new_url = new URL($this->destination_text, $handle);
+		$new_url = URL::from_form($this->destination_text, $handle);
 
 		$this->assertEquals($new_url->handle(), $handle);
 	}
@@ -67,7 +67,7 @@ final class URLTest extends TestCase
 	public function test_a_password_can_be_passed_on_construction (): void
 	{
 		$password = "DZSH3N)o"; // https://duckduckgo.com/?q=password+strong+8
-		$new_url  = new URL($this->destination_text, "", $password);
+		$new_url  = URL::from_form($this->destination_text, "", $password);
 
 		$this->assertTrue($new_url->is_password_protected());
 		$this->assertEquals($new_url->password(), $password);
