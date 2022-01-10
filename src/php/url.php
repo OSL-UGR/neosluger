@@ -1,18 +1,18 @@
 <?php declare(strict_types=1);
 
 
+require_once("const.php");
 use MongoDB\Client as Mongo;
 
 
 final class URL
 {
-	const HASH_LENGTH  = 6;
-	const MILLISECONDS = 1000;
-	const SITE_ADDRESS = "https://sl.ugr.es/";
+	const HASH_LENGTH  = Neosluger\HASH_LENGTH;
+	const SITE_ADDRESS = Neosluger\SITE_ADDRESS;
 
 
 	private DateTime $creation_datetime;
-	private string $destination  = "";
+	private string $destination = "";
 	private string $handle = "";
 	private string $password = "";
 
