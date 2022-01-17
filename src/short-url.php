@@ -40,15 +40,12 @@ function main (): void
 
 	if ($url->is_null())
 	{
-		echo $twig->render("index.html", [
-			"index_tab" => "active-tab",
-		]);
+		echo $twig->render("404.html");
 	}
 	else
 	{
 		echo $url->destination();
 		header("Location: " . $url->destination(), true,  301);
-		exit();
 	}
 }
 
