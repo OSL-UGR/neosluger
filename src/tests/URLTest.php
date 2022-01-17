@@ -84,6 +84,17 @@ final class URLTest extends TestCase
 		$this->assertTrue($new_url->is_password_protected());
 		$this->assertEquals($new_url->password(), $password);
 	}
+
+
+	public function test_a_null_url_can_be_constructed (): void
+	{
+		$new_url = URL::from_null();
+
+		$this->assertTrue($new_url->is_null());
+		$this->assertEquals("", $new_url->destination());
+		$this->assertEquals("", $new_url->handle());
+		$this->assertEquals("", $new_url->password());
+	}
 }
 
 ?>

@@ -10,6 +10,10 @@ final class URL
 	const HASH_LENGTH  = Neosluger\HASH_LENGTH;
 	const SITE_ADDRESS = Neosluger\SITE_ADDRESS;
 
+	// Please change this to an enum when it becomes avaliable (PHP 8 >= 8.1.0)
+	const URL_IS_NULL  = "IS_NULL";
+	const URL_NOT_NULL = "NOT_NULL";
+
 
 	private DateTime $creation_datetime;
 	private string $destination = "";
@@ -17,21 +21,25 @@ final class URL
 	private string $password = "";
 
 
-	private function __construct (string $destination, string $handle = "", string $password = "")
+	private function __construct (string $destination, string $handle = "", string $password = "", string $is_null = URL::URL_NOT_NULL)
 	{
-		if (!filter_var($destination, FILTER_VALIDATE_URL))
-			throw new InvalidArgumentException("'$destination' is not an URL!");
-
 		$this->creation_datetime = new DateTime("NOW", new DateTimeZone(date("T")));
-		$this->destination = $destination;
 
-		if (!empty($handle))
-			$this->handle = $handle;
-		else
-			$this->create_handle_with_hash();
+		if ($is_null == URL::URL_NOT_NULL)
+		{
+			if (!filter_var($destination, FILTER_VALIDATE_URL))
+				throw new InvalidArgumentException("'$destination' is not an URL!");
 
-		if (!empty($password))
-			$this->password = $password;
+			$this->destination = $destination;
+
+			if (!empty($handle))
+				$this->handle = $handle;
+			else
+				$this->create_handle_with_hash();
+
+			if (!empty($password))
+				$this->password = $password;
+		}
 	}
 
 
@@ -50,6 +58,12 @@ final class URL
 		$new_url = new URL($destination, $handle, $password);
 		$new_url->add_to_database();
 		return $new_url;
+	}
+
+
+	public static function from_null ()
+	{
+		return new URL("", "", "", URL::URL_IS_NULL);
 	}
 
 
@@ -74,6 +88,12 @@ final class URL
 	public function handle (): string
 	{
 		return $this->handle;
+	}
+
+
+	public function is_null (): bool
+	{
+		return ($this->destination == "");
 	}
 
 

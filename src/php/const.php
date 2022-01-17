@@ -5,7 +5,7 @@ namespace Neosluger;
 
 
 const HASH_LENGTH  = 8;
-const SITE_ADDRESS = "https://sl.ugr.es/";
+const SITE_ADDRESS = "localhost/";
 
 
 ?>

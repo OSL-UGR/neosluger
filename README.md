@@ -20,6 +20,32 @@ composer install
 
 All dependencies will be installed in `src/vendor/`.
 
+## Server settings
+
+The server settings used by Neosluger can be found in `conf/neosluger.conf`.
+The heavy lifting is done by `@extensionless-urls`:
+
+```nginx
+location @extensionless-urls {
+	rewrite (\/(api|help|index|licence|url-result))$ $1.php last;
+	rewrite \/([a-zA-Z0-9]+)$ /short-url.php last;
+}
+```
+
+This `location` directive pattern matches the URL in two cases:
+
+- **`(\/(api|help|index|licence|url-result))$`:** This matches the pages available on the web server. All pages are translated to their `*.php` equivalent, so they look cleaner in the URL bar.
+- **`\/([a-zA-Z0-9\-_]+)$`:** This matches all other possible URLs, which are the shortened ones. They are redirected to `short-url.php` so that the script can redirect the user to the destination site or serve them a 404 page in case the handle cannot be found in the system.
+
+To install the server, copy `conf/neosluger.conf` to `/etc/nginx/sites-enabled/neosluger.conf` and add the following directive in `/etc/nginx/nginx.conf`:
+
+```nginx
+http {
+	# Add this include directive in the body of the already existing http block:
+	include /etc/nginx/sites-enabled/neosluger.conf;
+}
+```
+
 ## Cache directory
 
 QR codes are saved in a cache directory to be presented to the user and be downloaded by them.
@@ -36,7 +62,7 @@ chown -R "$USER":http src/
 chmod -R g+w src/
 ```
 
-# Español
+# Neosluger (Español)
 
 **Acortador de URLs de la Universidad de Granada.**
 
@@ -70,4 +96,30 @@ Puedes hacerlo con una orden similar a la siguiente:
 ```sh
 chown -R "$USER":http src/
 chmod -R g+w src/
+```
+
+## Configuración del servidor
+
+La configuración del servidor usada por Neosluger puede encontrarse en `conf/neosluger.conf`.
+La función `@extensionless-urls` es la que se carga la mayor parte del trabajo:
+
+```nginx
+location @extensionless-urls {
+	rewrite (\/(api|help|index|licence|url-result))$ $1.php last;
+	rewrite \/([a-zA-Z0-9]+)$ /short-url.php last;
+}
+```
+
+Esta directiva `location` busca patrones coincidentes en dos casos:
+
+- **`(\/(api|help|index|licence|url-result))$`:** Encuentra las páginas disponibles en el servidor web. Todas las páginas se traducen a su equivalente `*.php`, de forma que se ven más limpias en la barra de la URL.
+- **`\/([a-zA-Z0-9\-_]+)$`:** Encuentra el resto de URLs posibles, que son las acortadas. Se redirigen a `short-url.php` para que el script pueda redirigir al usuario al sitio de destino o servirles una página 404 en caso de que la URL no se encuentre en el sistema.
+
+Para instalar el servidor, copia `conf/neosluger.conf` en `/etc/nginx/sites-enabled/neosluger.conf` y añade la siguiente directiva en `/etc/nginx/nginx.conf`:
+
+```nginx
+http {
+	# Añade esta directiva include en el cuerpo del bloque http ya existente:
+	include /etc/nginx/sites-enabled/neosluger.conf;
+}
 ```
