@@ -1,9 +1,10 @@
 <?php declare(strict_types=1);
 
 
+const ROOT = "..";
 ini_set("display_errors", '1');
-require_once("vendor/autoload.php");
-require_once("php/url.php");
+require_once(ROOT."/vendor/autoload.php");
+require_once(ROOT."/php/url.php");
 
 
 use MongoDB\Client as Mongo;
@@ -33,7 +34,7 @@ function parse_short_url_handle (): string
 
 function main (): void
 {
-	$loader = new \Twig\Loader\FilesystemLoader("templates");
+	$loader = new \Twig\Loader\FilesystemLoader(ROOT."/templates");
 	$twig   = new \Twig\Environment($loader);
 
 	$url = get_url_from_database();
