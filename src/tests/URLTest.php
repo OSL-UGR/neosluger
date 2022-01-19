@@ -27,10 +27,14 @@ final class URLTest extends TestCase
 	}
 
 
-	public function test_url_build_from_not_url_string_aborts (): void
+	public function test_url_build_from_not_url_string_makes_it_null (): void
 	{
-		$this->expectException(InvalidArgumentException::class);
-		URL::from_form("ROFL COPTER!!!");
+		$new_url = URL::from_form("ROFL COPTER!!!");
+
+		$this->assertTrue($new_url->is_null());
+		$this->assertEquals("", $new_url->destination());
+		$this->assertEquals("", $new_url->handle());
+		$this->assertEquals("", $new_url->password());
 	}
 
 

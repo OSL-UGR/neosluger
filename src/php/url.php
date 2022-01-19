@@ -28,17 +28,19 @@ final class URL
 		if ($is_null == URL::URL_NOT_NULL)
 		{
 			if (!filter_var($destination, FILTER_VALIDATE_URL))
-				throw new InvalidArgumentException("'$destination' is not an URL!");
-
-			$this->destination = $destination;
-
-			if (!empty($handle))
-				$this->handle = $handle;
+				$this->destination = "";
 			else
-				$this->create_handle_with_hash();
+			{
+				$this->destination = $destination;
 
-			if (!empty($password))
-				$this->password = $password;
+				if (!empty($handle))
+					$this->handle = $handle;
+				else
+					$this->create_handle_with_hash();
+
+				if (!empty($password))
+					$this->password = $password;
+			}
 		}
 	}
 

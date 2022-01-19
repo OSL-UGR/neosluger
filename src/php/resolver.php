@@ -35,10 +35,22 @@ function get_url_from_database (string $handle): URL
 }
 
 
+function is_api_petition (string $uri): string
+{
+	$path   = $_SERVER['DOCUMENT_ROOT']."/php/".$uri.".php";
+	$result = "";
+
+	if (file_exists($path))
+		$result = $path;
+
+	return $result;
+}
+
+
 function parse_request_uri_first_item (): string
 {
 	// Study this regex with https://regex101.com/. Absolutely recommended!
-	return preg_replace("/^\/([^\/]+).*/", "$1", $_SERVER["REQUEST_URI"]);
+	return preg_replace("/^\/([^\/?]+).*/", "$1", $_SERVER["REQUEST_URI"]);
 }
 
 
@@ -53,12 +65,21 @@ function main (): void
 	}
 	else
 	{
-		$url = get_url_from_database($uri);
+		$api_path = is_api_petition($uri);
 
-		if ($url->is_null())
-			include($_SERVER['DOCUMENT_ROOT']."/pages/404.php");
+		if ($api_path != "")
+		{
+			include($api_path);
+		}
 		else
-			header("Location: " . $url->destination(), true,  301);
+		{
+			$url = get_url_from_database($uri);
+
+			if ($url->is_null())
+				include($_SERVER['DOCUMENT_ROOT']."/pages/404.php");
+			else
+				header("Location: " . $url->destination(), true,  301);
+		}
 	}
 
 }
