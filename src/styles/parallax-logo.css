@@ -1,7 +1,9 @@
 main
 {
+	background-attachment: fixed;
 	background-image: url('/assets/logo-ugr.svg');
 	background-position: center;
+	background-position-y: calc(60px + 38%);
 	background-repeat: no-repeat;
 	background-size: 80vmin;
 }

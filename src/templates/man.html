@@ -1,0 +1,141 @@
+{% extends "main.html" %}
+{% use "main-panel.html" %}
+
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="/styles/man.css">
+{% endblock %}
+
+
+{% block head %}
+	<script type="text/javascript" src="/js/man.js" defer></script>
+{% endblock %}
+
+
+{% block main_panel_title %}
+	Manual de usuario
+{% endblock %}
+
+
+{% block main_panel_content %}
+	<div class="tabs">
+		<button onclick="switch_tab(event, 'shortener')" id="current">Acortador</button>
+		<button onclick="switch_tab(event, 'qr')">QR</button>
+		<button onclick="switch_tab(event, 'api')">API</button>
+	</div>
+
+	<div id="shortener" class="visible">
+		<p>
+			Introduce un enlace que deseas acortar en el primer cuadro de texto.
+			Por ejmplo:
+		</p>
+
+		<samp>
+			https://www.ugr.es/universidad/historia/
+		</samp>
+
+		<p>
+			Al pulsar el botón <i>Generar enlace</i>, se generará un enlace corto con caracteres aleatorios.
+			Por ejemplo:
+		</p>
+
+		<samp>
+			https://sl.ugr.es/0cd1h5ba
+		</samp>
+
+		<p>
+			Si prefieres que el enlace corto contenga un nombre específico, puedes introducir el nombre en el segundo cuadro de texto.
+			El nombre debe contener entre 5 y 50 caracteres y puedes utilizar letras mayúsculas y minúscias, números, guiones y barras bajas.
+			Por ejemplo:
+		</p>
+
+		<samp>
+			oficina-virtual_ugr2
+		</samp>
+
+		<p>
+			Al introducir una dirección especificando ese nombre, se generará el siguiente enlace:
+		</p>
+
+		<samp>
+			https://sl.ugr.es/oficina-virtual_ugr2
+		</samp>
+	</div>
+
+	<div id="qr" class="invisible">
+		<p>
+			Esta sección no está implementada todavía.
+			Cuando la añadamos al sitio añadiremos el manual.
+		</p>
+
+		<b>Spoiler:</b> Vamos a meter un generador de códigos QR muy chulo :)
+	</div>
+
+	<div id="api" class="invisible">
+		<div id="new-api">
+			<p>
+				Utiliza la API para conectar tu servicio con el nuestro y automatizar tareas.
+			</p>
+
+			<p>
+				Esta sección no está implementada todavía.
+				Cuando la añadamos al sitio añadiremos el manual.
+			</p>
+
+		</div>
+
+		<div id="old-api">
+			<p>
+				Esta versión de la API está en modo mantenimiento.
+				Úsala únicamente si estabas trabajando con ella antes de que rediseñáramos el servicio y no te merece la pena cambiarla.
+				La API nueva ofrece la misma funcionalidad que ésta pero con un método de consultas y respuestas más sencillos.
+			</p>
+
+			<h3>Solicitud:</h3>
+
+			<samp>
+				http://sl.ugr.es/sluger.php?modo=JASON&amp;url=&lt;url&gt;&amp;id=&lt;nombre-corto&gt;
+			</samp>
+			<br>
+
+			<ul>
+				<li>
+					<b><tt>url</tt>:</b>
+					Enlace a acortar <a href="https://en.wikipedia.org/wiki/Percent-encoding">debidamente codificado</a>.
+				</li>
+				<li>
+					<b><tt>id</tt>:</b>
+					Cadena opcional de 5 a 50 caracteres con el nombre de la url.
+				</li>
+			</ul>
+
+			<h3>Respuesta:</h3>
+
+			<samp>{<samp><br>
+			<samp>&emsp;&emsp;"url": "sl.ugr.es/*"|"",<br></samp>
+			<samp>&emsp;&emsp;"error": 1|0,<br></samp>
+			<samp>&emsp;&emsp;"text": "URL creada"|"Mensaje de error"<br></samp>
+			<samp>}</samp>
+
+			<ul>
+				<li>
+					<b><tt>url:</tt></b>
+					La url corta o la cadena vacía en caso de error.
+				</li>
+				<li>
+					<b><tt>error:</tt></b>
+					<tt>1</tt> en caso de éxito, <tt>0</tt> en caso de error.
+				</li>
+				<li>
+					<b><tt>text:</tt></b>
+					<tt>"URL creada"</tt> en caso de éxito o la descripción del error.
+				</li>
+			</ul>
+		</div>
+
+		<center>
+			<button onclick="switch_api()" id="switch-api">Documentación de la API antigua.</button>
+		</center>
+	</div>
+{% endblock %}

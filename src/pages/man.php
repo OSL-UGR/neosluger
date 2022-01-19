@@ -11,8 +11,8 @@ function main ()
 	$loader = new \Twig\Loader\FilesystemLoader(ROOT."/templates");
 	$twig   = new \Twig\Environment($loader);
 
-	echo $twig->render("help.html", [
-		"help_tab" => "active-tab",
+	echo $twig->render("man.html", [
+		"man_tab" => "active-tab",
 	]);
 }
 
