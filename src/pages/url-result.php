@@ -1,10 +1,9 @@
 <?php declare(strict_types=1);
 
 
-const ROOT = "..";
 ini_set("display_errors", '1');
-require_once(ROOT."/vendor/autoload.php");
-require_once(ROOT."/php/url.php");
+require_once($_SERVER['DOCUMENT_ROOT']."/vendor/autoload.php");
+require_once($_SERVER['DOCUMENT_ROOT']."/php/url.php");
 
 
 use chillerlan\QRCode\{QRCode, QROptions};
@@ -12,7 +11,7 @@ use chillerlan\QRCode\{QRCode, QROptions};
 
 function generate_qr (URL $url)
 {
-	$cache_directory = ROOT."/cache/qr";
+	$cache_directory = $_SERVER['DOCUMENT_ROOT']."/cache/qr";
 
 	if (!file_exists($cache_directory))
 		mkdir($cache_directory, 0775, true);
@@ -41,7 +40,7 @@ function read_form ()
 
 function render ()
 {
-	$loader = new \Twig\Loader\FilesystemLoader(ROOT."/templates");
+	$loader = new \Twig\Loader\FilesystemLoader($_SERVER['DOCUMENT_ROOT']."/templates");
 	$twig   = new \Twig\Environment($loader);
 
 	$form_fields = read_form();
