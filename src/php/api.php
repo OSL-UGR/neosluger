@@ -18,7 +18,7 @@ class API
 
 	private static function args_contain_url (array $args): bool
 	{
-		$contained = ($args["url"] != "");
+		$contained = (!empty($args["url"]));
 
 		if (!$contained)
 		{
@@ -46,7 +46,11 @@ class API
 		if (!$valid)
 		{
 			API::$response["success"]  = false;
-			API::$response["errormsg"] = "The URL string passed was not an actual URL!";
+
+			if ($url->is_duplicate())
+				API::$response["errormsg"] = "A URL with your handle already exists!";
+			else
+				API::$response["errormsg"] = "The URL string passed was not an actual URL!";
 		}
 
 		return $valid;

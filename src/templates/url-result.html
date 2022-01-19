@@ -9,37 +9,61 @@
 
 
 {% block main_panel_title %}
-	Enlace acortado con éxito
+	{% if url.is_null() %}
+		Error al acortar el enlace
+	{% else %}
+		Enlace acortado con éxito
+	{% endif %}
 {% endblock %}
 
 
 {% block main_panel_content %}
-	<p>
-		Gracias por usar nuestro servicio.
-		Aquí tienes tu enlace corto:
-	</p>
+	{% if url.is_null() %}
+		<p>
+			No hemos podido procesar tu enlace corto para esta dirección:
+		</p>
 
-	<a href="{{ url.destination() }}" target="_blank" id="short-url">
-		{{ url.full_handle() }}
-	</a>
+		<a href="{{ destination }}" id="destination">
+			{{ destination }}
+		</a>
 
-	<p>
-		Este enlace redirigirá a todos sus usuarios a la siguiente dirección:
-	</p>
+		<p>
+			{% if url.is_duplicate() %}
+				Esto se debe a que ya existe un enlace corto llamado <tt>{{ handle }}</tt>.
+				Por favor, utiliza otro nombre para tu enlace corto.
+			{% else %}
+				El error se ha producido por una causa que desconocemos.
+				Por favor, inténtalo de nuevo y, si vuelve a fallar, <a href="https://osl.ugr.es/contacto/">ponte en contacto con nosotros</a>
+			{% endif %}
+		</p>
+	{% else %}
+		<p>
+			Gracias por usar nuestro servicio.
+			Aquí tienes tu enlace corto:
+		</p>
 
-	<a href="{{ url.destination() }}" target="_blank" id="destination">
-		{{ url.destination() }}
-	</a>
+		<a href="{{ url.destination() }}" target="_blank" id="short-url">
+			{{ url.full_handle() }}
+		</a>
 
-	<p>
-		También puedes usar este código QR para acceder al enlace corto:
-	</p>
+		<p>
+			Este enlace redirigirá a todos sus usuarios a la siguiente dirección:
+		</p>
 
-	<a href="/{{ qr_path }}" download id="save-qr">
-		Descargar QR
-	</a>
+		<a href="{{ url.destination() }}" target="_blank" id="destination">
+			{{ url.destination() }}
+		</a>
 
-	<a href="/{{ qr_path }}" download id="qr-img">
-		<img src="/{{ qr_path }}" alt="Código QR">
-	</a>
+		<p>
+			También puedes usar este código QR para acceder al enlace corto:
+		</p>
+
+		<a href="/{{ qr_path }}" download id="save-qr">
+			Descargar QR
+		</a>
+
+		<a href="/{{ qr_path }}" download id="qr-img">
+			<img src="/{{ qr_path }}" alt="Código QR">
+		</a>
+	{% endif %}
 {% endblock %}

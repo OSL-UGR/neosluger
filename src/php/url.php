@@ -15,6 +15,7 @@ final class URL
 	const URL_NOT_NULL = "NOT_NULL";
 
 
+	private bool $duplicate = false;
 	private DateTime $creation_datetime;
 	private string $destination = "";
 	private string $handle = "";
@@ -34,9 +35,19 @@ final class URL
 				$this->destination = $destination;
 
 				if (!empty($handle))
+				{
 					$this->handle = $handle;
+				}
 				else
+				{
 					$this->create_handle_with_hash();
+
+					while (URL::handle_already_exists_in_database($this->handle))
+					{
+						$this->creation_datetime = new DateTime("NOW", new DateTimeZone(date("T")));
+						$this->create_handle_with_hash();
+					}
+				}
 
 				if (!empty($password))
 					$this->password = $password;
@@ -57,8 +68,23 @@ final class URL
 
 	public static function from_form (string $destination, string $handle = "", string $password = "")
 	{
-		$new_url = new URL($destination, $handle, $password);
-		$new_url->add_to_database();
+		$duplicate = false;
+		$new_url   = null;
+
+		if (!empty($handle))
+			$duplicate = URL::handle_already_exists_in_database($handle);
+
+		if ($duplicate)
+		{
+			$new_url = URL::from_null();
+			$new_url->duplicate = true;
+		}
+		else
+		{
+			$new_url = new URL($destination, $handle, $password);
+			$new_url->add_to_database();
+		}
+
 		return $new_url;
 	}
 
@@ -66,6 +92,17 @@ final class URL
 	public static function from_null ()
 	{
 		return new URL("", "", "", URL::URL_IS_NULL);
+	}
+
+
+	private static function handle_already_exists_in_database (string $handle): bool
+	{
+		$mongo      = new Mongo("mongodb://localhost:27017");
+		$collection = $mongo->neosluger->urls;
+		$result     = $collection->find(["handle" => $handle]);
+		$exists     = (count($result->toArray()) > 0);
+
+		return $exists;
 	}
 
 
@@ -93,9 +130,15 @@ final class URL
 	}
 
 
+	public function is_duplicate (): bool
+	{
+		return $this->duplicate;
+	}
+
+
 	public function is_null (): bool
 	{
-		return ($this->destination == "");
+		return empty($this->destination);
 	}
 
 

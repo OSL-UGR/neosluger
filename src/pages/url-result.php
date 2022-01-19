@@ -48,9 +48,11 @@ function render ()
 	$qr_path     = generate_qr($url);
 
 	echo $twig->render("url-result.html", [
-		"index_tab" => "active-tab",
-		"url"       => $url,
-		"qr_path"   => $qr_path,
+		"destination" => $form_fields["url"],
+		"handle"      => $form_fields["handle"],
+		"index_tab"   => "active-tab",
+		"url"         => $url,
+		"qr_path"     => $qr_path,
 	]);
 }
 

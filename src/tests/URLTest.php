@@ -67,8 +67,10 @@ final class URLTest extends TestCase
 
 	public function test_a_custom_handle_can_be_passed_on_construction (): void
 	{
-		$handle  = "My_Handle-01";
-		$new_url = URL::from_form($this->destination_text, $handle);
+		// Create a random handle every time to avoid duplicate errors
+		$datetime = new DateTime("NOW", new DateTimeZone(date("T")));
+		$handle   = sha1($datetime->format("Y-m-d H:i:s.u"));
+		$new_url  = URL::from_form($this->destination_text, $handle);
 
 		$this->assertEquals($new_url->handle(), $handle);
 	}

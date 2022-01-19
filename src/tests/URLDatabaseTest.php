@@ -86,6 +86,20 @@ final class URLDatabaseTest extends TestCase
 		$logged_datetime = new DateTime($accesses[1]);
 		$this->assertEquals($logged_datetime, $access_datetime);
 	}
+
+
+	public function test_duplicate_urls_create_an_invalid_url (): void
+	{
+		$handle = "PHPUnit-handle_url10";
+		$result = $this->url_collection->find(["handle" => $handle]);
+
+		if (count($result->toArray()) == 0)
+			URL::from_form("https://www.ugr.es/", $handle);
+
+		$new_url = URL::from_form("https://www.ugr.es/", $handle);
+		$this->assertTrue($new_url->is_null());
+		$this->assertTrue($new_url->is_duplicate());
+	}
 }
 
 
