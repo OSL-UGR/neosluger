@@ -6,7 +6,7 @@ ini_set("display_errors", '1');
 require_once(ROOT."/vendor/autoload.php");
 
 
-function main ()
+function render ()
 {
 	$loader = new \Twig\Loader\FilesystemLoader(ROOT."/templates");
 	$twig   = new \Twig\Environment($loader);
@@ -17,7 +17,7 @@ function main ()
 }
 
 
-main();
+render();
 
 
 ?>
