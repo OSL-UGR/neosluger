@@ -45,7 +45,6 @@ function main (): void
 	}
 	else
 	{
-		echo $url->destination();
 		header("Location: " . $url->destination(), true,  301);
 	}
 }

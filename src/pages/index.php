@@ -5,6 +5,7 @@ const ROOT = "..";
 ini_set("display_errors", '1');
 require_once(ROOT."/vendor/autoload.php");
 
+
 function main (): void
 {
 	$loader = new \Twig\Loader\FilesystemLoader(ROOT."/templates");
