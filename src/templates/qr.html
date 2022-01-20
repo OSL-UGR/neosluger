@@ -1,0 +1,31 @@
+{% extends "main.html" %}
+{% use "main-panel.html" %}
+
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="/styles/qr.css">
+{% endblock %}
+
+
+{% block main_panel_title %}
+	Generador de QR
+{% endblock %}
+
+
+{% block main_panel_content %}
+	<form action="qr-result" method="post">
+		<h4>Introduce el enlace para el que deseas crear un QR:</h4>
+		<input type="qr-string" name="neosluger-qr-string" autofocus/>
+
+		<div class="form-bottom">
+			<button type="submit" id="gen-qr">Generar QR</button>
+			<a href="https://osl.ugr.es/" target="_blank" id="logo-osl-form">
+				<img src="/assets/logo-osl.svg" alt="Logo OSL">
+			</a>
+		</div>
+	</form>
+{% endblock %}
+
+
+{% block main_panel_logo_osl %}{% endblock %}
