@@ -59,7 +59,7 @@ function main (): void
 	$uri  = parse_request_uri_first_item();
 	$path = find_page($uri);
 
-	if ($path != "")
+	if (!empty($path))
 	{
 		include($path);
 	}
@@ -67,7 +67,7 @@ function main (): void
 	{
 		$api_path = is_api_petition($uri);
 
-		if ($api_path != "")
+		if (!empty($api_path))
 		{
 			include($api_path);
 		}
