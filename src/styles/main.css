@@ -27,7 +27,7 @@ header
 	background-color: #CA2D30;
 	display: grid;
 	font-family: "Garamond", serif;
-	grid-template-areas: "index help api licence spacer ugr";
+	grid-template-areas: "index qr man licence spacer ugr";
 	grid-template-columns: min-content min-content min-content min-content auto 233px;
 	grid-template-rows: 60px;
 	height: 60px;
@@ -82,9 +82,9 @@ main
 }
 
 
-#header-help
+#header-man
 {
-	grid-area: help;
+	grid-area: man;
 }
 
 
@@ -97,6 +97,12 @@ main
 #header-licence
 {
 	grid-area: licence;
+}
+
+
+#header-qr
+{
+	grid-area: qr;
 }
 
 
