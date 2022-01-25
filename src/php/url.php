@@ -19,10 +19,9 @@ final class URL
 	private DateTime $creation_datetime;
 	private string $destination = "";
 	private string $handle = "";
-	private string $password = "";
 
 
-	private function __construct (string $destination, string $handle = "", string $password = "", string $is_null = URL::URL_NOT_NULL)
+	private function __construct (string $destination, string $handle = "", string $is_null = URL::URL_NOT_NULL)
 	{
 		$this->creation_datetime = new DateTime("NOW", new DateTimeZone(date("T")));
 
@@ -48,9 +47,6 @@ final class URL
 						$this->create_handle_with_hash();
 					}
 				}
-
-				if (!empty($password))
-					$this->password = $password;
 			}
 		}
 	}
@@ -61,12 +57,11 @@ final class URL
 		return new URL(
 			$result["destination"],
 			$result["handle"],
-			$result["password"]
 		);
 	}
 
 
-	public static function from_form (string $destination, string $handle = "", string $password = "")
+	public static function from_form (string $destination, string $handle = "")
 	{
 		$duplicate = false;
 		$new_url   = null;
@@ -81,7 +76,7 @@ final class URL
 		}
 		else
 		{
-			$new_url = new URL($destination, $handle, $password);
+			$new_url = new URL($destination, $handle);
 			$new_url->add_to_database();
 		}
 
@@ -142,12 +137,6 @@ final class URL
 	}
 
 
-	public function is_password_protected (): bool
-	{
-		return !empty($this->password);
-	}
-
-
 	public function log_access (): DateTime
 	{
 		$mongo = new Mongo("mongodb://localhost:27017");
@@ -162,12 +151,6 @@ final class URL
 	}
 
 
-	public function password (): string
-	{
-		return $this->password;
-	}
-
-
 	private function add_to_database (): void
 	{
 		$mongo = new Mongo("mongodb://localhost:27017");
@@ -177,7 +160,6 @@ final class URL
 		$url_collection->insertOne([
 			"destination" => $this->destination,
 			"handle"      => $this->handle,
-			"password"    => $this->password,
 		]);
 
 		// The date is stored as a string because PHP is a stringly typed language.

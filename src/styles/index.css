@@ -49,25 +49,11 @@ input:hover
 	align-items: center;
 	display: grid;
 	grid-column-gap: 10px;
-	grid-template-areas: "advanced logo-osl" "gen-link logo-osl";
+	grid-template-areas: "gen-link logo-osl";
 	grid-template-columns: 193px auto;
 	justify-items: center;
 	margin-top: 15px;
 	margin-left: 3px;
-}
-
-
-#advanced
-{
-	border: none;
-	background-color: white;
-	grid-area: advanced;
-}
-
-
-#advanced:hover
-{
-	text-decoration: underline;
 }
 
 

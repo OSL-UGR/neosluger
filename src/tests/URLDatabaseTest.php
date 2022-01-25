@@ -41,7 +41,6 @@ final class URLDatabaseTest extends TestCase
 
 		$this->assertEquals($url_fields["destination"], $this->url->destination());
 		$this->assertEquals($url_fields["handle"],      $this->url->handle());
-		$this->assertEquals($url_fields["password"],    $this->url->password());
 	}
 
 
@@ -53,7 +52,6 @@ final class URLDatabaseTest extends TestCase
 
 		$this->assertEquals($url_fields["destination"], $new_url->destination());
 		$this->assertEquals($url_fields["handle"],      $new_url->handle());
-		$this->assertEquals($url_fields["password"],    $new_url->password());
 	}
 
 

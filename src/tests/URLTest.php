@@ -34,7 +34,6 @@ final class URLTest extends TestCase
 		$this->assertTrue($new_url->is_null());
 		$this->assertEquals("", $new_url->destination());
 		$this->assertEquals("", $new_url->handle());
-		$this->assertEquals("", $new_url->password());
 	}
 
 
@@ -76,22 +75,6 @@ final class URLTest extends TestCase
 	}
 
 
-	public function test_urls_dont_have_a_password_by_default (): void
-	{
-		$this->assertNotTrue($this->url->is_password_protected());
-	}
-
-
-	public function test_a_password_can_be_passed_on_construction (): void
-	{
-		$password = "DZSH3N)o"; // https://duckduckgo.com/?q=password+strong+8
-		$new_url  = URL::from_form($this->destination_text, "", $password);
-
-		$this->assertTrue($new_url->is_password_protected());
-		$this->assertEquals($new_url->password(), $password);
-	}
-
-
 	public function test_a_null_url_can_be_constructed (): void
 	{
 		$new_url = URL::from_null();
@@ -99,7 +82,6 @@ final class URLTest extends TestCase
 		$this->assertTrue($new_url->is_null());
 		$this->assertEquals("", $new_url->destination());
 		$this->assertEquals("", $new_url->handle());
-		$this->assertEquals("", $new_url->password());
 	}
 }
 
