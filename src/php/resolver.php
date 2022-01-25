@@ -42,6 +42,19 @@ function parse_request_uri_first_item (): string
 }
 
 
+function try_old_api_or_404 (): void
+{
+	if (str_starts_with($_SERVER["REQUEST_URI"], "/sluger.php"))
+		echo json_encode([
+			"url"   => "",
+			"error" => "0",
+			"text"  => "This API is deprecated. Read the docs to update it!"
+		]);
+	else
+		include($_SERVER['DOCUMENT_ROOT']."/pages/404.php");
+}
+
+
 function main (): void
 {
 	$uri  = parse_request_uri_first_item();
@@ -56,7 +69,7 @@ function main (): void
 		$url = get_url_from_database($uri);
 
 		if ($url->is_null())
-			include($_SERVER['DOCUMENT_ROOT']."/pages/404.php");
+			try_old_api_or_404();
 		else
 			header("Location: " . $url->destination(), true,  301);
 	}
