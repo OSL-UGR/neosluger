@@ -11,7 +11,7 @@ use chillerlan\QRCode\{QRCode, QROptions};
 
 function generate_qr (URL $url)
 {
-	$cache_directory = $_SERVER['DOCUMENT_ROOT']."/cache/qr";
+	$cache_directory = "../cache/qr";
 
 	if (!file_exists($cache_directory))
 		mkdir($cache_directory, 0775, true);

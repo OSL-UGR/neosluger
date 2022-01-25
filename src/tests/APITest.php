@@ -3,28 +3,28 @@
 
 require_once("vendor/autoload.php");
 require_once("php/const.php");
-require_once("php/new_api.php");
+require_once("php/api.php");
 
 
 use PHPUnit\Framework\TestCase;
 
 
-final class NewAPITest extends TestCase
+final class APITest extends TestCase
 {
 	private string $url    = "https://ugr.es/";
 	private string $handle = "my-handle_01";
-	private NewAPIQuery $query;
-	private NewAPIQuery $query_with_handle;
-	private NewAPIQuery $empty_query;
-	private NewAPIResponse $empty_response;
+	private APIQuery $query;
+	private APIQuery $query_with_handle;
+	private APIQuery $empty_query;
+	private APIResponse $empty_response;
 
 
 	protected function setUp (): void
 	{
-		$this->query             = new NewAPIQuery($this->url);
-		$this->query_with_handle = new NewAPIQuery($this->url, $this->handle);
-		$this->empty_query       = new NewAPIQuery;
-		$this->empty_response    = new NewAPIResponse();
+		$this->query             = new APIQuery($this->url);
+		$this->query_with_handle = new APIQuery($this->url, $this->handle);
+		$this->empty_query       = new APIQuery;
+		$this->empty_response    = new APIResponse();
 	}
 
 
@@ -46,14 +46,14 @@ final class NewAPITest extends TestCase
 	{
 		$this->assertEmpty($this->empty_response->url());
 		$this->assertFalse($this->empty_response->success());
-		$this->assertEquals($this->empty_response->errormsg(), NewAPIResponse::MSG_NO_URL);
+		$this->assertEquals($this->empty_response->errormsg(), APIResponse::MSG_NO_URL);
 	}
 
 
 	public function test_if_response_succeeds_its_errormsg_is_empty (): void
 	{
 		// The url should be a short one but we don't mind in this test
-		$response = new NewAPIResponse($this->url);
+		$response = new APIResponse($this->url);
 
 		$this->assertTrue($response->success());
 		$this->assertEmpty($response->errormsg());
@@ -70,30 +70,30 @@ final class NewAPITest extends TestCase
 
 		$this->assertEmpty($decoded_response["url"]);
 		$this->assertFalse($decoded_response["success"]);
-		$this->assertEquals($decoded_response["errormsg"], NewAPIResponse::MSG_NO_URL);
+		$this->assertEquals($decoded_response["errormsg"], APIResponse::MSG_NO_URL);
 	}
 
 
 	public function test_api_gets_query_returns_response (): void
 	{
-		$response = NewAPI::process($this->query);
-		$this->assertInstanceOf(NewAPIResponse::class, $response);
+		$response = API::process($this->query);
+		$this->assertInstanceOf(APIResponse::class, $response);
 	}
 
 
 	public function test_processing_query_without_url_returns_error (): void
 	{
-		$response = NewAPI::process($this->empty_query);
+		$response = API::process($this->empty_query);
 
 		$this->assertEmpty($response->url());
 		$this->assertFalse($response->success());
-		$this->assertEquals($response->errormsg(), NewAPIResponse::MSG_NO_URL);
+		$this->assertEquals($response->errormsg(), APIResponse::MSG_NO_URL);
 	}
 
 
 	public function test_processing_query_with_url_returns_short_url (): void
 	{
-		$response = NewAPI::process($this->query);
+		$response = API::process($this->query);
 		$regex    = "/" . preg_replace("/\//", "\/", Neosluger\SITE_ADDRESS) . "[a-zA-Z0-9_\-]+/";
 
 		$this->assertEquals(1, preg_match($regex, $response->url()));
@@ -104,22 +104,22 @@ final class NewAPITest extends TestCase
 
 	public function test_processing_query_with_invalid_url_returns_error (): void
 	{
-		$response = NewAPI::process(new NewAPIQuery("Never gonna give you up!"));
+		$response = API::process(new APIQuery("Never gonna give you up!"));
 
 		$this->assertEmpty($response->url());
 		$this->assertFalse($response->success());
-		$this->assertEquals($response->errormsg(), NewAPIResponse::MSG_INVALID_URL);
+		$this->assertEquals($response->errormsg(), APIResponse::MSG_INVALID_URL);
 	}
 
 
 	public function test_processing_query_with_duplicate_handle_returns_error (): void
 	{
-		$response = NewAPI::process($this->query_with_handle);
-		$response = NewAPI::process($this->query_with_handle);
+		$response = API::process($this->query_with_handle);
+		$response = API::process($this->query_with_handle);
 
 		$this->assertEmpty($response->url());
 		$this->assertFalse($response->success());
-		$this->assertEquals($response->errormsg(), NewAPIResponse::MSG_DUPLICATE_HANDLE);
+		$this->assertEquals($response->errormsg(), APIResponse::MSG_DUPLICATE_HANDLE);
 	}
 }
 
