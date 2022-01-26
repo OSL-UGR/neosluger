@@ -121,6 +121,24 @@ final class APITest extends TestCase
 		$this->assertFalse($response->success());
 		$this->assertEquals($response->errormsg(), APIResponse::MSG_DUPLICATE_HANDLE);
 	}
+
+
+	public function test_processing_query_with_invalid_handle_length_returns_error (): void
+	{
+		$short_handle = "hey";
+		$response     = API::process(new APIQuery($this->url, $short_handle));
+
+		$this->assertEmpty($response->url());
+		$this->assertFalse($response->success());
+		$this->assertEquals($response->errormsg(), APIResponse::MSG_INVALID_HANDLE_LEN);
+
+		$long_handle = "012345678901234567890123456789012345678901234567890"; // 51 chars
+		$response    = API::process(new APIQuery($this->url, $long_handle));
+
+		$this->assertEmpty($response->url());
+		$this->assertFalse($response->success());
+		$this->assertEquals($response->errormsg(), APIResponse::MSG_INVALID_HANDLE_LEN);
+	}
 }
 
 

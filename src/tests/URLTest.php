@@ -27,6 +27,16 @@ final class URLTest extends TestCase
 	}
 
 
+	public function test_a_null_url_can_be_constructed (): void
+	{
+		$new_url = URL::from_null();
+
+		$this->assertTrue($new_url->is_null());
+		$this->assertEquals("", $new_url->destination());
+		$this->assertEquals("", $new_url->handle());
+	}
+
+
 	public function test_url_build_from_not_url_string_makes_it_null (): void
 	{
 		$new_url = URL::from_form("ROFL COPTER!!!");
@@ -75,13 +85,21 @@ final class URLTest extends TestCase
 	}
 
 
-	public function test_a_null_url_can_be_constructed (): void
+	public function test_url_handle_must_be_at_least_five_characters_long (): void
 	{
-		$new_url = URL::from_null();
+		$handle  = "hey";
+		$new_url = URL::from_form($this->destination_text, $handle);
 
 		$this->assertTrue($new_url->is_null());
-		$this->assertEquals("", $new_url->destination());
-		$this->assertEquals("", $new_url->handle());
+	}
+
+
+	public function test_url_handle_must_be_at_most_fifty_characters_long (): void
+	{
+		$handle  = "012345678901234567890123456789012345678901234567890"; // 51 chars
+		$new_url = URL::from_form($this->destination_text, $handle);
+
+		$this->assertTrue($new_url->is_null());
 	}
 }
 

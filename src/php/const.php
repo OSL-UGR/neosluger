@@ -4,8 +4,10 @@
 namespace Neosluger;
 
 
-const HASH_LENGTH  = 8;
-const SITE_ADDRESS = "localhost/";
+const HASH_LENGTH    = 8;
+const MAX_HANDLE_LEN = 50;
+const MIN_HANDLE_LEN = 5;
+const SITE_ADDRESS   = "localhost/";
 
 
 ?>

@@ -29,9 +29,10 @@ class APIQuery
 
 class APIResponse
 {
-	const MSG_DUPLICATE_HANDLE = "A URL with your handle already exists!";
-	const MSG_INVALID_URL      = "The URL string is not an actual URL!";
-	const MSG_NO_URL           = "A URL is required!";
+	const MSG_DUPLICATE_HANDLE   = "A URL with your handle already exists!";
+	const MSG_INVALID_HANDLE_LEN = "Custom handles must be between 5 and 50 characters long!";
+	const MSG_INVALID_URL        = "The URL string is not an actual URL!";
+	const MSG_NO_URL             = "A URL is required!";
 
 
 	private string $errormsg = "";
@@ -87,6 +88,32 @@ class APIResponse
 
 class API
 {
+	private static function get_error_reason (APIQuery $query, URL $url): APIResponse
+	{
+		$handle       = $query->handle();
+		$handle_len   = strlen($handle);
+		$response     = null;
+		$valid_handle = (
+			empty($handle) ||
+			(URL::MIN_HANDLE_LEN <= $handle_len && $handle_len <= URL::MAX_HANDLE_LEN)
+		);
+
+		if ($valid_handle)
+		{
+			if ($url->is_duplicate())
+				$response = new APIResponse("", APIResponse::MSG_DUPLICATE_HANDLE);
+			else
+				$response = new APIResponse("", APIResponse::MSG_INVALID_URL);
+		}
+		else
+		{
+			$response = new APIResponse("", APIResponse::MSG_INVALID_HANDLE_LEN);
+		}
+
+		return $response;
+	}
+
+
 	public static function process($query): APIResponse
 	{
 		$response = new APIResponse();
@@ -96,16 +123,9 @@ class API
 			$url = URL::from_form($query->url(), $query->handle());
 
 			if ($url->is_null())
-			{
-				if ($url->is_duplicate())
-					$response = new APIResponse("", APIResponse::MSG_DUPLICATE_HANDLE);
-				else
-					$response = new APIResponse("", APIResponse::MSG_INVALID_URL);
-			}
+				$response = API::get_error_reason($query, $url);
 			else
-			{
 				$response = new APIResponse(Neosluger\SITE_ADDRESS . $url->handle());
-			}
 		}
 
 		return $response;

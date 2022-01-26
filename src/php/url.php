@@ -7,8 +7,10 @@ use MongoDB\Client as Mongo;
 
 final class URL
 {
-	const HASH_LENGTH  = Neosluger\HASH_LENGTH;
-	const SITE_ADDRESS = Neosluger\SITE_ADDRESS;
+	const HASH_LENGTH    = Neosluger\HASH_LENGTH;
+	const MAX_HANDLE_LEN = Neosluger\MAX_HANDLE_LEN;
+	const MIN_HANDLE_LEN = Neosluger\MIN_HANDLE_LEN;
+	const SITE_ADDRESS   = Neosluger\SITE_ADDRESS;
 
 	// Please change this to an enum when it becomes avaliable (PHP 8 >= 8.1.0)
 	const URL_IS_NULL  = "IS_NULL";
@@ -63,21 +65,24 @@ final class URL
 
 	public static function from_form (string $destination, string $handle = "")
 	{
-		$duplicate = false;
-		$new_url   = null;
+		$new_url      = URL::from_null();
+		$handle_len   = strlen($handle);
+		$valid_handle = (
+			empty($handle) ||
+			(URL::MIN_HANDLE_LEN <= $handle_len && $handle_len <= URL::MAX_HANDLE_LEN)
+		);
 
-		if (!empty($handle))
-			$duplicate = URL::handle_already_exists_in_database($handle);
-
-		if ($duplicate)
+		if ($valid_handle)
 		{
-			$new_url = URL::from_null();
-			$new_url->duplicate = true;
-		}
-		else
-		{
-			$new_url = new URL($destination, $handle);
-			$new_url->add_to_database();
+			if (!empty($handle) && URL::handle_already_exists_in_database($handle))
+			{
+				$new_url->duplicate = true;
+			}
+			else
+			{
+				$new_url = new URL($destination, $handle);
+				$new_url->add_to_database();
+			}
 		}
 
 		return $new_url;
