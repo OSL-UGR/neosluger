@@ -2,7 +2,6 @@
 
 
 require_once("const.php");
-use MongoDB\Client as Mongo;
 
 
 final class URL
@@ -97,9 +96,7 @@ final class URL
 
 	private static function handle_already_exists_in_database (string $handle): bool
 	{
-		$mongo      = new Mongo("mongodb://localhost:27017");
-		$collection = $mongo->neosluger->urls;
-		$result     = $collection->find(["handle" => $handle]);
+		$result     = Neosluger\URL_COLLECTION()->find(["handle" => $handle]);
 		$exists     = (count($result->toArray()) > 0);
 
 		return $exists;
@@ -144,11 +141,9 @@ final class URL
 
 	public function log_access (): DateTime
 	{
-		$mongo = new Mongo("mongodb://localhost:27017");
-		$log_collection  = $mongo->neosluger->access_logs;
 		$access_datetime = new DateTime("NOW", new DateTimeZone(date("T")));
 
-		$log_collection->updateOne(["handle" => $this->handle], [
+		Neosluger\LOG_COLLECTION()->updateOne(["handle" => $this->handle], [
 			'$push' => ["accesses" => $access_datetime->format("Y-m-d H:i:s.u")]
 		]);
 
@@ -158,18 +153,14 @@ final class URL
 
 	private function add_to_database (): void
 	{
-		$mongo = new Mongo("mongodb://localhost:27017");
-		$url_collection = $mongo->neosluger->urls;
-		$log_collection = $mongo->neosluger->access_logs;
-
-		$url_collection->insertOne([
+		Neosluger\URL_COLLECTION()->insertOne([
 			"destination" => $this->destination,
 			"handle"      => $this->handle,
 		]);
 
 		// The date is stored as a string because PHP is a stringly typed language.
 
-		$log_collection->insertOne([
+		Neosluger\LOG_COLLECTION()->insertOne([
 			"handle"   => $this->handle,
 			"accesses" => array($this->creation_datetime->format("Y-m-d H:i:s.u"))
 		]);

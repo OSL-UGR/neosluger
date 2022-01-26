@@ -4,9 +4,7 @@
 ini_set("display_errors", '1');
 require_once($_SERVER['DOCUMENT_ROOT']."/vendor/autoload.php");
 require_once($_SERVER['DOCUMENT_ROOT']."/php/url.php");
-
-
-use MongoDB\Client as Mongo;
+require_once($_SERVER['DOCUMENT_ROOT']."/php/const.php");
 
 
 function find_page (string $uri): string
@@ -23,10 +21,8 @@ function find_page (string $uri): string
 
 function get_url_from_database (string $handle): URL
 {
-	$mongo      = new Mongo("mongodb://localhost:27017");
-	$collection = $mongo->neosluger->urls;
-	$result     = $collection->find(["handle" => $handle])->toArray();
-	$url        = URL::from_null();
+	$result = Neosluger\URL_COLLECTION()->find(["handle" => $handle])->toArray();
+	$url    = URL::from_null();
 
 	if (count($result) > 0)
 		$url = URL::from_db_result($result[0]);
