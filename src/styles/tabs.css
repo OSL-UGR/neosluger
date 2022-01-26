@@ -1,0 +1,45 @@
+.invisible
+{
+	display: none;
+}
+
+
+.visible
+{
+	display: contents;
+}
+
+
+.tabs {
+	background-color: #F2F2F2;
+	border-radius: 20px;
+	display: grid;
+	grid-template-columns: 33.33% auto 33.33%;
+	margin-bottom: 22px;
+	overflow: hidden;
+}
+
+
+.tabs button {
+	background-color: inherit;
+	border: none;
+	cursor: pointer;
+	float: left;
+	font-size: 17px;
+	outline: none;
+	padding: 14px 16px;
+	transition: 0.3s;
+}
+
+
+.tabs button:hover
+{
+	background-color: #DDDDDD;
+}
+
+
+#current-tab-item
+{
+	background-color: #CCCCCC;
+	font-weight: bold;
+}

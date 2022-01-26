@@ -5,11 +5,12 @@
 {% block stylesheets %}
 	{{ parent() }}
 	<link rel="stylesheet" href="/styles/man.css">
+	<link rel="stylesheet" href="/styles/tabs.css">
 {% endblock %}
 
 
 {% block head %}
-	<script type="text/javascript" src="/js/man.js" defer></script>
+	<script type="text/javascript" src="/js/tabs.js" defer></script>
 {% endblock %}
 
 
@@ -20,8 +21,8 @@
 
 {% block main_panel_content %}
 	<div class="tabs">
-		<button onclick="switch_tab(event, 'shortener')" id="current">Acortador</button>
-		<button onclick="switch_tab(event, 'qr')">QR</button>
+		<button onclick="switch_tab(event, 'shortener')" id="current-tab-item">Acortador de enlaces</button>
+		<button onclick="switch_tab(event, 'qr')">Generador de códigos QR</button>
 		<button onclick="switch_tab(event, 'api')">API</button>
 	</div>
 

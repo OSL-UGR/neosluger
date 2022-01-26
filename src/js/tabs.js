@@ -5,6 +5,6 @@ function switch_tab (event, tabname)
 	document.querySelector("#"+tabname).className = "visible";
 
 	// Toggles the current tabline button
-	document.querySelector("#current").removeAttribute("id");
-	event.currentTarget.id = "current";
+	document.querySelector("#current-tab-item").removeAttribute("id");
+	event.currentTarget.id = "current-tab-item";
 }
