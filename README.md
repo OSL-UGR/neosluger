@@ -68,6 +68,18 @@ composer install
 
 Todas las dependencias se instalarán en `src/vendor/`.
 
+## Configuración del servidor
+
+Un fichero de ejemplo de la configuración del servidor usada por Neosluger puede encontrarse en `conf/neosluger.conf`.
+Para instalar el servidor, copia `conf/neosluger.conf` en `/etc/nginx/sites-enabled/neosluger.conf` y añade la siguiente directiva en `/etc/nginx/nginx.conf`:
+
+```nginx
+http {
+	# Añade esta directiva include en el cuerpo del bloque http ya existente:
+	include /etc/nginx/sites-enabled/neosluger.conf;
+}
+```
+
 ## Directorio de caché
 
 Los códigos QR se guardan en un directorio de caché para mostrarlos al usuario y que éste los descargue.
@@ -82,16 +94,4 @@ Puedes hacerlo con una orden similar a la siguiente:
 ```sh
 chown -R "$USER":http src/
 chmod -R g+w src/
-```
-
-## Configuración del servidor
-
-Un fichero de ejemplo de la configuración del servidor usada por Neosluger puede encontrarse en `conf/neosluger.conf`.
-Para instalar el servidor, copia `conf/neosluger.conf` en `/etc/nginx/sites-enabled/neosluger.conf` y añade la siguiente directiva en `/etc/nginx/nginx.conf`:
-
-```nginx
-http {
-	# Añade esta directiva include en el cuerpo del bloque http ya existente:
-	include /etc/nginx/sites-enabled/neosluger.conf;
-}
 ```
