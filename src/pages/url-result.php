@@ -32,7 +32,7 @@ function generate_qr (URL $url)
 function read_form ()
 {
 	return array(
-		"handle" => $_POST["neosluger-handle"],
+		"handle" => empty($_POST["neosluger-handle"]) ? "" : $_POST["neosluger-handle"],
 		"url"    => $_POST["neosluger-url"],
 	);
 }

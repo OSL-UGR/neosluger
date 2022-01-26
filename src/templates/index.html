@@ -8,6 +8,11 @@
 {% endblock %}
 
 
+{% block head %}
+	<script type="text/javascript" src="/js/url-form.js" defer></script>
+{% endblock %}
+
+
 {% block main_panel_title %}
 	Acortador de enlaces
 {% endblock %}
@@ -16,10 +21,10 @@
 {% block main_panel_content %}
 	<form action="url-result" method="post">
 		<h4>Introduce el enlace que deseas acortar:</h4>
-		<input type="url" name="neosluger-url" autofocus/>
+		<input type="url" required name="neosluger-url" autofocus/>
 
 		<h4>(Opcional) Elige el nombre de tu enlace corto:</h4>
-		<input type="text" name="neosluger-handle"/>
+		<input type="text" disabled name="neosluger-handle"/>
 
 		<div class="form-bottom">
 			<button type="submit" id="gen-link">Generar enlace</button>
