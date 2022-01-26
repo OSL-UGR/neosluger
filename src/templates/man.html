@@ -95,69 +95,49 @@
 	</div>
 
 	<div id="api" class="invisible">
-		<div id="new-api">
-			<p>
-				Utiliza la API para conectar tu servicio con el nuestro y automatizar tareas.
-			</p>
+		<p>
+			Utiliza la API para conectar tus programas con el acortador de enlaces.
+		</p>
 
-			<p>
-				Esta sección no está implementada todavía.
-				Cuando la añadamos al sitio añadiremos el manual.
-			</p>
+		<h3>Solicitud:</h3>
 
-		</div>
+		<samp>
+			https://sl.ugr.es/api?url=&lt;url&gt;&amp;handle=&lt;handle&gt;
+		</samp>
+		<br>
 
-		<div id="old-api">
-			<p>
-				Esta versión de la API está en modo mantenimiento.
-				Úsala únicamente si estabas trabajando con ella antes de que rediseñáramos el servicio y no te merece la pena cambiarla.
-				La API nueva ofrece la misma funcionalidad que ésta pero con un método de consultas y respuestas más sencillos.
-			</p>
+		<ul>
+			<li>
+				<b><tt>url</tt>:</b>
+				El enlace que deseas acortar.
+			</li>
+			<li>
+				<b><tt>handle</tt>:</b>
+				Cadena opcional con el nombre corto que quieres usar en el enlace.
+			</li>
+		</ul>
 
-			<h3>Solicitud:</h3>
+		<h3>Respuesta:</h3>
 
-			<samp>
-				http://sl.ugr.es/sluger.php?modo=JASON&amp;url=&lt;url&gt;&amp;id=&lt;nombre-corto&gt;
-			</samp>
-			<br>
-
-			<ul>
-				<li>
-					<b><tt>url</tt>:</b>
-					Enlace a acortar <a href="https://en.wikipedia.org/wiki/Percent-encoding">debidamente codificado</a>.
-				</li>
-				<li>
-					<b><tt>id</tt>:</b>
-					Cadena opcional de 5 a 50 caracteres con el nombre de la url.
-				</li>
-			</ul>
-
-			<h3>Respuesta:</h3>
-
-			<samp>{<samp><br>
+		<samp>{<samp><br>
 			<samp>&emsp;&emsp;"url": "sl.ugr.es/*"|"",<br></samp>
-			<samp>&emsp;&emsp;"error": 1|0,<br></samp>
-			<samp>&emsp;&emsp;"text": "URL creada"|"Mensaje de error"<br></samp>
-			<samp>}</samp>
+			<samp>&emsp;&emsp;"success": true|false,<br></samp>
+			<samp>&emsp;&emsp;"errormsg": ""|"Error description"<br></samp>
+		<samp>}</samp>
 
-			<ul>
-				<li>
-					<b><tt>url:</tt></b>
-					La url corta o la cadena vacía en caso de error.
-				</li>
-				<li>
-					<b><tt>error:</tt></b>
-					<tt>1</tt> en caso de éxito, <tt>0</tt> en caso de error.
-				</li>
-				<li>
-					<b><tt>text:</tt></b>
-					<tt>"URL creada"</tt> en caso de éxito o la descripción del error.
-				</li>
-			</ul>
-		</div>
-
-		<center>
-			<button onclick="switch_api()" id="switch-api">Documentación de la API antigua.</button>
-		</center>
+		<ul>
+			<li>
+				<b><tt>url:</tt></b>
+				La url corta creada o la cadena vacía en caso de error.
+			</li>
+			<li>
+				<b><tt>success:</tt></b>
+				<tt>true</tt> en caso de éxito, <tt>false</tt> en caso de error.
+			</li>
+			<li>
+				<b><tt>errormsg:</tt></b>
+				La cadena vacía en caso de éxito o una descripción del error.
+			</li>
+		</ul>
 	</div>
 {% endblock %}
