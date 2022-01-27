@@ -4,8 +4,7 @@ const handle_input = document.getElementsByName("neosluger-handle")[0];
 
 function hide_disabled_handle_msg ()
 {
-	if (handle_input.disabled)
-		handle_input.placeholder = "";
+	handle_input.placeholder = "";
 }
 
 
@@ -33,6 +32,6 @@ function show_disabled_handle_msg ()
 }
 
 
-url_input.addEventListener("keyup", toggle_handle);
+url_input.addEventListener("input", toggle_handle);
 handle_input.addEventListener("mouseenter", show_disabled_handle_msg)
 handle_input.addEventListener("mouseleave", hide_disabled_handle_msg)
