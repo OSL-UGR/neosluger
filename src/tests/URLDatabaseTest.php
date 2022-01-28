@@ -36,14 +36,12 @@ final class URLDatabaseTest extends TestCase
 	}
 
 
-	public function test_a_new_url_object_can_be_created_from_a_database_result (): void
+	public function test_a_new_url_object_can_be_created_from_a_database_query (): void
 	{
-		$result     = Neosluger\URL_COLLECTION()->find(["handle" => $this->url->handle()]);
-		$url_fields = $result->toArray()[0];
-		$new_url    = URL::from_db_result($url_fields);
+		$new_url = URL::from_database($this->url->handle());
 
-		$this->assertEquals($url_fields["destination"], $new_url->destination());
-		$this->assertEquals($url_fields["handle"],      $new_url->handle());
+		$this->assertEquals($this->url->destination(), $new_url->destination());
+		$this->assertEquals($this->url->handle(),      $new_url->handle());
 	}
 
 

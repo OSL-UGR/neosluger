@@ -19,25 +19,6 @@ function find_page (string $uri): string
 }
 
 
-function get_url_from_database (string $handle): URL
-{
-	$result = Neosluger\URL_COLLECTION()->find(["handle" => $handle])->toArray();
-	$url    = URL::from_null();
-
-	if (count($result) > 0)
-		$url = URL::from_db_result($result[0]);
-
-	return $url;
-}
-
-
-function parse_request_uri_first_item (): string
-{
-	// Study this regex with https://regex101.com/. Absolutely recommended!
-	return preg_replace("/^\/([^\/?]+).*/", "$1", $_SERVER["REQUEST_URI"]);
-}
-
-
 function try_old_api_or_404 (): void
 {
 	if (str_starts_with($_SERVER["REQUEST_URI"], "/sluger.php"))
@@ -53,7 +34,7 @@ function try_old_api_or_404 (): void
 
 function main (): void
 {
-	$uri  = parse_request_uri_first_item();
+	$uri  = Neosluger\parse_request_uri_nth_item(1);
 	$path = find_page($uri);
 
 	if (!empty($path))
@@ -62,14 +43,24 @@ function main (): void
 	}
 	else
 	{
-		$url = get_url_from_database($uri);
+		$url = URL::from_database($uri);
 
 		if ($url->is_null())
+		{
 			try_old_api_or_404();
+		}
 		else
-			header("Location: " . $url->destination(), true,  301);
-	}
+		{
+			// Prevent the user from caching this page so that all accesses are logged
+			header('Expires: Fri, 25 Oct 1996 14:40:00 GMT'); // Happy birthday to me~
+			header('Cache-Control: no-store, no-cache, must-revalidate');
+			header('Cache-Control: post-check=0, pre-check=0', FALSE);
+			header('Pragma: no-cache');
 
+			$url->log_access();
+			header("Location: " . $url->destination(), true,  301);
+		}
+	}
 }
 
 

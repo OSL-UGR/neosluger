@@ -53,12 +53,15 @@ final class URL
 	}
 
 
-	public static function from_db_result (MongoDB\Model\BSONDocument $result): URL
+	public static function from_database (string $handle): URL
 	{
-		return new URL(
-			$result["destination"],
-			$result["handle"],
-		);
+		$result = Neosluger\URL_COLLECTION()->find(["handle" => $handle])->toArray();
+		$url    = URL::from_null();
+
+		if (count($result) > 0)
+			$url = new URL($result[0]["destination"], $result[0]["handle"]);
+
+		return $url;
 	}
 
 

@@ -25,20 +25,20 @@
 	<div class="tabs">
 		<button onclick="switch_tab(event, 'shortener')" id="current-tab-item">Acortador de enlaces</button>
 		<button onclick="switch_tab(event, 'qr')">Generador de códigos QR</button>
-		<button onclick="switch_tab(event, 'soon')">Próximamente...</button>
+		<button onclick="switch_tab(event, 'inspect')">Inspector de enlaces cortos</button>
 	</div>
 
 	<div id="shortener" class="visible">
-		<form action="url-result" method="post">
+		<form action="url-result" id="shortener-form" method="post">
 			<h4>Introduce el enlace que deseas acortar:</h4>
-			<input type="url" required name="neosluger-url" autofocus/>
+			<input type="url" name="neosluger-url" autofocus required/>
 
 			<h4>(Opcional) Elige el nombre de tu enlace corto:</h4>
-			<input type="text" disabled name="neosluger-handle"/>
+			<input type="text" name="neosluger-handle" disabled/>
 
 			<div class="form-bottom">
-				<button type="submit" id="gen-link">Generar enlace</button>
-				<a href="https://osl.ugr.es/" target="_blank" id="logo-osl-form">
+				<button type="submit">Generar enlace</button>
+				<a href="https://osl.ugr.es/" target="_blank" class="logo-osl-form">
 					<img src="/assets/logo-osl.svg" alt="Logo OSL">
 				</a>
 			</div>
@@ -46,20 +46,32 @@
 	</div>
 
 	<div id="qr" class="invisible">
-		<form action="qr-result" method="post">
+		<form action="qr-result" id="qr-form" method="post">
 			<h4>Introduce el enlace para el que deseas crear un QR:</h4>
-			<input type="qr-string" name="neosluger-qr-string" autofocus/>
+			<input type="qr-string" name="neosluger-qr-string" autofocus required/>
 
 			<div class="form-bottom">
-				<button type="submit" id="gen-qr">Generar QR</button>
-				<a href="https://osl.ugr.es/" target="_blank" id="logo-osl-form">
+				<button type="submit">Generar QR</button>
+				<a href="https://osl.ugr.es/" target="_blank" class="logo-osl-form">
 					<img src="/assets/logo-osl.svg" alt="Logo OSL">
 				</a>
 			</div>
 		</form>
 	</div>
 
-	<div id="soon" class="invisible"></div>
+	<div id="inspect" class="invisible">
+		<form action="inspect-result" id="inspect-form" method="post">
+			<h4>Introduce el enlace corto que deseas inspeccionar:</h4>
+			<input type="inspect-string" name="neosluger-inspect-string" autofocus required/>
+
+			<div class="form-bottom">
+				<button type="submit">Inspeccionar</button>
+				<a href="https://osl.ugr.es/" target="_blank" class="logo-osl-form">
+					<img src="/assets/logo-osl.svg" alt="Logo OSL">
+				</a>
+			</div>
+		</form>
+	</div>
 {% endblock %}
 
 

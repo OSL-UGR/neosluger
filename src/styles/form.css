@@ -79,7 +79,7 @@ input:not(:disabled):hover
 }
 
 
-#logo-osl-form
+.logo-osl-form
 {
 	align-items: center;
 	display: grid;

@@ -1,0 +1,51 @@
+{% extends "main.html" %}
+{% use "main-panel.html" %}
+
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="/styles/url-result.css">
+{% endblock %}
+
+
+{% block main_panel_title %}
+	{% if error %}
+		Enlace no reconocido
+	{% else %}
+		Estadísticas del enlace
+	{% endif %}
+{% endblock %}
+
+
+{% block main_panel_content %}
+	{% if error %}
+		El enlace para el que estás intentado inspeccionar no existe.
+		Si crees que se trata de un error, ponte en contacto con la entidad que te lo haya proporcionado e infórmalos.
+	{% else %}
+		<h2>
+			Dirección de destino:
+		</h2>
+
+		<a href="{{ url.destination() }}" target="_blank" id="destination">
+			{{ url.destination() }}
+		</a>
+
+		<p>
+			Este enlace fue creado el <b>{{ creation_date }}</b> a las <b>{{ creation_time }}</b>.
+			<br>
+			Desde entonces, ha sido utilizado <b>{{ accesses }}</b> veces.
+		</p>
+
+		<p>
+			Puedes usar el siguiente QR para acceder a él:
+		</p>
+
+		<a href="/{{ qr_path }}" download id="qr-img">
+			<img src="/{{ qr_path }}" alt="Código QR">
+		</a>
+
+		<a href="/{{ qr_path }}" download id="save-qr">
+			Descargar QR
+		</a>
+	{% endif %}
+{% endblock %}

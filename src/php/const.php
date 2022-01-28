@@ -22,6 +22,18 @@ namespace Neosluger
 	{
 		return MONGO->neosluger->urls;
 	}
+
+
+	function parse_request_uri_nth_item (int $n): string
+	{
+		/*
+		 * Study this regex with https://regex101.com/.
+		 * Example where REQUEST_URI is '/item/12345?always=ignored':
+		 * - n=1: Returns 'item'.
+		 * - n=2: Returns '12345'.
+		 */
+		return preg_replace("/^\/?([^\/?]+\/){".($n-1)."}([^\/?]+).*$/", "$2", $_SERVER["REQUEST_URI"]);
+	}
 }
 
 
