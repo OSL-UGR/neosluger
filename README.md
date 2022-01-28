@@ -48,6 +48,11 @@ chown -R "$USER":http src/
 chmod -R g+w src/
 ```
 
+## Benchmarking
+
+You can run `conf/benchmark.sh` to test the time spent in subsequent API calls.
+Run `conf/benchmark.sh --help` for more details.
+
 # Neosluger (Español)
 
 **Acortador de URLs de la Universidad de Granada.**
@@ -95,3 +100,8 @@ Puedes hacerlo con una orden similar a la siguiente:
 chown -R "$USER":http src/
 chmod -R g+w src/
 ```
+
+## Ejecución de *benchmarks*
+
+Puedes ejecutar `conf/benchmark.sh` para comprobar el tiempo utilizado en llamadas subsiguientes a la API.
+Ejecuta `conf/benchmark.sh --help` para más detalles.
