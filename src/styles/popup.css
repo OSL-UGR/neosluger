@@ -1,0 +1,28 @@
+.popup
+{
+	background-color: #393536;
+	border-radius: 9px;
+	color: #fff;
+	font-size: 14px;
+	left: calc(50% - 65px) !important;
+	opacity: 0;
+	padding: 8px 0;
+	position: absolute;
+	text-align: center;
+	transition: opacity .5s ease-out;
+	width: 130px;
+	z-index: 1;
+}
+
+
+.popup::before
+{
+	border-color: #393536 transparent transparent transparent;
+	border-style: solid;
+	border-width: 5px;
+	content: "";
+	left: 50%;
+	margin-left: -5px;
+	position: absolute;
+	top: 100%;
+}

@@ -1,0 +1,38 @@
+#qr-img
+{
+	align-items: center;
+	bottom: -40px;
+	clip-path: polygon(20px 20px, calc(100% - 20px) 20px, calc(100% - 20px) calc(100% - 20px), 20px calc(100% - 20px));
+	display: grid;
+	grid-template-rows: min-content;
+	image-rendering: pixelated;
+	justify-items: center;
+	overflow: hidden;
+	position: relative;
+	top: -10px;
+}
+
+
+#save-qr
+{
+	background-color: #F2F2F2;
+	border-radius: 10px;
+	border: 1px solid #A8A8A8;
+	color: black;
+	cursor: pointer;
+	margin: 4px;
+	padding: 3px 7px;
+	position: relative;
+	text-align: center;
+	text-decoration: none;
+	top: -20px;
+}
+
+
+#save-qr:hover
+{
+	border-radius: 12px;
+	box-shadow: 0 0 4px #A8A8A8;
+	margin: 0px;
+	padding: 7px 11px;
+}

@@ -1,3 +1,9 @@
+center
+{
+	margin-bottom: 0;
+}
+
+
 h2
 {
 	margin-bottom: 0;
@@ -31,42 +37,15 @@ p
 }
 
 
-#qr-img
-{
-	image-rendering: pixelated;
-}
-
-
-#save-qr
-{
-	background-color: #F2F2F2;
-	color: black;
-	border-radius: 10px;
-	border: 1px solid #A8A8A8;
-	cursor: pointer;
-	margin: 10px;
-	text-align: center;
-	text-decoration: none;
-	padding: 3px 7px;
-}
-
-
-#save-qr:hover
-{
-	border-radius: 12px;
-	box-shadow: 0 0 4px #A8A8A8;
-	margin: 6px;
-	padding: 7px 11px;
-}
-
-
 #short-url
 {
+	align-items: center;
 	color: blue;
-	display: block;
+	cursor: pointer;
+	display: grid;
 	font-weight: bold;
 	font-size: 20px;
-	margin-bottom: 10px;
+	margin-bottom: 0;
 	text-decoration: none;
 }
 
@@ -74,4 +53,14 @@ p
 #short-url:hover
 {
 	text-decoration: underline;
+}
+
+
+#to-copy
+{
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	width: 450px;
+	word-wrap: break-word;
 }

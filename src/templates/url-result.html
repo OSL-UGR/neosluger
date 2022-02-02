@@ -4,7 +4,14 @@
 
 {% block stylesheets %}
 	{{ parent() }}
-	<link rel="stylesheet" href="/styles/url-result.css">
+	<link rel="stylesheet" href="/styles/popup.css">
+	<link rel="stylesheet" href="/styles/qr.css">
+	<link rel="stylesheet" href="/styles/result.css">
+{% endblock %}
+
+
+{% block head %}
+	<script type="text/javascript" src="/js/click-copy.js" defer></script>
 {% endblock %}
 
 
@@ -39,11 +46,13 @@
 	{% else %}
 		<p>
 			Gracias por usar nuestro servicio.
-			Aquí tienes tu enlace corto:
+			Aquí tienes tu enlace corto.
 		</p>
+		<center>Pulsa sobre él para copiarlo:</center>
 
-		<a href="{{ url.destination() }}" target="_blank" id="short-url">
-			{{ url.full_handle() }}
+		<a id="short-url" onclick="copy_on_click('to-copy', 'url-popup')">
+			<div id="to-copy">{{ url.full_handle() }}</div>
+			<div id="url-popup" class="popup">¡Enlace copiado!</div>
 		</a>
 
 		<p>
@@ -58,12 +67,12 @@
 			También puedes usar este código QR para acceder al enlace corto:
 		</p>
 
-		<a href="/{{ qr_path }}" download id="save-qr">
-			Descargar QR
-		</a>
-
 		<a href="/{{ qr_path }}" download id="qr-img">
 			<img src="/{{ qr_path }}" alt="Código QR">
+		</a>
+
+		<a href="/{{ qr_path }}" download id="save-qr">
+			Descargar QR
 		</a>
 	{% endif %}
 {% endblock %}

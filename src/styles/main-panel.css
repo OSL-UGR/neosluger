@@ -39,7 +39,8 @@ main
 	border-radius: 30px;
 	box-shadow: 1px 2px 1px rgba(0, 0, 0, 0.3), -1px 2px 1px rgba(0, 0, 0, 0.3);
 	display: grid;
-	grid-template-rows: max-content max-content max-content;
+	grid-template-columns: 100%;
+	grid-template-rows: max-content;
 	margin: auto;
 	padding: 20px;
 	width: 500px;

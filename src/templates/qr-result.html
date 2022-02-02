@@ -4,31 +4,32 @@
 
 {% block stylesheets %}
 	{{ parent() }}
-	<link rel="stylesheet" href="/styles/url-result.css">
+	<link rel="stylesheet" href="/styles/qr.css">
+	<link rel="stylesheet" href="/styles/result.css">
 {% endblock %}
 
 
 {% block main_panel_title %}
-	Generador de QR
+	QR generado con éxito
 {% endblock %}
 
 
 {% block main_panel_content %}
 	<p>
 		Gracias por usar nuestro servicio.
-		Aquí tienes tu QR:
+		Aquí tienes tu código QR:
 	</p>
-
-	<a href="/{{ qr_path }}" download id="save-qr">
-		Descargar QR
-	</a>
 
 	<a href="/{{ qr_path }}" download id="qr-img">
 		<img src="/{{ qr_path }}" alt="Código QR">
 	</a>
 
+	<a href="/{{ qr_path }}" download id="save-qr">
+		Descargar
+	</a>
+
 	<p>
-		Este código redirigirá a todos sus usuarios a la siguiente dirección:
+		Cuando escanees este código te llevará a la siguiente dirección:
 	</p>
 
 	<a href="{{ destination }}" target="_blank" id="destination">
