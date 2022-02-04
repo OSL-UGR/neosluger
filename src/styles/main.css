@@ -131,6 +131,25 @@ main
 }
 
 
+#report
+{
+	position: fixed;
+	top: auto;
+	bottom: 0px;
+	left: auto;
+	right: 0px;
+	padding: 5px 10px;
+	font-size: 15px;
+	text-decoration: none;
+	color: black;
+}
+
+#report:hover
+{
+	text-decoration: underline;
+}
+
+
 @media (orientation: landscape) and (min-width: 640px)
 {
 	header #hamburger-menu

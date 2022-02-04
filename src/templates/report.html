@@ -1,0 +1,32 @@
+{% extends "main.html" %}
+{% use "main-panel.html" %}
+
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="/styles/404.css">
+{% endblock %}
+
+
+{% block main_panel_title %}Reportar un problema{% endblock %}
+
+
+{% block main_panel_content %}
+	<h2>
+		Problemas con un enlace:
+	</h2>
+
+	<p>
+		Si has creado un enlace y quieres que modifiquemos su nombre, el sitio web al que redirige o necesitas que lo eliminemos directamente, <a href="https://osl.ugr.es/contacto/">ponte en contacto con nosotros</a>.
+		Estaremos encantados de ayudarte.
+	</p>
+
+	<h2>
+		Problemas técnicos con la web o la API:
+	</h2>
+
+	<p>
+		Para cualquier fallo en la funcionalidad o propuesta de mejora, <a href="https://osl.ugr.es/contacto/">ponte en contacto con nosotros</a> y revisaremos tu solicitud lo antes posible.
+		Si sabes manejar Git, ábrenos una <i>issue</i> o una <i>merge request</i> en <a href="https://github.com/OSL-UGR/neosluger">el respositorio de Neosluger</a>.
+	</p>
+{% endblock %}
