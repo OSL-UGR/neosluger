@@ -63,16 +63,23 @@
 			{{ url.destination() }}
 		</a>
 
-		<p>
-			También puedes usar este código QR para acceder al enlace corto:
-		</p>
+		{% if qr_path %}
+			<p>
+				También puedes usar este código QR para acceder al enlace corto:
+			</p>
 
-		<a href="/{{ qr_path }}" download id="qr-img">
-			<img src="/{{ qr_path }}" alt="Código QR">
-		</a>
+			<a href="/{{ qr_path }}" download id="qr-img">
+				<img src="/{{ qr_path }}" alt="Código QR">
+			</a>
 
-		<a href="/{{ qr_path }}" download id="save-qr">
-			Descargar QR
-		</a>
+			<a href="/{{ qr_path }}" download id="save-qr">
+				Descargar QR
+			</a>
+		{% else %}
+			<p>
+				Un error en nuestro servicio nos ha impedido generar el QR asociado a tu enlace.
+				Por favor, <a href="/report">reporta el problema</a> para que lo solucionemos.
+			</p>
+		{% endif %}
 	{% endif %}
 {% endblock %}

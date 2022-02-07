@@ -21,7 +21,16 @@ function generate_qr (string $qr_string)
 		"pngCompression"   => 9,
 	]);
 
-	(new QRCode($qr_options))->render($qr_string, $qr_path);
+	try
+	{
+		(new QRCode($qr_options))->render($qr_string, $qr_path);
+	}
+	catch (Exception $e)
+	{
+		error_log($e->__toString());
+		$qr_path = "";
+	}
+
 	return $qr_path;
 }
 
