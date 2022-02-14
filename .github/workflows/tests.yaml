@@ -1,0 +1,25 @@
+name: PHPUnit Tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Start MongoDB
+        uses: supercharge/mongodb-github-action@1.7.0
+        with:
+          mongodb-db: neosluger
+
+      - name: Install composer dependencies
+        working-directory: src
+        run: |
+          composer install
+
+      - name: Run PHPUnit tests suites
+        working-directory: src
+        run: |
+          vendor/bin/phpunit tests
