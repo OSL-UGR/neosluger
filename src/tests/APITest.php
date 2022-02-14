@@ -6,10 +6,7 @@ require_once("php/const.php");
 require_once("php/api.php");
 
 
-use PHPUnit\Framework\TestCase;
-
-
-final class APITest extends TestCase
+final class APITest extends PHPUnit\Framework\TestCase
 {
 	private string $url    = "https://ugr.es/";
 	private string $handle = "my-handle_01";

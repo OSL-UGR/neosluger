@@ -5,10 +5,7 @@ require_once("vendor/autoload.php");
 require_once("php/url.php");
 
 
-use PHPUnit\Framework\TestCase;
-
-
-final class URLTest extends TestCase
+final class URLTest extends PHPUnit\Framework\TestCase
 {
 	private string $destination_text = "https://www.ugr.es/";
 	private URL $url;

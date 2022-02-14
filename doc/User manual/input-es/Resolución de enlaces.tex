@@ -1,0 +1,86 @@
+\chapter{Resolución de enlaces}\label{resolucion-de-enlaces}
+
+\section{Fichero de configuración}\label{fichero-de-configuracion}
+
+El fichero de configuración del servidor instalado en \S\ref{ficheros-de-configuracion} define los primeros pasos que el servidor debe realizar para responder a las peticiones de los usuarios.
+Cada vez que un usuario intenta acceder al servicio, lo hace con una petición HTTPS a \url{https://sl.ugr.es/}.
+Cuando el servidor recibe una petición, abre el bloque \texttt{location /} en el fichero de configuración y busca dentro una página que servir al usuario para responder a su petición:
+
+\begin{lstlisting}
+location / {
+	try_files $uri /php/resolver.php?$args;
+	index pages/index.php;
+}
+\end{lstlisting}
+
+La directiva \texttt{try\_files} intenta encontrar una página correspondiente a la URI pedida.
+Por eje,plo, si el usuario pide \texttt{https://sl.ugr.es/licence}, intentará buscar una página que pueda servirle para la URI \texttt{licence}.
+Se garantiza que \texttt{\$uri} va a fallar, ya que todas las páginas se encuentran en el directorio \texttt{pages/}, por lo que cada vez que el usuario pida una página será redirigido a \texttt{/php/resolver.php}.
+El sufijo \texttt{?\$args} indica que todos los argumentos pasados junto con la URI serán pasados al resolvedor para que puedan ser utilizados en las páginas a las que redirija.
+Discutiremos el resolvedor con más profundidad en \S\ref{el-script-de-resolucion}.
+La directiva \texttt{index} permite al servidor saber qué cargar cuando el usuario accede al servidor directamente, es decir, \url{sl.ugr.es}.
+
+El bloque \texttt{location \mysim\char`\\.php\$} hace lo mismo que el anterior, pero en su lugar intenta cargar \texttt{\$fastcgi\_script\_name}.
+Esta directiva se usa en lugar de \texttt{\$uri} porque \texttt{fastcgi} es el protocolo que carga el servicio PHP.
+
+Por último, la directiva \texttt{error\_page} redirige todos los \texttt{404} a \texttt{/pages/404.php}.
+En teoría, esta directiva no hace falta porque el resolvedor envía a los usuarios perdidos a la página 404, pero nadie va a quejarse por un poco de resiliencia y cargar una página 404 personalizada es mucho más elegante que servir la página por defecto.
+
+\begin{lstlisting}
+error_page 404 /pages/404.php;
+\end{lstlisting}
+
+\section{El \textit{script} de resolución}\label{el-script-de-resolucion}
+
+Todas las peticiones se reenvían a este \textit{script}, que interpreta la URI y encuentra la mejor página para servir al usuario o lo redirige desde un enlace corto.
+El \textit{script} fue escrito por razones de escalabilidad dados los requisitos de Neosluger:
+
+\begin{itemize}
+\item
+	El usuario debe poder acceder a las páginas del sitio sin tener que saber su ruta absoluta.
+	Por ejemplo, \texttt{sl.ugr.es/man} debe poder servir \texttt{pages/manual.php}.
+\item
+	El usuario debe poder usar un enlace corto para ser redirigido automáticamente y añadir \texttt{stats/} antes del identificador del enlace para inspeccionarlo y ver sus estadísticas de uso.
+\item
+	El usuario no debe poder acceder a las diferentes páginas desde su ubicación en el árbol de directorios del servidor.
+	Esto mejora la seguridad del servicio.
+\item
+	La API antigua debe seguir funcionando aunque siempre lance un error.
+\end{itemize}
+
+Si las URIs fueran resueltas por el fichero de configuración, cada vez que se añadiese una nueva pagina al servicio habría que modificarlo y se abarrotaría muy rápido.
+En su lugar, hacemos que el \textit{script} de resolución gestione esto por nosotros y compruebe si el usuario está accediendo a una página del servicio o quiere ser redirigido desde un enlace corto.
+
+El resolvedor sigue los siguientes pasos para servirle al usuario la página que espera:
+
+\begin{lstlisting}
+Interpretar la URI recibida por el servidor
+
+si encuentra una página coincidente en pages/*php
+	mostrar la página
+en otro caso, si la URI NO es de un enlace corto disponible en la base de datos:
+	si se refiere a la API antigua:
+		mostrar el mensaje de error de obsolescencia de la API
+	en otro caso
+		mostrar la página de 404
+en otro caso, si el identificador se encuentra en la base de datos:
+	Impedir al usuario almacenar la página en caché para registrar todos sus accesos
+	Registrar el acceso al enlace
+	Redirigir al usuario a su destino
+\end{lstlisting}
+
+El orden de los caminos es un poco extraño porque para comprobar si una URL no se encuentra en la base de datos hacemos una llamada a \texttt{\$url->is\_null()} y las condiciones de los \texttt{if} están escritas de forma que no contengan negaciones, de forma que sea más fácil razonarlas.
+
+\section{Muestra de las páginas}\label{muestra-de-las-paginas}
+
+Todas las páginas en \texttt{pages/*.php} \textbf{deben} contener una función \texttt{render} que actúe como la función principal de la página y llamarla al final del fichero.
+De esta forma, cuando el resolvedor las incluya, la función \texttt{render} se llama automáticamente por la página.
+
+Las páginas se componen usando Twig, un motor de plantillas que permite a Neosluger reutilizar código de las interfaces y lo hace mucho más fácil de mantener.
+Las directivas de Twig se espefician dentro de bloques \texttt{\{\% \%\}} y \texttt{\{\{ \}\}}.
+El primero tipo de bloques se utiliza para palabras reservadas como \texttt{[end]block}, \texttt{[end]if} y para llamar a las funciones miembro de los objetos como \texttt{url.is\_null()} (fíjate en el operador \texttt{.} en lugar de \texttt{->}).
+El segundo tipo de bloques expande el valor entre las llaves.
+Por eejemplo, si tenemos la variable \texttt{\$name = "Taxo"}, \texttt{<p>Mi nombre es \{\{ name \}\}.</p>} se expandirá a \texttt{<p>Mi nombre es Taxo.</p>}
+
+Para mostrar una página hay que llamar a la función \texttt{Twig->render()} mediante un \texttt{echo}.
+Esta función recibe la ruta del fichero HTML que debe mostrar y una lista asociativa de objetos cuyos nombres son las variables utilizadas por la plantilla.

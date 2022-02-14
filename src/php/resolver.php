@@ -7,6 +7,11 @@ require_once($_SERVER['DOCUMENT_ROOT']."/php/url.php");
 require_once($_SERVER['DOCUMENT_ROOT']."/php/const.php");
 
 
+/** @fn find_page (string $uri): string
+  * @brief Finds the file `$uri.php` in `pages/*.php`.
+  * @return $result: Path to the file if found, empty string otherwise
+  */
+
 function find_page (string $uri): string
 {
 	$path   = $_SERVER['DOCUMENT_ROOT']."/pages/".$uri.".php";
@@ -18,6 +23,15 @@ function find_page (string $uri): string
 	return $result;
 }
 
+
+/** @fn try_old_api_or_404 (): void
+  * @brief Redirects the user to the 404 page if the request URI is not for the old API.
+  *
+  * This is the final step in resolving the URI. Instead of throwing a 404 error
+  * when no other pages can be found, we first check if the user is trying to
+  * call the old API and serve a custom error instead. This step can be skipped
+  * and just serve the error page if calls to the old API stop being maintained.
+  */
 
 function try_old_api_or_404 (): void
 {
@@ -31,6 +45,10 @@ function try_old_api_or_404 (): void
 		include($_SERVER['DOCUMENT_ROOT']."/pages/404.php");
 }
 
+
+/** @fn main (): void
+  * @brief Resolves the URI and serves the user with the page they're looking for.
+  */
 
 function main (): void
 {

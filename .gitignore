@@ -1,6 +1,14 @@
 cache/
 vendor/
 
+*.aux
 *.lock
+*.log
+*.out
+*.pdf
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
 
 benchmark_result

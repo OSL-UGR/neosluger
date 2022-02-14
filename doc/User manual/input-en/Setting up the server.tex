@@ -1,0 +1,97 @@
+\chapter{Setting up the server}\label{setting-up-the-server}
+
+\section{Configuration files}\label{configuration-files}
+
+Neosluger is configured to run in an Nginx server.
+It can be configured to run with Apache, but this is not officially supported.
+The server configuration file is available in Neosluger's repository \texttt{conf/} directory and is named \texttt{neosluger.conf}.
+To install it, add it to \texttt{/etc/nginx/sites-enabled/neosluger.conf} and modify it to match you system's settings as required.
+The default directory to host Neosluger is \texttt{/var/www/neosluger/src}.
+If you decide to place it in any other directory, you must change the \texttt{root} directory to match the new path.
+Finally, add the following directive in \texttt{/etc/nginx/nginx.conf}:
+
+\begin{lstlisting}[language=sh]
+http {
+	# Add this include directive in the body of the already existing http block:
+	include /etc/nginx/sites-enabled/neosluger.conf;
+}
+\end{lstlisting}
+
+% TODO: Ubuntu shenanigans
+
+\section{Dependencies}\label{dependencies}
+
+Neosluger requires \texttt{php}, \texttt{php-gd}, \texttt{php-fpm} \texttt{mongodb} and \texttt{php-mongodb} to run.
+You can easily install it with your distro's package manager, but bear in mind that the packages may have different names depending on the repository you are accessing.
+After installing PHP, install \texttt{composer} to manage Neosluger's internal dependencies.
+The latest version at the time of writing is \texttt{v2.2.6} and it is the version that has been used to develop Neosluger.
+If the version provided by your package manager is lower than \texttt{v2.0} or throws warnings when installing the internal dependencies, reinstall \texttt{composer} manually following the official instructions\footnote{
+	\url{https://getcomposer.org/download/}
+}.
+
+To install Neosluger's internal dependencies, move to the \texttt{src/} directory and install them with \texttt{composer}:
+
+\begin{lstlisting}[language=sh]
+cd src/
+composer install
+\end{lstlisting}
+
+This will install the latest versions of the dependencies.
+To install them with the latests tested versions, copy the \texttt{composer.lock} file inside \texttt{src/}, next to where \texttt{composer.json} is.
+This file contains metadata about the latest update so that running \texttt{composer install} will download the correct dependencies' versions to match the locked system.
+In short, if it works in my machine, I can send you my lock file to make it work in yours too.
+
+\section{Setting up the database}\label{setting-up-the-database}
+
+Neosluger stores all its data in a local MongoDB database.
+Its address is defined in \texttt{php/const.php} and points to the local database set up by the MongoDB service.
+You can change it if your instance uses a database in a different location.
+When the database is up, run \texttt{conf/migrate.php} to set up the database indices.
+
+\subsection{Benchmarking}\label{benchmarking}
+
+You can run \texttt{conf/benchmark.sh} to test the time spent in subsequent API calls.
+Run \texttt{conf/benchmark.sh --help} for more details.
+
+\section{Starting the service}\label{starting-the-service}
+
+With the server correctly configured and all dependencies installed, you can now start the \texttt{systemd} services required to run Neosluger:
+
+\begin{lstlisting}[language=sh]
+sudo systemctl start nginx php-fpm mongodb
+\end{lstlisting}
+
+You can also use the following command to automatically report errors:
+
+\begin{lstlisting}[language=sh]
+sudo systemctl restart nginx php-fpm mongodb || sudo systemctl status nginx
+\end{lstlisting}
+
+After this, you should be able to access the server with the IP address configured by Nginx.
+
+\section{Cache directory}\label{cache-directory}
+
+QR codes are saved in a cache directory to be presented to the user and be downloaded by them.
+Its route is set in \texttt{pages/url-result.php} and defaults to \texttt{src/cache/qr/}.
+You may be forbidden from writing into this directory if Neosluger is hosted in \texttt{/usr/}.
+If that is the case, please refer to this ServerFault answer: \url{https://serverfault.com/a/997496}.
+
+To use the directory, you need to give the user running PHP permission to write into it.
+Neosluger will create the cache directory if it does not exist, so you should give write permissions to \texttt{src/}.
+This may look like the following:
+
+\begin{lstlisting}[language=sh]
+chown -R "$USER":http src/
+chmod -R g+w src/
+\end{lstlisting}
+
+\section{Testing the service}\label{testing-the-service}
+
+Once Neosluger is running in your server, you can run its test suites using PHPUnit to ensure that the system won't throw any errors at runtime:
+
+\begin{lstlisting}[language=sh]
+cd src/
+vendor/bin/phpunit tests
+\end{lstlisting}
+
+The test suites also acts as a complete reference for any developer who wishes to extend the system.

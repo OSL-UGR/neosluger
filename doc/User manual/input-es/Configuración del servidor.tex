@@ -1,0 +1,97 @@
+\chapter{Configuración del servidor}\label{configuracion-del-servidor}
+
+\section{Ficheros de configuración}\label{ficheros-de-configuracion}
+
+Neosluger está configurado para ejecutarse en un servidor Nginx.
+Se puede configurar para usarlo con Apache, pero esta opción no tiene soporte oficial.
+Puedes encontrar la configuración del servidor en el repositorio bajo el nombre de \texttt{neosluger.conf} dentro del directorio \texttt{conf/}.
+Para instalarlo, debes copiarlo en \texttt{/etc/nginx/sites-enabled/neosluger.conf} modificar lo que necesites para que concuerde con la configuración de tu sistema.
+El directorio por defecto para alojar Neosluger es \texttt{/var/www/neosluger/src}.
+Si decides colocarlo en cualquier otro directorio, debes modificar el directorio \texttt{root} para que concuerde con la ruta nueva.
+Por último, añade la siguiente directiva a \texttt{/etc/nginx/nginx.conf}:
+
+\begin{lstlisting}[language=sh]
+http {
+	# Añade esta directiva include en el cuerpo del bloque http ya existente:
+	include /etc/nginx/sites-enabled/neosluger.conf;
+}
+\end{lstlisting}
+
+% TODO: Ubuntu shenanigans
+
+\section{Dependencias}\label{dependencias}
+
+Neosluger requiere los paquetes \texttt{php}, \texttt{php-gd}, \texttt{php-fpm} \texttt{mongodb} and \texttt{php-mongodb} para funcionar.
+Puedes instalarlos fácilmente con el gestor de paquetes de tu distro, pero ten en cuenta que los paquetes pueden diferir en el nombre dependiendo del repositorio al que estés accediendo.
+Tras instalar PHP, instala \texttt{composer} para gestionar las dependencias internas de Neosluger.
+La última versión a fecha de redacción es \texttt{v2.2.6} y es la versión que se ha utilizado para desarrollar Neosluger.
+Si la versión provista por tu gestor de paquetes es inferior a \texttt{v2.0} o lanzar \textit{warnings} durante la instalación, reinstala \texttt{composer} manualmente siguiendo las instrucciones oficiales\footnote{
+	\url{https://getcomposer.org/download/}
+}.
+
+Para instalar las dependencias internas de Neosluger, muévete al directorio \texttt{src/} e instálalas con \texttt{composer}:
+
+\begin{lstlisting}[language=sh]
+cd src/
+composer install
+\end{lstlisting}
+
+Esto instalará la última versión de las dependencias.
+Para instalarlas con las últimas versiones probadas copia el fichero \texttt{composer.lock} dentro de \texttt{src/} junto a \texttt{composer.json}.
+Este fichero contiene metadatos sobre la última actualización, de forma que al ejecutar \texttt{composer install} se descargarán las versiones correctas de las dependencias para que coincidan con el sistema bloqueado.
+En resumen, si funciona en mi máquina, puedo enviarte mi fichero \texttt{lock} para que también funcione en la tuya.
+
+\section{Configuración de la base de datos}\label{configuración-de-la-base-de-datos}
+
+Neosluger guarda todos sus datos en una base de datos MongoDB.
+Su dirección está definida en \texttt{php/const.php} y apunta a la base de datos local iniciada por el servicio de MongoDB.
+Puedes modificarla si tu instancia utiliza una base de datos en una ubicación diferente.
+Cuando la base de datos esté funcionando, ejecuta \texttt{conf/migrate.php} para configurar los índices.
+
+\subsection{\textit{Benchmarks}}\label{benchmarks}
+
+Puedes ejecutar \texttt{conf/benchmark.sh} para probar el tiempo utilizado en llamadas subsguientes a la API.
+Ejecuta \texttt{conf/benchmark.sh --help} para más detalles.
+
+\section{Inicio del servicio}\label{inicio-del-servicio}
+
+Con el servidor correctamente configurado y todas las dependencias instaladas puedes iniciar los servicios de \texttt{systemd} requeridos para ejecutar Neosluger:
+
+\begin{lstlisting}[language=sh]
+sudo systemctl start nginx php-fpm mongodb
+\end{lstlisting}
+
+También puedes usar la siguiente orden para reportar errores automáticamente:
+
+\begin{lstlisting}[language=sh]
+sudo systemctl restart nginx php-fpm mongodb || sudo systemctl status nginx
+\end{lstlisting}
+
+Tras esto, deberías poder acceder al servidor con la dirección IP configurada por Nginx.
+
+\section{Directorio de caché}\label{directorio-de-cache}
+
+Los códigos QR se almacenan en un directorio de caché para presentarlos al usuario y que éste los descargue.
+Su ruta está definida en \texttt{pages/url-result.php} y apunta por defecto a \texttt{src/cache/qr/}.
+Puede que tengas prohibido escribir en este directorio si Neosluger está alojado en \texttt{/usr/}.
+Si éste es el caso, échale un vistazo a esta respuesta de ServerFault \url{https://serverfault.com/a/997496}.
+
+Para usar el directorio necesitas darle al usuario ejecutando PHP permisos de escritura.
+Neosluger creará el directorio de caché si no existe, así que deberías darle los permisos en \texttt{src/}.
+Puedes hacerlo de la siguiente forma:
+
+\begin{lstlisting}[language=sh]
+chown -R "$USER":http src/
+chmod -R g+w src/
+\end{lstlisting}
+
+\section{Pruebas sobre el servicio}\label{pruebas-sobre-el-servicio}
+
+Cuando Neosluger esté ejecutándose en tu servidor, puedes ejecutar las pruebas usando PHPUnit para asegurarte de que el sistema no te lanzará errores en tiempo de ejecución:
+
+\begin{lstlisting}[language=sh]
+cd src/
+vendor/bin/phpunit tests
+\end{lstlisting}
+
+Las pruebas también sirven como una referencia completa para cualquier desarrollador que desee extender el sistema.

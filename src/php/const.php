@@ -5,6 +5,11 @@ namespace Neosluger
 {
 	use MongoDB\Client as Mongo;
 
+	/*
+	 * Edit these constants to modify Neosluger's behaviours in your server.
+	 * You MUST at least change SITE_ADDRESS to your server address.
+	 */
+
 	const HASH_LENGTH    = 8;
 	const MAX_HANDLE_LEN = 50;
 	const MIN_HANDLE_LEN = 5;
@@ -24,14 +29,17 @@ namespace Neosluger
 	}
 
 
+	/** @fn parse_request_uri_nth_item (int $n): string
+	  * @brief Gets a portion of an URI.
+	  *
+	  * Study this regex with https://regex101.com/.
+	  * Example where REQUEST_URI is '/item/12345?always=ignored':
+	  * - n=1: Returns 'item'.
+	  * - n=2: Returns '12345'.
+	  */
+
 	function parse_request_uri_nth_item (int $n): string
 	{
-		/*
-		 * Study this regex with https://regex101.com/.
-		 * Example where REQUEST_URI is '/item/12345?always=ignored':
-		 * - n=1: Returns 'item'.
-		 * - n=2: Returns '12345'.
-		 */
 		return preg_replace("/^\/?([^\/?]+\/){".($n-1)."}([^\/?]+).*$/", "$2", $_SERVER["REQUEST_URI"]);
 	}
 }

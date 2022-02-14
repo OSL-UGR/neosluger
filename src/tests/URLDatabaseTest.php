@@ -5,10 +5,7 @@ require_once("vendor/autoload.php");
 require_once("php/url.php");
 
 
-use PHPUnit\Framework\TestCase;
-
-
-final class URLDatabaseTest extends TestCase
+final class URLDatabaseTest extends PHPUnit\Framework\TestCase
 {
 	private URL $url;
 

@@ -1,0 +1,40 @@
+\documentclass[10pt, a4paper]{aqademic}
+
+\usepackage[english]{babel}
+	\selectlanguage{english}
+
+% Document packages
+
+\usepackage[type=CC, modifier=by-nc-sa, version=4.0]{doclicense}
+\usepackage{graphicx}
+	\graphicspath{{img}}
+\usepackage{hyperref}
+\usepackage{url}
+
+% Custom commands
+
+\def\mysim{\raise.17ex\hbox{$\scriptstyle\mathtt{\sim}$}}
+
+% Document settings
+
+\author{Atanasio José Rubio Gil}
+\title{Neosluger}
+
+% Document composition
+
+\begin{document}
+
+\AqMaketitle[%
+	author   = Atanasio José Rubio Gil,
+	cover    = logo-ugr.png,
+	org      = Office for Free Software,
+	subtitle = User manual,
+	url      = https://github.com/OSL-UGR/neosluger
+]
+\tableofcontents
+
+\input{input-en/The service}
+\input{input-en/Setting up the server}
+\input{input-en/Resolving links}
+
+\end{document}

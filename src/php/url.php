@@ -4,6 +4,10 @@
 require_once("const.php");
 
 
+/** @class URL
+  * @brief Representation of a shortened URL.
+  */
+
 final class URL
 {
 	const HASH_LENGTH    = Neosluger\HASH_LENGTH;
@@ -21,6 +25,17 @@ final class URL
 	private string $destination = "";
 	private string $handle = "";
 
+
+	/** @fn private function __construct (string $destination, string $handle = "", string $is_null = URL::URL_NOT_NULL)
+	  * @brief private general constructor
+	  *
+	  * The reason for it being private is that PHP doesn't overload functions,
+	  * so a reasonable way of having multiple constructors is going the Rust way
+	  * and having many static from_* functions that construct an URL depending
+	  * on the context. This lets the class have the flexibility of one with
+	  * overloaded constructors as well as being more explicit about the context
+	  * each instanced is constructed in, making it more maintainable.
+	  */
 
 	private function __construct (string $destination, string $handle = "", string $is_null = URL::URL_NOT_NULL)
 	{
@@ -53,6 +68,16 @@ final class URL
 	}
 
 
+	/** @fn public static function from_database (string $handle): URL
+	  * @brief Constructs an URL from the corresponding fields stored in the database
+	  * @return: A valid URL or a null one if it doesn't exist
+	  *
+	  * URLs in the database are indexed by their handle, so we use it to find it
+	  * in the database and construct the object from the result. This alleviates
+	  * the responsibility of searching the database from the callers and exposes
+	  * less intricate types to te system.
+	  */
+
 	public static function from_database (string $handle): URL
 	{
 		$result = Neosluger\URL_COLLECTION()->find(["handle" => $handle])->toArray();
@@ -64,6 +89,17 @@ final class URL
 		return $url;
 	}
 
+
+	/** @fn public static function from_form (string $destination, string $handle = "")
+	  * @brief Constructs an URL from the fields of the web form or the API
+	  * @return: A valid URL or a null one the form contains errors
+	  *
+	  * This function makes various checks to avoid entering invalid URLs in the
+	  * databse. First, the handle must be either empty or between MIN_HANDLE_LEN
+	  * and MAX_HANDLE_LEN. If it's valid, there must not exist an URL with thes
+	  * same handle in the database. If it's unique, we create an URL and add it
+	  * to the database.
+	  */
 
 	public static function from_form (string $destination, string $handle = "")
 	{
@@ -90,6 +126,13 @@ final class URL
 		return $new_url;
 	}
 
+
+	/** @fn public static function from_null ()
+	  * @brief Constructs a null URL (one with a an empty destination)
+	  *
+	  * This function is used to construct URLS by default. If the relevant
+	  * constructor can't create an URL object, a null one is returned instead.
+	  */
 
 	public static function from_null ()
 	{

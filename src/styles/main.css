@@ -36,6 +36,7 @@ header
 }
 
 
+/* TODO: Fix horizontal menu broken after opening and closing vertical menu */
 header #menu-items
 {
 	display: grid;

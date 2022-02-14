@@ -1,0 +1,86 @@
+\chapter{Resolving links}\label{resolving-links}
+
+\section{Server configuration}\label{server-configuration}
+
+The server configuration file installed in \S\ref{configuration-files} defines the first steps the server has to take to respond to the users' petitions.
+Every time a user tries to access the service, they do it with an HTTPS petition to \url{https://sl.ugr.es/}.
+When the server receives a petition, it opens the \texttt{location /} block in the configuration file and looks inside it to find a page they can serve the user to respond to their petition:
+
+\begin{lstlisting}
+location / {
+	try_files $uri /php/resolver.php?$args;
+	index pages/index.php;
+}
+\end{lstlisting}
+
+The \texttt{try\_files} directive tries to find a find a page corresponding to the requested URI.
+For example, if the user asks for \texttt{https://sl.ugr.es/licence}, it will try to find a page that can be served for the URI \texttt{licence}.
+It is guaranteed that \texttt{\$uri} will fail, since all pages are inside the \texttt{pages/} directory, which means that every time the user asks for a page they will be redirected to \texttt{/php/resolver.php}.
+The \texttt{?\$args} suffix means that any arguments passed along with the URI will be passed to the resolver so that they can be used by the pages it redirects them to.
+We will discuss the resolver with greater depth in \S\ref{the-resolver-script}.
+The \texttt{index} directive lets the server know what to load when the user accesses the service directly, i.e. \url{sl.ugr.es}.
+
+The \texttt{location \mysim\char`\\.php\$} block does the same as the previous block, but tries \texttt{\$fastcgi\_script\_name} instead.
+This directive is used instead of \texttt{\$uri} because \texttt{fastcgi} is the protocol that effectively loads the PHP service.
+
+Finally, the \texttt{error\_page} directive redirects all \texttt{404} errors to \texttt{/pages/404.php}.
+In theory, this directive is not required because the resolver sends lost users to the 404 page, but nobody is going to complain about a little resilience and loading the custom 404 page is much more elegant than serving the default one.
+
+\begin{lstlisting}
+error_page 404 /pages/404.php;
+\end{lstlisting}
+
+\section{The resolver script}\label{the-resolver-script}
+
+Every petition is forwarded to this script, which parses the URI and finds the best page to serve the user or redirects them from a short link.
+The script was written for scalability reasons given the requisites of Neosluger:
+
+\begin{itemize}
+\item
+	The user must be able to access pages inside the site without having to know the absolute path.
+	E.g. \texttt{sl.ugr.es/man} must be able to serve \texttt{pages/manual.php}.
+\item
+	The user must be able to use a short URL to be automatically redirected and prepend \texttt{stats/} to the URL handle to inspect it and see its usage statistics.
+\item
+	The users must not be able to access the different pages from their location in the server directory tree.
+	This improves the service's security.
+\item
+	The old API must still work, even though it will always throw an error.
+\end{itemize}
+
+If the URIs were resolved by the server configuration file, every time a new page was added to the service it would need to be modified and it would get clobbered really fast.
+Instead, we let the resolver script handle this for us and check whether the user is accessing a page within the service or wants to be redirected from a short URL.
+
+The resolver follows these steps to serve the user the page they expect:
+
+\begin{lstlisting}
+Parse URI received from the server
+
+if a maching page is found in pages/*.php:
+	render the page
+otherwise, if the URI is NOT a handle found in the database:
+	if it refers to the old API:
+		serve an API deprecation error message
+	otherwise
+		serve the 404 page
+otherwise, if the handle was found in the database:
+	Prevent the user from caching this page to register all accesses to the link
+	Register the access
+	Redirect the user to their destination
+\end{lstlisting}
+
+The order of the paths is unusual because checking if a URL wasn't found in the database is done by a call to \texttt{\$url->is\_null()} and \texttt{if} statements are written so that their conditions never contain a negation, which is easier to reason about.
+
+\section{Rendering pages}\label{rendering-pages}
+
+All pages in \texttt{pages/*.php} \textbf{must} contain a \texttt{render} function to act as the main function of the page and call them at the end of the file.
+This way, when the resolver includes them, the \texttt{render} function is called automatically by the page.
+
+Pages are rendered using Twig, a templating engine that lets Neosluger reuse interface code and be much easier to maintain.
+Twig directives are specified inside \texttt{\{\% \%\}} and \texttt{\{\{ \}\}} blocks.
+The first type of blocks are used for reserved words like \texttt{[end]block}, \texttt{[end]if} and to call objects' member functions like \texttt{url.is\_null()} (notice the \texttt{.} operator instead of \texttt{->}).
+The second type of blocks expands the value inside the braces.
+For example, if we have a variable \texttt{\$name = "Taxo"}, \texttt{<p>My name is \{\{ name \}\}.</p>} will be expanded to \texttt{<p>My name is Taxo.</p>}
+
+To render a page, \texttt{Twig->render()} must be called from an \texttt{echo} statement.
+It receives the route of the HTML file it has to render and an associative array of objects where the names are the variables used by the template.

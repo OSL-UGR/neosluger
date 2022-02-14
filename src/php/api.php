@@ -1,6 +1,14 @@
 <?php declare(strict_types=1);
 
 
+/** @class APIQuery
+  * @brief Collection of items passed by the user to the API when calling it
+  *
+  * Even though this class could be substituted by an associative array, it is
+  * interesting to keep it because it makes it impossible to tamper with the
+  * arguments after construction, allowing for better const correctness.
+  */
+
 class APIQuery
 {
 	private string $handle = "";
@@ -26,6 +34,14 @@ class APIQuery
 	}
 }
 
+
+/** @class APIResponse
+  * @brief Collection of items passed by the API as a response to the user
+  *
+  * Even though this class could be substituted by an associative array, it is
+  * interesting to keep it because it makes it impossible to tamper with the
+  * arguments after construction, allowing for better const correctness.
+  */
 
 class APIResponse
 {
@@ -85,6 +101,13 @@ class APIResponse
 	}
 }
 
+
+/** @class API
+  * @brief Static functions that process the users' queries.
+  *
+  * Instead of using a namespace, we prefer a class with static functions which
+  * can limit their access for future maintainers.
+  */
 
 class API
 {
