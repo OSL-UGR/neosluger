@@ -95,3 +95,25 @@ vendor/bin/phpunit tests
 \end{lstlisting}
 
 The test suites also acts as a complete reference for any developer who wishes to extend the system.
+
+\subsection{Directory permissions clash}
+
+The web server is ran by the user \texttt{http}, while the tests are ran by \texttt{"\$USER"}.
+This means that whoever gets to create the cache directory first gets all the permissions to read and write to it.
+To solve this, you \textbf{must} edit the cache directory's owners in two cases:
+
+\begin{itemize}
+\item
+	After creating the cache directory from running the test suites so that the web server can create the codes.
+\item
+	After creating the cache directory from a web server response so that the tests can pass.
+\end{itemize}
+
+To update the owners you just need to \texttt{chown} the deepest directory:
+
+\begin{lstlisting}[language=sh]
+cd src/
+chown "$USER":http cache/qr
+\end{lstlisting}
+
+The directory's permissions are set to \texttt{775} by the service.

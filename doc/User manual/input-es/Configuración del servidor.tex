@@ -76,8 +76,8 @@ Su ruta está definida en \texttt{pages/url-result.php} y apunta por defecto a \
 Puede que tengas prohibido escribir en este directorio si Neosluger está alojado en \texttt{/usr/}.
 Si éste es el caso, échale un vistazo a esta respuesta de ServerFault \url{https://serverfault.com/a/997496}.
 
-Para usar el directorio necesitas darle al usuario ejecutando PHP permisos de escritura.
-Neosluger creará el directorio de caché si no existe, así que deberías darle los permisos en \texttt{src/}.
+Para usar el directorio necesitas darle permisos de escritura al usuario que ejecuta PHP.
+Neosluger creará el directorio si no existe, así que debes darle los permisos en \texttt{src/}.
 Puedes hacerlo de la siguiente forma:
 
 \begin{lstlisting}[language=sh]
@@ -95,3 +95,25 @@ vendor/bin/phpunit tests
 \end{lstlisting}
 
 Las pruebas también sirven como una referencia completa para cualquier desarrollador que desee extender el sistema.
+
+\subsection{Choque de permisos sobre directorios}
+
+El servidor web se ejecuta por el usuario \texttt{http} mientras que los tests los ejecuta \texttt{"\$USER"}.
+Esto implica que quien cree antes el directorio de caché se queda con todos los permisos de lectura y escritura.
+Para solucionarlo, \textbf{debes} editar los dueños del directorio de caché en dos casos:
+
+\begin{itemize}
+\item
+	Tras crear el directorio de caché al ejecutar las pruebas para que el servidor web pueda crear los códigos.
+\item
+	Tras crear el directorio de caché al responder desde el servidor web para que las pruebas funcionen.
+\end{itemize}
+
+Para actualizar los permisos basta con que uses \texttt{chown} en el directorio más profundo:
+
+\begin{lstlisting}[language=sh]
+cd src/
+chown "$USER":http cache/qr
+\end{lstlisting}
+
+Los permisos del directorio se definen a \texttt{775} por el servicio.

@@ -16,6 +16,13 @@ else
 use chillerlan\QRCode\{QRCode, QROptions};
 
 
+/** @class QRWrapper
+  * @brief Static functions that call the QR code creator.
+  *
+  * Instead of using a namespace, we prefer a class with static functions which
+  * can limit their access for future maintainers.
+  */
+
 class QRWrapper
 {
 	private static function generate_qr (string $path, string $content): string
