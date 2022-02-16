@@ -17,6 +17,18 @@ namespace Neosluger
 	const SITE_ADDRESS   = "localhost/";
 
 
+	/*
+	 * IP Addresses from which the user is allowed to access certain parts of the
+	 * service. Use `user_ip_is_allowed()`, defined below, to check whether they
+	 * have access.
+	 */
+
+	const ALLOWED_IPS = [
+		"150.214.*.*",
+		"172.*.*.*"
+	];
+
+
 	function LOG_COLLECTION ()
 	{
 		return MONGO->neosluger->access_logs;
@@ -41,6 +53,22 @@ namespace Neosluger
 	function parse_request_uri_nth_item (int $n): string
 	{
 		return preg_replace("/^\/?([^\/?]+\/){".($n-1)."}([^\/?]+).*$/", "$2", $_SERVER["REQUEST_URI"]);
+	}
+
+
+	function user_ip_is_allowed (): bool
+	{
+		$allowed = false;
+		$i = 0;
+
+		while (!$allowed && $i < count(ALLOWED_IPS))
+		{
+			$ip_regex = "/".preg_replace("/\.\*/", "\..+", ALLOWED_IPS[$i])."/";
+			$allowed  = (preg_match($ip_regex, $_SERVER['REMOTE_ADDR']) != false);
+			++$i;
+		}
+
+		return $allowed;
 	}
 }
 

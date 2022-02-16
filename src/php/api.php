@@ -1,6 +1,9 @@
 <?php declare(strict_types=1);
 
 
+require_once("const.php");
+
+
 /** @class APIQuery
   * @brief Collection of items passed by the user to the API when calling it
   *
@@ -47,6 +50,7 @@ class APIResponse
 {
 	const MSG_DUPLICATE_HANDLE   = "A URL with your handle already exists!";
 	const MSG_INVALID_HANDLE_LEN = "Custom handles must be between 5 and 50 characters long!";
+	const MSG_INVALID_IP         = "Only users from the University of Granada can create short URLs!";
 	const MSG_INVALID_URL        = "The URL string is not an actual URL!";
 	const MSG_NO_URL             = "A URL is required!";
 
@@ -141,7 +145,11 @@ class API
 	{
 		$response = new APIResponse();
 
-		if (!empty($query->url()))
+		if (isset($_SERVER['DOCUMENT_ROOT']) && !empty($_SERVER['DOCUMENT_ROOT']) && !Neosluger\user_ip_is_allowed())
+		{
+			$response = new APIResponse("", APIResponse::MSG_INVALID_IP);
+		}
+		else if (!empty($query->url()))
 		{
 			$url = URL::from_form($query->url(), $query->handle());
 

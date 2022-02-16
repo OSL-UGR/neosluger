@@ -29,20 +29,31 @@
 	</div>
 
 	<div id="shortener" class="visible">
-		<form action="url-result" id="shortener-form" method="post">
-			<h4>Introduce el enlace que deseas acortar:</h4>
-			<input type="url" name="neosluger-url" oninput="setCustomValidity('')" oninvalid="setCustomValidity('Introduzca un enlace válido (precedido de https:// o http://)')" autofocus required/>
+		{% if shortener_allowed %}
+			<form action="url-result" id="shortener-form" method="post">
+				<h4>Introduce el enlace que deseas acortar:</h4>
+				<input type="url" name="neosluger-url" oninput="setCustomValidity('')" oninvalid="setCustomValidity('Introduzca un enlace válido (precedido de https:// o http://)')" autofocus required/>
 
-			<h4>(Opcional) Elige el nombre de tu enlace corto (5-50 caracteres):</h4>
-			<input type="text" name="neosluger-handle" pattern="[A-Za-z0-9\-_]{5,50}" oninput="setCustomValidity('')" oninvalid="setCustomValidity('Utilice únicamente entre 5 y 50 letras mayúsculas y minúsculas, números, guiones y barras bajas.')" disabled/>
+				<h4>(Opcional) Elige el nombre de tu enlace corto (5-50 caracteres):</h4>
+				<input type="text" name="neosluger-handle" pattern="[A-Za-z0-9\-_]{5,50}" oninput="setCustomValidity('')" oninvalid="setCustomValidity('Utilice únicamente entre 5 y 50 letras mayúsculas y minúsculas, números, guiones y barras bajas.')" disabled/>
 
-			<div class="form-bottom">
-				<button type="submit">Generar enlace</button>
-				<a href="https://osl.ugr.es/" target="_blank" class="logo-osl-form">
-					<img src="/assets/logo-osl.svg" alt="Logo OSL">
-				</a>
-			</div>
-		</form>
+				<div class="form-bottom">
+					<button type="submit">Generar enlace</button>
+					<a href="https://osl.ugr.es/" target="_blank" class="logo-osl-form">
+						<img src="/assets/logo-osl.svg" alt="Logo OSL">
+					</a>
+				</div>
+			</form>
+		{% else %}
+			<p>
+				El acortador de enlaces únicamente está disponible para usuarios que accedan desde la red de la Universidad de Granada.
+				Si crees que deberías poder acceder, <a href="https://osl.ugr.es/contacto/">ponte en contacto con nosotros</a>.
+			</p>
+
+			<p>
+				En cualquier caso, puedes utilizar el resto de servicios sin restricciones.
+			</p>
+		{% endif %}
 	</div>
 
 	<div id="qr" class="invisible">

@@ -3,6 +3,7 @@
 
 ini_set("display_errors", '1');
 require_once($_SERVER['DOCUMENT_ROOT']."/vendor/autoload.php");
+require_once($_SERVER['DOCUMENT_ROOT']."/php/const.php");
 
 
 function render (): void
@@ -12,6 +13,7 @@ function render (): void
 
 	echo $twig->render("index.html", [
 		"index_tab" => "active-tab",
+		"shortener_allowed" => Neosluger\user_ip_is_allowed(),
 	]);
 }
 
