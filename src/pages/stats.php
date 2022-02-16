@@ -3,30 +3,7 @@
 
 ini_set("display_errors", '1');
 require_once($_SERVER['DOCUMENT_ROOT']."/vendor/autoload.php");
-require_once($_SERVER['DOCUMENT_ROOT']."/php/url.php");
-
-
-use chillerlan\QRCode\{QRCode, QROptions};
-
-
-function generate_qr (URL $url)
-{
-	$cache_directory = "../cache/qr";
-
-	if (!file_exists($cache_directory))
-		mkdir($cache_directory, 0775, true);
-
-	$qr_path    = $cache_directory."/qr-" . $url->handle() . ".png";
-	$qr_options = new QROptions([
-		"outputType"       => QRCode::OUTPUT_IMAGE_PNG,
-		"eccLevel"         => QRCode::ECC_L,
-		"imageTransparent" => false,
-		"pngCompression"   => 9,
-	]);
-
-	(new QRCode($qr_options))->render($url->full_handle(), $qr_path);
-	return $qr_path;
-}
+require_once($_SERVER['DOCUMENT_ROOT']."/php/qr.php");
 
 
 function render ()
@@ -45,7 +22,7 @@ function render ()
 	}
 	else
 	{
-		$qr_path  = generate_qr($url);
+		$qr_path  = QRWrapper::from_url($url);
 		$url_logs = Neosluger\LOG_COLLECTION()->find(["handle" => $url->handle()])->toArray()[0];
 		$accesses = $url_logs["accesses"];
 		$creation = new DateTime($accesses[0]);
