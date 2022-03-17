@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types=1); namespace NeoslugerWeb;
 
 
 ini_set("display_errors", '1');
@@ -13,7 +13,7 @@ function render (): void
 
 	echo $twig->render("index.html", [
 		"index_tab" => "active-tab",
-		"shortener_allowed" => Neosluger\user_ip_is_allowed(),
+		"shortener_allowed" => \Neosluger\user_ip_is_allowed(),
 	]);
 }
 

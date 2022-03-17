@@ -1,11 +1,11 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types=1); namespace Neosluger;
 
 
 require_once(__DIR__."/../../vendor/autoload.php");
 require_once(__DIR__."/../qr.php");
 
 
-final class QRTest extends PHPUnit\Framework\TestCase
+final class QRTest extends \PHPUnit\Framework\TestCase
 {
 	public function test_is_saved_in_cache_directory (): void
 	{

@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types=1); namespace NeoslugerWeb;
 
 
 ini_set("display_errors", '1');
@@ -20,11 +20,11 @@ function render ()
 	$twig   = new \Twig\Environment($loader);
 
 	$form_fields = read_form();
-	$qr_path     = QRWrapper::from_string($form_fields["qr-string"]);
+	$qr_path     = \Neosluger\QRWrapper::from_string($form_fields["qr-string"]);
 
 	echo $twig->render("qr-result.html", [
 		"destination" => $form_fields["qr-string"],
-		"qr_path"     => $qr_path,
+		"qr_path"     => substr($qr_path, strlen($_SERVER["DOCUMENT_ROOT"])),
 		"qr_tab"      => "active-tab",
 	]);
 }

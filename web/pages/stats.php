@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types=1); namespace NeoslugerWeb;
 
 
 ini_set("display_errors", '1');
@@ -11,8 +11,8 @@ function render ()
 	$loader = new \Twig\Loader\FilesystemLoader(__DIR__."/../templates");
 	$twig   = new \Twig\Environment($loader);
 
-	$handle = Neosluger\parse_request_uri_nth_item(2);
-	$url    = URL::from_database($handle);
+	$handle = \Neosluger\parse_request_uri_nth_item(2);
+	$url    = \Neosluger\URL::from_database($handle);
 
 	if ($url->is_null())
 	{
@@ -22,10 +22,10 @@ function render ()
 	}
 	else
 	{
-		$qr_path  = QRWrapper::from_url($url);
-		$url_logs = Neosluger\LOG_COLLECTION()->find(["handle" => $url->handle()])->toArray()[0];
+		$qr_path  = \Neosluger\QRWrapper::from_url($url);
+		$url_logs = \Neosluger\LOG_COLLECTION()->find(["handle" => $url->handle()])->toArray()[0];
 		$accesses = $url_logs["accesses"];
-		$creation = new DateTime($accesses[0]);
+		$creation = new \DateTime($accesses[0]);
 
 		echo $twig->render("stats.html", [
 			"accesses"      => count($accesses) - 1,

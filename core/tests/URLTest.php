@@ -1,11 +1,11 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types=1); namespace Neosluger;
 
 
 require_once(__DIR__."/../../vendor/autoload.php");
 require_once(__DIR__."/../url.php");
 
 
-final class URLTest extends PHPUnit\Framework\TestCase
+final class URLTest extends \PHPUnit\Framework\TestCase
 {
 	private string $destination_text = "https://www.ugr.es/";
 	private URL $url;
@@ -47,7 +47,7 @@ final class URLTest extends PHPUnit\Framework\TestCase
 	public function test_url_handle_is_set_on_construction (): void
 	{
 		$handle = $this->url->handle();
-		$this->assertEquals(strlen($handle), URL::HASH_LENGTH);
+		$this->assertEquals(strlen($handle), HASH_LENGTH);
 	}
 
 
@@ -66,7 +66,7 @@ final class URLTest extends PHPUnit\Framework\TestCase
 		$handle = $this->url->handle();
 		$this->assertEquals(
 			$this->url->full_handle(),
-			URL::SITE_ADDRESS . $handle
+			SITE_ADDRESS . $handle
 		);
 	}
 
@@ -74,7 +74,7 @@ final class URLTest extends PHPUnit\Framework\TestCase
 	public function test_a_custom_handle_can_be_passed_on_construction (): void
 	{
 		// Create a random handle every time to avoid duplicate errors
-		$datetime = new DateTime("NOW", new DateTimeZone(date("T")));
+		$datetime = new \DateTime("NOW", new \DateTimeZone(date("T")));
 		$handle   = sha1($datetime->format("Y-m-d H:i:s.u"));
 		$new_url  = URL::from_form($this->destination_text, $handle);
 

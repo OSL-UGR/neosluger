@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types=1); namespace Neosluger;
 
 
 require_once(__DIR__."/../vendor/autoload.php");
@@ -41,7 +41,7 @@ class QRWrapper
 			{
 				(new QRCode($qr_options))->render($content, $file_path);
 			}
-			catch (Exception $e)
+			catch (\Exception $e)
 			{
 				error_log($e->__toString());
 				$file_path = "";

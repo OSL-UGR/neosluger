@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types=1); namespace Neosluger;
 
 
 require_once(__DIR__."/const.php");
@@ -122,7 +122,7 @@ class API
 		$response     = null;
 		$valid_handle = (
 			empty($handle) ||
-			(URL::MIN_HANDLE_LEN <= $handle_len && $handle_len <= URL::MAX_HANDLE_LEN)
+			(MIN_HANDLE_LEN <= $handle_len && $handle_len <= MAX_HANDLE_LEN)
 		);
 
 		if ($valid_handle)
@@ -145,7 +145,7 @@ class API
 	{
 		$response = new APIResponse();
 
-		if (isset($_SERVER['DOCUMENT_ROOT']) && !empty($_SERVER['DOCUMENT_ROOT']) && !Neosluger\user_ip_is_allowed())
+		if (isset($_SERVER['DOCUMENT_ROOT']) && !empty($_SERVER['DOCUMENT_ROOT']) && !user_ip_is_allowed())
 		{
 			$response = new APIResponse("", APIResponse::MSG_INVALID_IP);
 		}
@@ -156,7 +156,7 @@ class API
 			if ($url->is_null())
 				$response = API::get_error_reason($query, $url);
 			else
-				$response = new APIResponse(Neosluger\SITE_ADDRESS . $url->handle());
+				$response = new APIResponse(SITE_ADDRESS . $url->handle());
 		}
 
 		return $response;

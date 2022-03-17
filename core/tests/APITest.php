@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types=1); namespace Neosluger;
 
 
 require_once(__DIR__."/../../vendor/autoload.php");
@@ -6,7 +6,7 @@ require_once(__DIR__."/../const.php");
 require_once(__DIR__."/../api.php");
 
 
-final class APITest extends PHPUnit\Framework\TestCase
+final class APITest extends \PHPUnit\Framework\TestCase
 {
 	private string $url    = "https://ugr.es/";
 	private string $handle = "my-handle_01";
@@ -91,7 +91,7 @@ final class APITest extends PHPUnit\Framework\TestCase
 	public function test_processing_query_with_url_returns_short_url (): void
 	{
 		$response = API::process($this->query);
-		$regex    = "/" . preg_replace("/\//", "\/", Neosluger\SITE_ADDRESS) . "[a-zA-Z0-9_\-]+/";
+		$regex    = "/" . preg_replace("/\//", "\/", SITE_ADDRESS) . "[a-zA-Z0-9_\-]+/";
 
 		$this->assertEquals(1, preg_match($regex, $response->url()));
 		$this->assertTrue($response->success());

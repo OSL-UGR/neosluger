@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types=1); namespace NeoslugerWeb;
 
 
 ini_set("display_errors", '1');
@@ -10,8 +10,8 @@ function filter_short_link_handle (string $query): string
 	$handle = trim($query);
 	$query_no_https  = trim(preg_replace("/https?:\/\//", "", $query));
 
-	if (str_starts_with($query_no_https, Neosluger\SITE_ADDRESS))
-		$handle = substr($query_no_https, strlen(Neosluger\SITE_ADDRESS), strlen($query));
+	if (str_starts_with($query_no_https, \Neosluger\SITE_ADDRESS))
+		$handle = substr($query_no_https, strlen(\Neosluger\SITE_ADDRESS), strlen($query));
 
 	return trim($handle);
 }

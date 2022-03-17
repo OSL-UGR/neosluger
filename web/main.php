@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types=1); namespace NeoslugerWeb;
 
 
 ini_set("display_errors", '1');
@@ -54,7 +54,7 @@ function try_old_api_or_404 (): void
 
 function main (): void
 {
-	$uri  = Neosluger\parse_request_uri_nth_item(1);
+	$uri  = \Neosluger\parse_request_uri_nth_item(1);
 	$path = find_page($uri);
 
 	if (!empty($path))
@@ -63,7 +63,7 @@ function main (): void
 	}
 	else
 	{
-		$url = URL::from_database($uri);
+		$url = \Neosluger\URL::from_database($uri);
 
 		if ($url->is_null())
 		{
