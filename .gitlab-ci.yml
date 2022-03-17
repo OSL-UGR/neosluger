@@ -1,0 +1,28 @@
+image: php:8.0
+
+services:
+  - mongo:latest
+
+variables:
+  MONGO_DATA_DIR: /data/db
+  MONGO_LOG_DIR: /dev/null
+
+# cache:
+#   paths:
+#   - vendor/
+
+before_script:
+- apt-get update -qq
+- apt-get install -qq zip
+- pecl install mongodb
+- echo "extension=mongodb.so" >> /usr/local/etc/php/conf.d/mongodb.ini
+- curl -sS https://getcomposer.org/installer | php
+- php composer.phar install
+
+
+PHPUnit Tests:
+  only:
+    - merge-requests
+    - pushes
+  script:
+    - php vendor/bin/phpunit core/tests
