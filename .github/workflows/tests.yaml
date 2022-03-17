@@ -22,4 +22,4 @@ jobs:
       - name: Run PHPUnit tests suites
         working-directory: src
         run: |
-          vendor/bin/phpunit tests
+          vendor/bin/phpunit core/tests

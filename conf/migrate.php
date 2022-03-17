@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
 
-require_once("vendor/autoload.php");
-require_once("../src/php/const.php");
+require_once(__DIR__."/../vendor/autoload.php");
+require_once(__DIR__."/../core/const.php");
 
 
 function convert_autoincremented_index_to_oldstyle_handle (int $index): string

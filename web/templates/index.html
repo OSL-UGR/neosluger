@@ -1,0 +1,89 @@
+{% extends "main.html" %}
+{% use "main-panel.html" %}
+
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="/web/styles/form.css">
+	<link rel="stylesheet" href="/web/styles/index.css">
+	<link rel="stylesheet" href="/web/styles/tabs.css">
+{% endblock %}
+
+
+{% block head %}
+	<script type="text/javascript" src="/web/scripts/tabs.js" defer></script>
+	<script type="text/javascript" src="/web/scripts/url-form.js" defer></script>
+{% endblock %}
+
+
+{% block main_panel_title %}
+	¡Bienvenido!
+{% endblock %}
+
+
+{% block main_panel_content %}
+	<div class="tabs">
+		<button onclick="switch_tab(event, 'shortener')" id="current-tab-item">Acortador de enlaces</button>
+		<button onclick="switch_tab(event, 'qr')">Generador de códigos QR</button>
+		<button onclick="switch_tab(event, 'inspect')">Inspector de enlaces cortos</button>
+	</div>
+
+	<div id="shortener" class="visible">
+		{% if shortener_allowed %}
+			<form action="url-result" id="shortener-form" method="post">
+				<h4>Introduce el enlace que deseas acortar:</h4>
+				<input type="url" name="neosluger-url" oninput="setCustomValidity('')" oninvalid="setCustomValidity('Introduzca un enlace válido (precedido de https:// o http://)')" autofocus required/>
+
+				<h4>(Opcional) Elige el nombre de tu enlace corto (5-50 caracteres):</h4>
+				<input type="text" name="neosluger-handle" pattern="[A-Za-z0-9\-_]{5,50}" oninput="setCustomValidity('')" oninvalid="setCustomValidity('Utilice únicamente entre 5 y 50 letras mayúsculas y minúsculas, números, guiones y barras bajas.')" disabled/>
+
+				<div class="form-bottom">
+					<button type="submit">Generar enlace</button>
+					<a href="https://osl.ugr.es/" target="_blank" class="logo-osl-form">
+						<img src="/web/assets/logo-osl.svg" alt="Logo OSL">
+					</a>
+				</div>
+			</form>
+		{% else %}
+			<p>
+				El acortador de enlaces únicamente está disponible para usuarios que accedan desde la red de la Universidad de Granada.
+				Si crees que deberías poder acceder, <a href="https://osl.ugr.es/contacto/">ponte en contacto con nosotros</a>.
+			</p>
+
+			<p>
+				En cualquier caso, puedes utilizar el resto de servicios sin restricciones.
+			</p>
+		{% endif %}
+	</div>
+
+	<div id="qr" class="invisible">
+		<form action="qr-result" id="qr-form" method="post">
+			<h4>Introduce el enlace para el que deseas crear un QR:</h4>
+			<input type="qr-string" name="neosluger-qr-string" autofocus required/>
+
+			<div class="form-bottom">
+				<button type="submit">Generar QR</button>
+				<a href="https://osl.ugr.es/" target="_blank" class="logo-osl-form">
+					<img src="/web/assets/logo-osl.svg" alt="Logo OSL">
+				</a>
+			</div>
+		</form>
+	</div>
+
+	<div id="inspect" class="invisible">
+		<form action="inspect-result" id="inspect-form" method="post">
+			<h4>Introduce el enlace corto que deseas inspeccionar:</h4>
+			<input type="inspect-string" name="neosluger-inspect-string" autofocus required/>
+
+			<div class="form-bottom">
+				<button type="submit">Inspeccionar</button>
+				<a href="https://osl.ugr.es/" target="_blank" class="logo-osl-form">
+					<img src="/web/assets/logo-osl.svg" alt="Logo OSL">
+				</a>
+			</div>
+		</form>
+	</div>
+{% endblock %}
+
+
+{% block main_panel_logo_osl %}{% endblock %}
