@@ -3,6 +3,7 @@
 
 ini_set("display_errors", '1');
 require_once($_SERVER['DOCUMENT_ROOT']."/vendor/autoload.php");
+require_once($_SERVER['DOCUMENT_ROOT']."/core/helper-functions.php");
 require_once($_SERVER['DOCUMENT_ROOT']."/core/qr.php");
 
 
