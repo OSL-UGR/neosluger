@@ -80,6 +80,16 @@ final class ResultTest extends \PHPUnit\Framework\TestCase
 
 		$this->assertEquals($this->error_result->errors(), $error_stack);
 	}
+
+
+	public function test_pushing_back_an_error_removes_any_value (): void
+	{
+		$errormsg = "Error msg";
+		$this->ok_result->push_back($errormsg);
+
+		$this->assertFalse($this->ok_result->ok());
+		$this->assertEquals($this->ok_result->first_error(), $errormsg);
+	}
 }
 
 

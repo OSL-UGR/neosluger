@@ -58,17 +58,36 @@ final class Result
 	{
 		$result = $this;
 
-		while (!is_null($result->next))
-			$result = $result->next;
+		if (empty($this->error))
+		{
+			$this->error = $error;
+			$this->value = null;
+		}
+		else
+		{
+			while (!is_null($result->next))
+				$result = $result->next;
 
-		$result->next = Result::from_error($error);
+			$result->next = Result::from_error($error);
+		}
 	}
 
 
 	public function unwrap (): mixed
 	{
 		if (!$this->ok())
-			throw new \LogicException($this->error);
+		{
+			$result = $this;
+			$error = "Fatal error when unwrapping!\n - ".$result->error;
+
+			while (!is_null($result->next))
+			{
+				$result = $result->next;
+				$error .= "\n - ".$result->error;
+			}
+
+			throw new \LogicException($error);
+		}
 
 		return $this->value;
 	}
