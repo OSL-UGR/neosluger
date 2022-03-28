@@ -2,7 +2,6 @@
 
 
 require_once(__DIR__."/vendor/autoload.php");
-use MongoDB\Client as Mongo;
 
 
 /*
@@ -43,14 +42,14 @@ const ALLOWED_IPS = [
 
 function LOG_COLLECTION ()
 {
-	$mongo = new Mongo("mongodb://localhost:27017");
+	$mongo = new \MongoDB\Client("mongodb://localhost:27017");
 	return $mongo->neosluger->access_logs;
 }
 
 
 function URL_COLLECTION ()
 {
-	$mongo = new Mongo("mongodb://localhost:27017");
+	$mongo = new \MongoDB\Client("mongodb://localhost:27017");
 	return $mongo->neosluger->urls;
 }
 
