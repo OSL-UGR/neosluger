@@ -70,7 +70,7 @@ final class URL
 
 	public function full_handle (): string
 	{
-		return SITE_ADDRESS . $this->handle;
+		return \NeoslugerSettings\SITE_ADDRESS . $this->handle;
 	}
 
 

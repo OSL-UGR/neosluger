@@ -39,9 +39,9 @@ function user_ip_is_allowed (): bool
 	if (!array_key_exists("REMOTE_ADDR", $_SERVER))
 		$allowed = true;
 
-	while (!$allowed && $i < count(ALLOWED_IPS))
+	while (!$allowed && $i < count(\NeoslugerSettings\ALLOWED_IPS))
 	{
-		$ip_regex = "/".preg_replace("/\.\*/", "\..+", ALLOWED_IPS[$i])."/";
+		$ip_regex = "/".preg_replace("/\.\*/", "\..+", \NeoslugerSettings\ALLOWED_IPS[$i])."/";
 		$allowed  = (preg_match($ip_regex, $_SERVER["REMOTE_ADDR"]) != false);
 		++$i;
 	}

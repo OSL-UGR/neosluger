@@ -46,7 +46,7 @@ final class URLInteractor implements URLRequestBoundary
 
 	private function create_handle_with_hash (\DateTime $datetime, string $destination): string
 	{
-		return substr(sha1($datetime->format("Y-m-d H:i:s.u") . $destination), 0, HANDLE_LENGTH);
+		return substr(sha1($datetime->format("Y-m-d H:i:s.u") . $destination), 0, \NeoslugerSettings\HANDLE_LENGTH);
 	}
 
 
@@ -72,7 +72,7 @@ final class URLInteractor implements URLRequestBoundary
 	private function handle_is_within_bounds (string $handle): bool
 	{
 		$length = strlen($handle);
-		return (MIN_HANDLE_LEN <= $length && $length <= MAX_HANDLE_LEN);
+		return (\NeoslugerSettings\MIN_HANDLE_LEN <= $length && $length <= \NeoslugerSettings\MAX_HANDLE_LEN);
 	}
 
 

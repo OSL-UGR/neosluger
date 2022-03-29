@@ -8,6 +8,17 @@ require_once(__DIR__."/../vendor/autoload.php");
 const OLDSTYLE_CHARS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 
+function mongodb_collection (string $collection): \MongoDB\Collection
+{
+	static $database = null;
+
+	if (is_null($database))
+		$database = (new \MongoDB\Client("mongodb://localhost:27017"))->neosluger;
+
+	return $database->select_collection($collection);
+}
+
+
 function convert_autoincremented_index_to_oldstyle_handle (int $index): string
 {
 	$charlen = strlen(OLDSTYLE_CHARS);
@@ -43,13 +54,13 @@ function insert_log_in_mongodb (array $link_row, array $log_table): void
 		array_push($log_object["accesses"], $access_datetime->format("Y-m-d H:i:s.u"));
 	}
 
-	\Neosluger\LOG_COLLECTION()->insertOne($log_object);
+	mongodb_collection(\NeoslugerSettings\LOGS_COLLECTION)->insertOne($log_object);
 }
 
 
 function insert_url_in_mongodb (array $link_row): void
 {
-	\Neosluger\URL_COLLECTION()->insertOne([
+	mongodb_collection(\NeoslugerSettings\URLS_COLLECTION)->insertOne([
 		"handle"      => $link_row["id"],
 		"destination" => $link_row["url"],
 	]);
@@ -101,8 +112,8 @@ function reset_mongodb_database (): bool
 	if ($user_consents_destruction)
 	{
 		echo "Dropping collections...\n";
-		\Neosluger\URL_COLLECTION()->drop();
-		\Neosluger\LOG_COLLECTION()->drop();
+		mongodb_collection(\NeoslugerSettings\URLS_COLLECTION)->drop();
+		mongodb_collection(\NeoslugerSettings\LOGS_COLLECTION)->drop();
 	}
 	else
 	{
@@ -160,8 +171,8 @@ function generate_indices ()
 {
 	echo "Generating indices...\n";
 
-	\Neosluger\URL_COLLECTION()->createIndex(['handle' => 1]);
-	\Neosluger\LOG_COLLECTION()->createIndex(['handle' => 1]);
+	mongodb_collection(\NeoslugerSettings\URLS_COLLECTION)->createIndex(['handle' => 1]);
+	mongodb_collection(\NeoslugerSettings\LOGS_COLLECTION)->createIndex(['handle' => 1]);
 
 	echo "Indices were successfully generated!\n";
 }

@@ -16,7 +16,7 @@ final class URLTest extends \PHPUnit\Framework\TestCase
 
 		$this->assertEquals($url->creation_datetime(), $datetime);
 		$this->assertEquals($url->destination(),       $destination);
-		$this->assertEquals($url->full_handle(),       SITE_ADDRESS . $handle);
+		$this->assertEquals($url->full_handle(),       \NeoslugerSettings\SITE_ADDRESS . $handle);
 		$this->assertEquals($url->handle(),            $handle);
 
 		$other_datetime    = new \Datetime("NOW", new \DateTimeZone(date('T')));
@@ -26,7 +26,7 @@ final class URLTest extends \PHPUnit\Framework\TestCase
 
 		$this->assertEquals($other_url->creation_datetime(), $other_datetime);
 		$this->assertEquals($other_url->destination(),       $other_destination);
-		$this->assertEquals($other_url->full_handle(),       SITE_ADDRESS . $other_handle);
+		$this->assertEquals($other_url->full_handle(),       \NeoslugerSettings\SITE_ADDRESS . $other_handle);
 		$this->assertEquals($other_url->handle(),            $other_handle);
 	}
 }

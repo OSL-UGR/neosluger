@@ -39,10 +39,10 @@ final class URLInteractorTest extends \PHPUnit\Framework\TestCase
 		$short_handle = "";
 		$long_handle  = "";
 
-		for ($i = 0; $i < MIN_HANDLE_LEN-1; ++$i)
+		for ($i = 0; $i < \NeoslugerSettings\MIN_HANDLE_LEN-1; ++$i)
 			$short_handle .= "s";
 
-		for ($i = 0; $i < MAX_HANDLE_LEN+1; ++$i)
+		for ($i = 0; $i < \NeoslugerSettings\MAX_HANDLE_LEN+1; ++$i)
 			$long_handle .= "s";
 
 		$short_handle_result = $this->interactor->register_new_url(URLInteractorTest::DESTINATION, $short_handle);

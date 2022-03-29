@@ -4,6 +4,7 @@
 require_once(__DIR__."/../core/result.php");
 require_once(__DIR__."/../core/url.php");
 require_once(__DIR__."/../core/url-gateway.php");
+require_once(__DIR__."/../settings/settings.php");
 require_once(__DIR__."/../vendor/autoload.php");
 
 
@@ -14,10 +15,10 @@ require_once(__DIR__."/../vendor/autoload.php");
 class MongoDBConnector implements \Neosluger\URLGateway
 {
 	/** Name of the access logs collection. **/
-	private string $logs = "access_logs";
+	private string $logs = \NeoslugerSettings\LOGS_COLLECTION;
 
 	/** Name of the urls collection. **/
-	private string $urls = "urls";
+	private string $urls = \NeoslugerSettings\URLS_COLLECTION;
 
 	/** Database to works with. **/
 	private \MongoDB\Database $db;

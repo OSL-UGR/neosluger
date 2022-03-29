@@ -2,8 +2,8 @@
 
 
 require_once(__DIR__."/../mongodb-connector.php");
-require_once(__DIR__."/../../settings.php");
 require_once(__DIR__."/../../core/url.php");
+require_once(__DIR__."/../../settings/settings.php");
 
 
 final class MongoDBTest extends \PHPUnit\Framework\TestCase
@@ -18,7 +18,7 @@ final class MongoDBTest extends \PHPUnit\Framework\TestCase
 
 	protected function setUp (): void
 	{
-		$this->db = new MongoDBConnector(\Neosluger\DB_ADDRESS);
+		$this->db = new MongoDBConnector(\NeoslugerSettings\DB_ADDRESS);
 		$this->db->set_logs_collection(MongoDBTest::LOGS);
 		$this->db->set_urls_collection(MongoDBTest::URLS);
 
@@ -30,7 +30,7 @@ final class MongoDBTest extends \PHPUnit\Framework\TestCase
 	protected function tearDown (): void
 	{
 		// We don't use the connector here because god forbid the next maintainer drops all collections in production
-		$client = new \MongoDB\Client(\Neosluger\DB_ADDRESS);
+		$client = new \MongoDB\Client(\NeoslugerSettings\DB_ADDRESS);
 		$client->selectCollection("neosluger", MongoDBTest::URLS)->drop();
 		$client->selectCollection("neosluger", MongoDBTest::LOGS)->drop();
 	}
