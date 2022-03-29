@@ -1,9 +1,9 @@
 <?php declare(strict_types=1); namespace NeoslugerDB;
 
 
+require_once(__DIR__."/../mongodb-connector.php");
 require_once(__DIR__."/../../settings.php");
 require_once(__DIR__."/../../core/url.php");
-require_once(__DIR__."/../mongodb-connector.php");
 
 
 final class MongoDBTest extends \PHPUnit\Framework\TestCase

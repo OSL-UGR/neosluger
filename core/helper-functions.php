@@ -1,7 +1,7 @@
 <?php declare(strict_types=1); namespace Neosluger;
 
 
-require_once(__DIR__."/../settings.php");
+require_once(__DIR__."/../settings/settings.php");
 
 
 /** @fn parse_request_uri_nth_item (int $n): string

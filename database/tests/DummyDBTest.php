@@ -1,8 +1,8 @@
 <?php declare(strict_types=1); namespace NeoslugerDB;
 
 
-require_once(__DIR__."/../../core/url.php");
 require_once(__DIR__."/../dummy-db.php");
+require_once(__DIR__."/../../core/url.php");
 
 
 final class DummyDBTest extends \PHPUnit\Framework\TestCase

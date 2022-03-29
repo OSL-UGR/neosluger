@@ -1,14 +1,16 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types=1); namespace NeoslugerScripts;
 
 
+require_once(__DIR__."/../settings/settings.php");
 require_once(__DIR__."/../vendor/autoload.php");
-require_once(__DIR__."/../core/const.php");
+
+
+const OLDSTYLE_CHARS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 
 function convert_autoincremented_index_to_oldstyle_handle (int $index): string
 {
-	$chars   = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	$charlen = strlen($chars);
+	$charlen = strlen(OLDSTYLE_CHARS);
 
 	// Convert index from base 10 to base $charlen with four numbers
 	$num1 = $index % $charlen;
@@ -16,11 +18,11 @@ function convert_autoincremented_index_to_oldstyle_handle (int $index): string
 	$num3 = ((int) ($index / pow($charlen, 2))) % $charlen;
 	$num4 = ((int) ($index / pow($charlen, 3))) % $charlen;
 
-	return ($chars[$num4] . $chars[$num3] . $chars[$num2] . $chars[$num1]);
+	return (OLDSTYLE_CHARS[$num4] . OLDSTYLE_CHARS[$num3] . OLDSTYLE_CHARS[$num2] . OLDSTYLE_CHARS[$num1]);
 }
 
 
-function get_log_table_from_link_row (mysqli $mysqli, array $link_row): array
+function get_log_table_from_link_row (\mysqli $mysqli, array $link_row): array
 {
 	return $mysqli->query("SELECT * FROM log WHERE idpag = '" . $link_row["id"] . "'")->fetch_all(MYSQLI_ASSOC);
 }
@@ -28,7 +30,7 @@ function get_log_table_from_link_row (mysqli $mysqli, array $link_row): array
 
 function insert_log_in_mongodb (array $link_row, array $log_table): void
 {
-	$creation_datetime = new DateTime($link_row["creada"]);
+	$creation_datetime = new \DateTime($link_row["creada"]);
 
 	$log_object = [
 		"handle"   => $link_row["id"],
@@ -37,24 +39,24 @@ function insert_log_in_mongodb (array $link_row, array $log_table): void
 
 	foreach ($log_table as $log_row)
 	{
-		$access_datetime = new DateTime($log_row["fecha"]);
+		$access_datetime = new \DateTime($log_row["fecha"]);
 		array_push($log_object["accesses"], $access_datetime->format("Y-m-d H:i:s.u"));
 	}
 
-	Neosluger\LOG_COLLECTION()->insertOne($log_object);
+	\Neosluger\LOG_COLLECTION()->insertOne($log_object);
 }
 
 
 function insert_url_in_mongodb (array $link_row): void
 {
-	Neosluger\URL_COLLECTION()->insertOne([
+	\Neosluger\URL_COLLECTION()->insertOne([
 		"handle"      => $link_row["id"],
 		"destination" => $link_row["url"],
 	]);
 }
 
 
-function migrate_links (mysqli $mysqli, mysqli_result $links_table, bool $convert_indices = true): void
+function migrate_links (\mysqli $mysqli, \mysqli_result $links_table, bool $convert_indices = true): void
 {
 	foreach ($links_table as $link_row)
 	{
@@ -99,8 +101,8 @@ function reset_mongodb_database (): bool
 	if ($user_consents_destruction)
 	{
 		echo "Dropping collections...\n";
-		Neosluger\URL_COLLECTION()->drop();
-		Neosluger\LOG_COLLECTION()->drop();
+		\Neosluger\URL_COLLECTION()->drop();
+		\Neosluger\LOG_COLLECTION()->drop();
 	}
 	else
 	{
@@ -111,7 +113,7 @@ function reset_mongodb_database (): bool
 }
 
 
-function connect_to_mysql_db (): mysqli
+function connect_to_mysql_db (): \mysqli
 {
 	$old_tty = shell_exec("stty -g");
 	$user    = get_current_user();
@@ -131,10 +133,10 @@ function connect_to_mysql_db (): mysqli
 	if (!empty($input))
 		$db = $input;
 
-	$mysql = new mysqli("localhost", $user, $pass, $db);
+	$mysql = new \mysqli("localhost", $user, $pass, $db);
 
 	if ($mysql->connect_errno)
-		throw new ErrorException("Could not connect to ".$db."!");
+		throw new \ErrorException("Could not connect to ".$db."!");
 
 	echo "Connection successful!\n";
 	return $mysql;
@@ -158,8 +160,8 @@ function generate_indices ()
 {
 	echo "Generating indices...\n";
 
-	Neosluger\URL_COLLECTION()->createIndex(['handle' => 1]);
-	Neosluger\LOG_COLLECTION()->createIndex(['handle' => 1]);
+	\Neosluger\URL_COLLECTION()->createIndex(['handle' => 1]);
+	\Neosluger\LOG_COLLECTION()->createIndex(['handle' => 1]);
 
 	echo "Indices were successfully generated!\n";
 }

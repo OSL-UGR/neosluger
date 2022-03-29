@@ -84,6 +84,8 @@ final class URLInteractor implements URLRequestBoundary
 	{
 		$result = Result::from_value($this->gateway->find_url_by_handle($handle));
 
+		var_dump($result);
+
 		if (!$result->ok())
 			$result->push_back(ERR_URL_NOT_FOUND);
 
@@ -154,14 +156,13 @@ final class URLInteractor implements URLRequestBoundary
 
 			if (empty($handle))
 			{
+				$handle = $this->create_handle_with_hash($this->current_datetime(), $destination);
+
 				while ($this->gateway->find_url_by_handle($handle)->ok())
-				{
-					$datetime = $this->current_datetime();
-					$handle   = $this->create_handle_with_hash($datetime, $destination);
-				}
+					$handle = $this->create_handle_with_hash($this->current_datetime(), $destination);
 			}
 
-			$handle_is_valid = $this->handle_is_within_bounds($handle) && is_null($this->gateway->find_url_by_handle($handle));
+			$handle_is_valid = $this->handle_is_within_bounds($handle) && !$this->gateway->find_url_by_handle($handle)->ok();
 
 			if ($handle_is_valid)
 			{

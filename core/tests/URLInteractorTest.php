@@ -1,9 +1,9 @@
 <?php declare(strict_types=1); namespace Neosluger;
 
 
-require_once(__DIR__."/../../database/dummy-db.php");
-require_once(__DIR__."/../../settings.php");
 require_once(__DIR__."/../url-interactor.php");
+require_once(__DIR__."/../../database/dummy-db.php");
+require_once(__DIR__."/../../settings/settings.php");
 
 
 final class URLInteractorTest extends \PHPUnit\Framework\TestCase
@@ -24,97 +24,97 @@ final class URLInteractorTest extends \PHPUnit\Framework\TestCase
 
 	public function test_url_can_be_inserted_without_its_handle (): void
 	{
-		$this->assertNotNull($this->interactor->register_new_url(URLInteractorTest::DESTINATION));
+		$this->assertTrue($this->interactor->register_new_url(URLInteractorTest::DESTINATION)->ok());
 	}
 
 
-	/* public function test_url_can_be_inserted_with_its_handle (): void */
-	/* { */
-	/* 	$this->assertNotNull($this->interactor->register_new_url(URLInteractorTest::DESTINATION, URLInteractorTest::HANDLE)); */
-	/* } */
+	public function test_url_can_be_inserted_with_its_handle (): void
+	{
+		$this->assertNotNull($this->interactor->register_new_url(URLInteractorTest::DESTINATION, URLInteractorTest::HANDLE));
+	}
 
 
-	/* public function test_requested_handle_must_be_between_length_bounds (): void */
-	/* { */
-	/* 	$short_handle = ""; */
-	/* 	$long_handle  = ""; */
+	public function test_requested_handle_must_be_between_length_bounds (): void
+	{
+		$short_handle = "";
+		$long_handle  = "";
 
-	/* 	for ($i = 0; $i < MIN_HANDLE_LEN-1; ++$i) */
-	/* 		$short_handle .= "s"; */
+		for ($i = 0; $i < MIN_HANDLE_LEN-1; ++$i)
+			$short_handle .= "s";
 
-	/* 	for ($i = 0; $i < MAX_HANDLE_LEN+1; ++$i) */
-	/* 		$long_handle .= "s"; */
+		for ($i = 0; $i < MAX_HANDLE_LEN+1; ++$i)
+			$long_handle .= "s";
 
-	/* 	$short_handle_result = $this->interactor->register_new_url(URLInteractorTest::DESTINATION, $short_handle); */
-	/* 	$long_handle_result = $this->interactor->register_new_url(URLInteractorTest::DESTINATION, $long_handle); */
+		$short_handle_result = $this->interactor->register_new_url(URLInteractorTest::DESTINATION, $short_handle);
+		$long_handle_result = $this->interactor->register_new_url(URLInteractorTest::DESTINATION, $long_handle);
 
-	/* 	$this->assertFalse($short_handle_result->ok()); */
-	/* 	$this->assertFalse($long_handle_result->ok()); */
-	/* } */
-
-
-	/* public function test_url_can_be_inserted_more_than_once_without_handle_but_with_same_destination (): void */
-	/* { */
-	/* 	$this->assertNotNull($this->interactor->register_new_url(URLInteractorTest::DESTINATION)); */
-	/* 	$this->assertNotNull($this->interactor->register_new_url("https://osl.ugr.es")); */
-	/* } */
+		$this->assertFalse($short_handle_result->ok());
+		$this->assertFalse($long_handle_result->ok());
+	}
 
 
-	/* public function test_url_cannnot_be_inserted_twice_with_same_handle (): void */
-	/* { */
-	/* 	$this->assertNotNull($this->interactor->register_new_url(URLInteractorTest::DESTINATION, URLInteractorTest::HANDLE)); */
-
-	/* 	$register_again_result_1 = $this->interactor->register_new_url(URLInteractorTest::DESTINATION, URLInteractorTest::HANDLE); */
-	/* 	$register_again_result_2 = $this->interactor->register_new_url("https://osl.ugr.es", URLInteractorTest::HANDLE); */
-
-	/* 	$this->assertFalse($register_again_result_1->ok()); */
-	/* 	$this->assertFalse($register_again_result_2->ok()); */
-	/* } */
+	public function test_url_can_be_inserted_more_than_once_without_handle_but_with_same_destination (): void
+	{
+		$this->assertNotNull($this->interactor->register_new_url(URLInteractorTest::DESTINATION));
+		$this->assertNotNull($this->interactor->register_new_url("https://osl.ugr.es"));
+	}
 
 
-	/* public function test_new_url_is_returned_after_insertion (): void */
-	/* { */
-	/* 	$url = $this->interactor->register_new_url(URLInteractorTest::DESTINATION)->unwrap(); */
-	/* 	$this->assertEquals($url->destination(), URLInteractorTest::DESTINATION); */
+	public function test_url_cannnot_be_inserted_twice_with_same_handle (): void
+	{
+		$this->assertNotNull($this->interactor->register_new_url(URLInteractorTest::DESTINATION, URLInteractorTest::HANDLE));
 
-	/* 	$other_destination = "https://osl.ugr.es"; */
-	/* 	$other_url = $this->interactor->register_new_url($other_destination)->unwrap(); */
-	/* 	$this->assertEquals($other_url->destination(), $other_destination); */
-	/* } */
+		$register_again_result_1 = $this->interactor->register_new_url(URLInteractorTest::DESTINATION, URLInteractorTest::HANDLE);
+		$register_again_result_2 = $this->interactor->register_new_url("https://osl.ugr.es", URLInteractorTest::HANDLE);
 
-
-	/* public function test_new_url_with_handle_is_returned_after_insertion (): void */
-	/* { */
-	/* 	$url = $this->interactor->register_new_url(URLInteractorTest::DESTINATION, URLInteractorTest::HANDLE)->unwrap(); */
-
-	/* 	$this->assertEquals($url->handle(), URLInteractorTest::HANDLE); */
-	/* 	$this->assertEquals($url->destination(), URLInteractorTest::DESTINATION); */
-
-	/* 	$other_handle = "neosluger-test-handle2"; */
-	/* 	$other_destination = "https://osl.ugr.es"; */
-	/* 	$other_url = $this->interactor->register_new_url($other_destination, $other_handle)->unwrap(); */
-
-	/* 	$this->assertEquals($other_url->handle(), $other_handle); */
-	/* 	$this->assertEquals($other_url->destination(), $other_destination); */
-	/* } */
+		$this->assertFalse($register_again_result_1->ok());
+		$this->assertFalse($register_again_result_2->ok());
+	}
 
 
-	/* public function test_url_can_be_retrieved_after_insertion (): void */
-	/* { */
-	/* 	$url = $this->interactor->register_new_url(URLInteractorTest::DESTINATION)->unwrap(); */
-	/* 	$retrieved_url = $this->interactor->find_url_by_handle($url->handle())->unwrap(); */
+	public function test_new_url_is_returned_after_insertion (): void
+	{
+		$url = $this->interactor->register_new_url(URLInteractorTest::DESTINATION)->unwrap();
+		$this->assertEquals($url->destination(), URLInteractorTest::DESTINATION);
 
-	/* 	$this->assertEquals($retrieved_url->handle(), $url->handle()); */
-	/* 	$this->assertEquals($retrieved_url->destination(), $url->destination()); */
+		$other_destination = "https://osl.ugr.es";
+		$other_url = $this->interactor->register_new_url($other_destination)->unwrap();
+		$this->assertEquals($other_url->destination(), $other_destination);
+	}
 
-	/* 	$other_destination = "https://ugr.es"; */
-	/* 	$other_url = $this->interactor->register_new_url($other_destination)->unwrap(); */
-	/* 	$other_retrieved_url = $this->interactor->find_url_by_handle($other_url->handle())->unwrap(); */
 
-	/* 	$this->assertEquals($other_retrieved_url->handle(), $other_url->handle()); */
-	/* 	$this->assertEquals($other_retrieved_url->destination(), $other_url->destination()); */
-	/* 	$this->assertNotEquals($url->handle(), $other_url->handle()); */
-	/* } */
+	public function test_new_url_with_handle_is_returned_after_insertion (): void
+	{
+		$url = $this->interactor->register_new_url(URLInteractorTest::DESTINATION, URLInteractorTest::HANDLE)->unwrap();
+
+		$this->assertEquals($url->handle(), URLInteractorTest::HANDLE);
+		$this->assertEquals($url->destination(), URLInteractorTest::DESTINATION);
+
+		$other_handle = "neosluger-test-handle2";
+		$other_destination = "https://osl.ugr.es";
+		$other_url = $this->interactor->register_new_url($other_destination, $other_handle)->unwrap();
+
+		$this->assertEquals($other_url->handle(), $other_handle);
+		$this->assertEquals($other_url->destination(), $other_destination);
+	}
+
+
+	public function test_url_can_be_retrieved_after_insertion (): void
+	{
+		$url = $this->interactor->register_new_url(URLInteractorTest::DESTINATION)->unwrap();
+		$retrieved_url = $this->interactor->find_url_by_handle($url->handle())->unwrap();
+
+		$this->assertEquals($retrieved_url->handle(), $url->handle());
+		$this->assertEquals($retrieved_url->destination(), $url->destination());
+
+		$other_destination = "https://ugr.es";
+		$other_url = $this->interactor->register_new_url($other_destination)->unwrap();
+		$other_retrieved_url = $this->interactor->find_url_by_handle($other_url->handle())->unwrap();
+
+		$this->assertEquals($other_retrieved_url->handle(), $other_url->handle());
+		$this->assertEquals($other_retrieved_url->destination(), $other_url->destination());
+		$this->assertNotEquals($url->handle(), $other_url->handle());
+	}
 
 
 	/* public function test_url_with_handle_can_be_retrieved_after_insertion (): void */
@@ -151,15 +151,15 @@ final class URLInteractorTest extends \PHPUnit\Framework\TestCase
 	/* } */
 
 
-	/* public function test_retrieved_url_can_be_queried_from_the_database (): void */
-	/* { */
-	/* 	$this->interactor->register_new_url(URLInteractorTest::DESTINATION, URLInteractorTest::HANDLE); */
+	public function test_retrieved_url_can_be_queried_from_the_database (): void
+	{
+		$this->interactor->register_new_url(URLInteractorTest::DESTINATION, URLInteractorTest::HANDLE);
 
-	/* 	$url_result = $this->interactor->find_url_by_handle(URLInteractorTest::HANDLE); */
-	/* 	$db_url = $this->database->find_url_by_handle(URLInteractorTest::HANDLE); */
+		$url_result = $this->interactor->find_url_by_handle(URLInteractorTest::HANDLE);
+		$db_url = $this->database->find_url_by_handle(URLInteractorTest::HANDLE);
 
-	/* 	$this->assertEquals($url_result->unwrap(), $db_url); */
-	/* } */
+		$this->assertEquals($url_result->unwrap(), $db_url);
+	}
 
 
 	/* public function test_logging_access_to_url_saves_it_in_the_database (): void */
@@ -192,13 +192,13 @@ final class URLInteractorTest extends \PHPUnit\Framework\TestCase
 	/* } */
 
 
-	/* public function test_logs_cannot_be_retrieved_from_non_inserted_url (): void */
-	/* { */
-	/* 	$url = new URL("https://ugr.es/", new \DateTime("NOW"), "test-handle"); */
+	public function test_logs_cannot_be_retrieved_from_non_inserted_url (): void
+	{
+		$url = new URL("https://ugr.es/", new \DateTime("NOW"), "test-handle");
 
-	/* 	$this->expectException(\LogicException::class); */
-	/* 	$this->interactor->find_urls_logged_accesses($url)->unwrap(); */
-	/* } */
+		$this->expectException(\LogicException::class);
+		$this->interactor->find_urls_logged_accesses($url)->unwrap();
+	}
 
 
 	/* public function test_log_from_newly_inserted_url_contains_its_creation_date (): void */

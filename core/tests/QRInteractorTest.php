@@ -1,8 +1,8 @@
 <?php declare(strict_types=1); namespace Neosluger;
 
 
-require_once(__DIR__."/../../database/dummy-db.php");
 require_once(__DIR__."/../qr-interactor.php");
+require_once(__DIR__."/../../database/dummy-db.php");
 
 use chillerlan\QRCode\QRCode;
 
