@@ -82,9 +82,7 @@ final class URLInteractor implements URLRequestBoundary
 
 	public function find_url_by_handle (string $handle): Result
 	{
-		$result = Result::from_value($this->gateway->find_url_by_handle($handle));
-
-		var_dump($result);
+		$result = $this->gateway->find_url_by_handle($handle);
 
 		if (!$result->ok())
 			$result->push_back(ERR_URL_NOT_FOUND);
