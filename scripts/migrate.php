@@ -15,7 +15,7 @@ function mongodb_collection (string $collection): \MongoDB\Collection
 	if (is_null($database))
 		$database = (new \MongoDB\Client("mongodb://localhost:27017"))->neosluger;
 
-	return $database->select_collection($collection);
+	return $database->selectCollection($collection);
 }
 
 
@@ -144,13 +144,26 @@ function connect_to_mysql_db (): \mysqli
 	if (!empty($input))
 		$db = $input;
 
-	$mysql = new \mysqli("localhost", $user, $pass, $db);
+	$mysqli = null;
 
-	if ($mysql->connect_errno)
+	try
+	{
+		$mysqli = new \mysqli("localhost", $user, $pass, $db);
+	}
+	catch (\Error $e)
+	{
+		echo "\n\n";
+		echo ">>>>> Can't connect to MySQL!!!\n";
+		echo ">>>>> Did you uncomment \"extension=mysqli\" in \"/etc/php/php.ini\"?\n";
+		echo ">>>>> Is the MySQL database on?\n\n\n";
+		throw $e;
+	}
+
+	if ($mysqli->connect_errno)
 		throw new \ErrorException("Could not connect to ".$db."!");
 
 	echo "Connection successful!\n";
-	return $mysql;
+	return $mysqli;
 }
 
 
