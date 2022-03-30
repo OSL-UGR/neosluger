@@ -1,17 +1,12 @@
-<?php declare(strict_types=1); namespace NslLocale;
+<?php declare(strict_types=1); namespace NslSettings;
 
 
-require_once(__DIR__."/../settings/settings.php");
+require_once(__DIR__."/settings.php");
 
 
-function localize (array $strings): string
+function localise (array $msg): string
 {
-	$message = $strings["EN"];
-
-	if (array_key_exists(\NslSettings\LANGUAGE, $strings))
-		$message = $strings[\NslSettings\LANGUAGE];
-
-	return $message;
+	return (array_key_exists(LANGUAGE, $msg) ? $msg[LANGUAGE] : $msg["EN"]);
 }
 
 ?>
