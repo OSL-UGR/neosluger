@@ -1,8 +1,11 @@
-<?php declare(strict_types=1); namespace NeoslugerWeb; ini_set("display_errors", '1');
+<?php declare(strict_types=1); namespace NeoslugerWeb;
 
 
 require_once(__DIR__."/../presenter/render.php");
 require_once($_SERVER['DOCUMENT_ROOT']."/settings/boundaries.php");
+require_once($_SERVER["DOCUMENT_ROOT"]."/settings/settings.php");
+
+ini_set("display_errors", strval(\NeoslugerSettings\DEBUG));
 
 
 function render_stats (\Neosluger\URL $url, array $logs): void

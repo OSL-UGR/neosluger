@@ -1,4 +1,4 @@
-<?php declare(strict_types=1); namespace NeoslugerWeb; ini_set("display_errors", '1');
+<?php declare(strict_types=1); namespace NeoslugerWeb;
 
 
 function filter_short_link_handle (string $query, string $site_address): string
