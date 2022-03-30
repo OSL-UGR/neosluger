@@ -10,12 +10,6 @@ $ERR_COULDNT_LOG = fn () =>\NslSettings\localise([
 ]);
 
 
-$ERR_COULDNT_REGISTER = fn () =>\NslSettings\localise([
-	"EN" => "Could not register URL",
-	"ES" => "¡No se pudo registrar el enlace",
-]);
-
-
 $ERR_DATABASE_OFFLINE = fn () =>\NslSettings\localise([
 	"EN" => "Critical error connecting to the database! Is it even on?",
 	"ES" => "¡Error crítico al conectarse a la base de datos! ¿Está encendida siquiera?",
@@ -34,31 +28,27 @@ $ERR_URL_NOT_FOUND = fn () => \NslSettings\localise([
 ]);
 
 
-$ERR_REGISTERING_FAILED_LOG_PRE = fn () =>\NslSettings\localise([
-	"EN" => "Registration of logs for URL",
-	"ES" => "¡El registro de un historial para el enlace",
-]);
-$ERR_REGISTERING_FAILED_URL_PRE = fn () =>\NslSettings\localise([
-	"EN" => "Registration of URL",
-	"ES" => "¡El registro del enlace",
-]);
-$ERR_REGISTERING_FAILED_POST = fn () =>\NslSettings\localise([
-	"EN" => "failed!",
-	"ES" => "falló!",
+$ERR_REGISTERING_FAILED_LOG = fn () =>\NslSettings\localise([
+	"EN" => "Could not register log for URL",
+	"ES" => "¡No se pudo registrar un historial para el enlace",
 ]);
 
 
-$ERR_ZERO_RESULTS_LOG_PRE = fn () => \NslSettings\localise([
-	"EN" => "Log lookup for URL",
-	"ES" => "¡La búsqueda del historial del enlace",
+$ERR_REGISTERING_FAILED_URL = fn () =>\NslSettings\localise([
+	"EN" => "Could not register URL",
+	"ES" => "¡No se pudo registrar el enlace",
 ]);
-$ERR_ZERO_RESULTS_URL_PRE = fn () => \NslSettings\localise([
-	"EN" => "URL lookup with handle",
-	"ES" => "¡La búsqueda de un enlace con nombre",
+
+
+$ERR_ZERO_RESULTS_LOG = fn () => \NslSettings\localise([
+	"EN" => "Zero log results were retrieved for URL",
+	"ES" => "¡No se encontraron resultados para un historial del enlace",
 ]);
-$ERR_ZERO_RESULTS_POST = fn () => \NslSettings\localise([
-	"EN" => "returned zero results!",
-	"ES" => "no devolvió resultados!",
+
+
+$ERR_ZERO_RESULTS_URL = fn () => \NslSettings\localise([
+	"EN" => "Zero URL results were retrieved for handle",
+	"ES" => "¡No se encontraron resultados para un enlace con nombre",
 ]);
 
 

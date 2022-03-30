@@ -27,7 +27,7 @@ const URL_HANDLE_FIELD = "handle";
 const URL_DESTINATION_FIELD = "destination";
 
 
-/** @class DummyDB
+/** @class MongoDBConnector
   * @brief `\Nsl\URLGateway` implementation for MongoDB.
   */
 
@@ -162,7 +162,8 @@ class MongoDBConnector implements \Nsl\URLGateway
 
 	public function find_url_by_handle (string $handle): \Nsl\Result
 	{
-		global $ERR_URL_NOT_FOUND, $ERR_ZERO_RESULTS_URL_PRE, $ERR_ZERO_RESULTS_POST;
+		global $ERR_URL_NOT_FOUND, $ERR_ZERO_RESULTS_URL;
+
 		$result = $url = $this->try_db_access(fn () => $this->find_url_command($handle));
 
 		if ($url->ok())
@@ -181,7 +182,7 @@ class MongoDBConnector implements \Nsl\URLGateway
 						$url[URL_HANDLE_FIELD]
 					));
 				else
-					$result->push_back($ERR_ZERO_RESULTS_URL_PRE()." '".$handle."' ".$ERR_ZERO_RESULTS_POST());
+					$result->push_back($ERR_ZERO_RESULTS_URL()." '".$handle."'!");
 			}
 		}
 
@@ -198,7 +199,8 @@ class MongoDBConnector implements \Nsl\URLGateway
 
 	public function find_urls_logged_accesses (\Nsl\URL $url): \Nsl\Result
 	{
-		global $ERR_LOG_NOT_FOUND, $ERR_ZERO_RESULTS_LOG_PRE, $ERR_ZERO_RESULTS_POST;
+		global $ERR_LOG_NOT_FOUND, $ERR_ZERO_RESULTS_LOG;
+
 		$result = $accesses = $this->try_db_access(fn () => $this->find_log_command($url->handle()));
 
 		if ($accesses->ok())
@@ -215,7 +217,7 @@ class MongoDBConnector implements \Nsl\URLGateway
 				$result = \Nsl\Result::from_value($log);
 			}
 			else
-				$result->push_back($ERR_ZERO_RESULTS_LOG_PRE()." '".$url->handle()."' ".$ERR_ZERO_RESULTS_POST());
+				$result->push_back($ERR_ZERO_RESULTS_LOG()." '".$url->handle()."'!");
 		}
 
 		if (!$result->ok())
@@ -232,8 +234,8 @@ class MongoDBConnector implements \Nsl\URLGateway
 	public function log_access_to_url (\Nsl\URL $url, \DateTime $datetime): \Nsl\Result
 	{
 		global $ERR_COULDNT_LOG;
-		$update_result = $this->try_db_access(fn () => $this->update_log_command($url, $datetime));
-		$result = $update_result;
+
+		$result = $update_result = $this->try_db_access(fn () => $this->update_log_command($url, $datetime));
 
 		if ($update_result->ok() && $update_result->unwrap()->getModifiedCount() === 1)
 			$result = \Nsl\Result::from_value(true);
@@ -250,33 +252,21 @@ class MongoDBConnector implements \Nsl\URLGateway
 
 	public function register_new_url (\Nsl\URL $url): \Nsl\Result
 	{
-		global $ERR_COULDNT_REGISTER, $ERR_REGISTERING_FAILED_LOG_PRE, $ERR_REGISTERING_FAILED_URL_PRE, $ERR_REGISTERING_FAILED_POST;
-		$result = $found_url = $this->try_db_access(fn () => $this->find_url_command($url->handle()));
+		global $ERR_REGISTERING_FAILED_LOG, $ERR_REGISTERING_FAILED_URL;
 
-		if ($found_url->ok())
+		$result = $url_insertion = $this->try_db_access(fn () => $this->insert_url_command($url));
+
+		if ($url_insertion->ok() && $url_insertion->unwrap()->getInsertedCount() === 1)
 		{
-			if ($found_url->unwrap() === false)
-			{
-				$result = $url_insertion = $this->try_db_access(fn () => $this->insert_url_command($url));
+			$result = $log_insertion = $this->try_db_access(fn () => $this->insert_log_command($url));
 
-				if ($url_insertion->ok() && $url_insertion->unwrap()->getInsertedCount() === 1)
-				{
-					$result = $log_insertion = $this->try_db_access(fn () => $this->insert_log_command($url));
-
-					if ($log_insertion->ok() && $log_insertion->unwrap()->getInsertedCount() === 1)
-						$result = \Nsl\Result::from_value(true);
-					else
-						$result->push_back($ERR_REGISTERING_FAILED_LOG_PRE()." '".$url->handle()."' ".$ERR_REGISTERING_FAILED_POST());
-				}
-				else
-					$result->push_back($ERR_REGISTERING_FAILED_URL_PRE()." '".$url->handle()."' ".$ERR_REGISTERING_FAILED_POST());
-			}
+			if ($log_insertion->ok() && $log_insertion->unwrap()->getInsertedCount() === 1)
+				$result = \Nsl\Result::from_value(true);
 			else
-				$result = \Nsl\Result::from_value(false);
+				$result->push_back($ERR_REGISTERING_FAILED_LOG()." '".$url->handle()."'!");
 		}
-
-		if (!$result->ok())
-			$result->push_back($ERR_COULDNT_REGISTER()." '".$url->handle()."'!");
+		else
+			$result->push_back($ERR_REGISTERING_FAILED_URL()." '".$url->handle()."'!");
 
 		return $result;
 	}

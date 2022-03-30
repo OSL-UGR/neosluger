@@ -14,7 +14,7 @@ require_once(__DIR__."/url.php");
 
 interface URLGateway
 {
-	/** @fn find_url_by_handle (string $handle): ?URL
+	/** @fn find_url_by_handle (string $handle): Result
 	  * @brief Queries the massive storage for an URL registered with a handle.
 	  *
 	  * @param $handle Handle of the URL to search for.
@@ -24,7 +24,7 @@ interface URLGateway
 	public function find_url_by_handle (string $handle): Result; // <URL>
 
 
-	/** @fn find_urls_logged_accesses (URL $url): ?array
+	/** @fn find_urls_logged_accesses (URL $url): Result
 	  * @brief Queries the massive storage for an URL's access logs.
 	  *
 	  * @param $url The URL to be queried.
@@ -39,7 +39,7 @@ interface URLGateway
 	public function find_urls_logged_accesses (URL $url): Result; // <array>
 
 
-	/** @fn log_access_to_url (URL $url, \DateTime $datetime): bool
+	/** @fn log_access_to_url (URL $url, \DateTime $datetime): Result
 	  * @brief Updates the massive storage's URL access logs.
 	  *
 	  * @param $url The URL's logs to be updated.
@@ -50,7 +50,7 @@ interface URLGateway
 	public function log_access_to_url (URL $url, \DateTime $datetime): Result; // <bool>
 
 
-	/** @fn register_new_url (URL $url): bool
+	/** @fn register_new_url (URL $url): Result
 	  * @brief Inserts a new URL in the massive storage system.
 	  *
 	  * @param $url The URL to be inserted.

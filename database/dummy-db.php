@@ -25,11 +25,11 @@ class DummyDB implements \Nsl\URLGateway
 	private array $logs = [];
 
 
-	/** @fn find_url_by_handle (string $handle): ?\Nsl\URL
+	/** @fn find_url_by_handle (string $handle): \Nsl\Result
 	  * @brief Implementation of `\Nsl\URLRequestBoundary::find_url_by_handle`.
 	  */
 
-	public function find_url_by_handle (string $handle): \Nsl\Result
+	public function find_url_by_handle (string $handle): \Nsl\Result // <\Nsl\URL>
 	{
 		global $ERR_URL_NOT_FOUND;
 		$result = \Nsl\Result::from_error($ERR_URL_NOT_FOUND()." '".$handle."'!");
@@ -41,11 +41,11 @@ class DummyDB implements \Nsl\URLGateway
 	}
 
 
-	/** @fn find_urls_logged_accesses (\Nsl\URL $url): ?array
+	/** @fn find_urls_logged_accesses (\Nsl\URL $url): \Nsl\Result
 	  * @brief Implementation of `\Nsl\URLRequestBoundary::find_urls_logged_accesses`.
 	  */
 
-	public function find_urls_logged_accesses (\Nsl\URL $url): \Nsl\Result
+	public function find_urls_logged_accesses (\Nsl\URL $url): \Nsl\Result // <array>
 	{
 		global $ERR_LOG_NOT_FOUND;
 		$result = \Nsl\Result::from_error($ERR_LOG_NOT_FOUND()." '".$url->handle()."'!");
@@ -57,22 +57,22 @@ class DummyDB implements \Nsl\URLGateway
 	}
 
 
-	/** @fn log_access_to_url (\Nsl\URL $url, \DateTime $datetime): bool
+	/** @fn log_access_to_url (\Nsl\URL $url, \DateTime $datetime): \Nsl\Result
 	  * @brief Implementation of `\Nsl\URLRequestBoundary::log_access_to_url`.
 	  */
 
-	public function log_access_to_url (\Nsl\URL $url, \DateTime $datetime): \Nsl\Result
+	public function log_access_to_url (\Nsl\URL $url, \DateTime $datetime): \Nsl\Result // <bool>
 	{
 		array_push($this->logs[$url->handle()], $datetime);
 		return \Nsl\Result::from_value(true);
 	}
 
 
-	/** @fn register_new_url (\Nsl\URL $url): bool
+	/** @fn register_new_url (\Nsl\URL $url): \Nsl\Result
 	  * @brief Implementation of `\Nsl\URLRequestBoundary::register_new_url`.
 	  */
 
-	public function register_new_url (\Nsl\URL $url): \Nsl\Result
+	public function register_new_url (\Nsl\URL $url): \Nsl\Result // <bool>
 	{
 		$this->urls[$url->handle()] = $url;
 		$this->logs[$url->handle()] = [$url->creation_datetime()];
