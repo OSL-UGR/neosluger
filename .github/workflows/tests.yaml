@@ -20,4 +20,8 @@ jobs:
 
       - name: Run PHPUnit tests suites
         run: |
+          vendor/bin/phpunit api/tests
           vendor/bin/phpunit core/tests
+          vendor/bin/phpunit database/tests
+          vendor/bin/phpunit settings/tests
+          vendor/bin/phpunit web/presenter/tests

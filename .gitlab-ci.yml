@@ -22,5 +22,9 @@ PHPUnit Tests:
     - merge-requests
     - pushes
   script:
-    - sed -i 's/localhost:27017/mongo:27017/g' core/const.php
+    - sed -i 's/localhost:27017/mongo:27017/g' database/mongodb-connector.php
+    - php vendor/bin/phpunit api/tests
     - php vendor/bin/phpunit core/tests
+    - php vendor/bin/phpunit database/tests
+    - php vendor/bin/phpunit settings/tests
+    - php vendor/bin/phpunit web/presenter/tests
