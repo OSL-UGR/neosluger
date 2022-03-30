@@ -1,4 +1,4 @@
-<?php declare(strict_types=1); namespace NeoslugerWeb;
+<?php declare(strict_types=1); namespace NslWeb;
 
 
 require_once(__DIR__."/error.php");
@@ -6,7 +6,7 @@ require_once(__DIR__."/../presenter/render.php");
 require_once($_SERVER['DOCUMENT_ROOT']."/settings/boundaries.php");
 require_once($_SERVER["DOCUMENT_ROOT"]."/settings/settings.php");
 
-ini_set("display_errors", strval(\NeoslugerSettings\DEBUG));
+ini_set("display_errors", strval(\NslSettings\DEBUG));
 
 
 function read_form (): array
@@ -21,12 +21,12 @@ function read_form (): array
 function page_main (): void
 {
 	$form_fields = read_form();
-	$register_result = \NeoslugerSettings\url_boundary()->register_new_url($form_fields["url"], $form_fields["handle"]);
+	$register_result = \NslSettings\url_boundary()->register_new_url($form_fields["url"], $form_fields["handle"]);
 
 	if ($register_result->ok())
 	{
 		$url = $register_result->unwrap();
-		$qr_path = \NeoslugerSettings\qr_boundary()->generate_qr_from_string($url->full_handle());
+		$qr_path = \NslSettings\qr_boundary()->generate_qr_from_string($url->full_handle());
 
 		render("url-result", [
 			"destination" => $form_fields["url"],

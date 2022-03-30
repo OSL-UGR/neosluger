@@ -1,4 +1,4 @@
-<?php declare(strict_types=1); namespace Neosluger;
+<?php declare(strict_types=1); namespace Nsl;
 
 
 require_once(__DIR__."/result.php");

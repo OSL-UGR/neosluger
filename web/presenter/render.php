@@ -1,4 +1,4 @@
-<?php declare(strict_types=1); namespace NeoslugerWeb;
+<?php declare(strict_types=1); namespace NslWeb;
 
 
 require_once($_SERVER['DOCUMENT_ROOT']."/vendor/autoload.php");

@@ -1,4 +1,4 @@
-<?php declare(strict_types=1); namespace NeoslugerSettings;
+<?php declare(strict_types=1); namespace NslSettings;
 
 
 require_once(__DIR__."/../settings/settings.php");

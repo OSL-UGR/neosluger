@@ -1,4 +1,4 @@
-<?php declare(strict_types=1); namespace NeoslugerDB;
+<?php declare(strict_types=1); namespace NslDB;
 
 
 require_once(__DIR__."/strings.php");
@@ -28,10 +28,10 @@ const URL_DESTINATION_FIELD = "destination";
 
 
 /** @class DummyDB
-  * @brief `\Neosluger\URLGateway` implementation for MongoDB.
+  * @brief `\Nsl\URLGateway` implementation for MongoDB.
   */
 
-class MongoDBConnector implements \Neosluger\URLGateway
+class MongoDBConnector implements \Nsl\URLGateway
 {
 	/** Name of the access logs collection. **/
 	private string $logs = DEFAULT_LOGS;
@@ -62,14 +62,14 @@ class MongoDBConnector implements \Neosluger\URLGateway
 	  * @return Result The command's optional result.
 	  */
 
-	private function try_db_access (callable $command): \Neosluger\Result
+	private function try_db_access (callable $command): \Nsl\Result
 	{
 		global $ERR_DATABASE_OFFLINE;
-		$result = \Neosluger\Result::from_error($ERR_DATABASE_OFFLINE());
+		$result = \Nsl\Result::from_error($ERR_DATABASE_OFFLINE());
 
 		try
 		{
-			$result = \Neosluger\Result::from_value($command());
+			$result = \Nsl\Result::from_value($command());
 		}
 		catch (\Exception $e)
 		{
@@ -108,14 +108,14 @@ class MongoDBConnector implements \Neosluger\URLGateway
 	}
 
 
-	/** @fn insert_log_command (\Neosluger\URL $url): \MongoDB\InsertOneResult
+	/** @fn insert_log_command (\Nsl\URL $url): \MongoDB\InsertOneResult
 	  * @brief Command to insert a logs document for an URL into the database.
 	  *
 	  * @param $url The URL whose matching logs document is going to be inserted.
 	  * @return \MongoDB\InsertOneResult The insertion result from the database.
 	  */
 
-	private function insert_log_command (\Neosluger\URL $url): \MongoDB\InsertOneResult
+	private function insert_log_command (\Nsl\URL $url): \MongoDB\InsertOneResult
 	{
 		return $this->db->selectCollection($this->logs)->insertOne([
 			URL_HANDLE_FIELD   => $url->handle(),
@@ -124,14 +124,14 @@ class MongoDBConnector implements \Neosluger\URLGateway
 	}
 
 
-	/** @fn insert_url_command (\Neosluger\URL $url): \MongoDB\InsertOneResult
+	/** @fn insert_url_command (\Nsl\URL $url): \MongoDB\InsertOneResult
 	  * @brief Command to insert a URL into the databse.
 	  *
 	  * @param $url The URL whose document is going to be inserted.
 	  * @return \MongoDB\InsertOneResult The insertion result from the database.
 	  */
 
-	private function insert_url_command (\Neosluger\URL $url): \MongoDB\InsertOneResult
+	private function insert_url_command (\Nsl\URL $url): \MongoDB\InsertOneResult
 	{
 		return $this->db->selectCollection($this->urls)->insertOne([
 			URL_HANDLE_FIELD      => $url->handle(),
@@ -140,7 +140,7 @@ class MongoDBConnector implements \Neosluger\URLGateway
 	}
 
 
-	/** @fn update_log_command (\Neosluger\URL $url, \DateTime $datetime): \MongoDB\UpdateResult
+	/** @fn update_log_command (\Nsl\URL $url, \DateTime $datetime): \MongoDB\UpdateResult
 	  * @brief Command to update a URL's logs with a new access datetime.
 	  *
 	  * @param $url The URL whose logs are going to be updated.
@@ -148,7 +148,7 @@ class MongoDBConnector implements \Neosluger\URLGateway
 	  * @return \MongoDB\UpdateResult The update result from the database.
 	  */
 
-	private function update_log_command (\Neosluger\URL $url, \DateTime $datetime): \MongoDB\UpdateResult
+	private function update_log_command (\Nsl\URL $url, \DateTime $datetime): \MongoDB\UpdateResult
 	{
 		return $this->db->selectCollection($this->logs)->updateOne([URL_HANDLE_FIELD => $url->handle()], [
 			'$push' => [LOG_ACCESSES_FIELD => $datetime->format("Y-m-d H:i:s.u")]
@@ -160,7 +160,7 @@ class MongoDBConnector implements \Neosluger\URLGateway
 	  * @brief Implementation of `QRRequestBoundary::generate_qr_from_url`.
 	  */
 
-	public function find_url_by_handle (string $handle): \Neosluger\Result
+	public function find_url_by_handle (string $handle): \Nsl\Result
 	{
 		global $ERR_URL_NOT_FOUND, $ERR_ZERO_RESULTS_URL_PRE, $ERR_ZERO_RESULTS_POST;
 		$result = $url = $this->try_db_access(fn () => $this->find_url_command($handle));
@@ -175,7 +175,7 @@ class MongoDBConnector implements \Neosluger\URLGateway
 				$log = $log->unwrap();
 
 				if ($url !== false && $log !== false)
-					$result = \Neosluger\Result::from_value(new \Neosluger\URL(
+					$result = \Nsl\Result::from_value(new \Nsl\URL(
 						$url[URL_DESTINATION_FIELD],
 						new \Datetime($log[0]),
 						$url[URL_HANDLE_FIELD]
@@ -192,11 +192,11 @@ class MongoDBConnector implements \Neosluger\URLGateway
 	}
 
 
-	/** @fn find_urls_logged_accesses (\Neosluger\URL $url): ?array
-	  * @brief Implementation of `\Neosluger\URLRequestBoundary::find_urls_logged_accesses`.
+	/** @fn find_urls_logged_accesses (\Nsl\URL $url): ?array
+	  * @brief Implementation of `\Nsl\URLRequestBoundary::find_urls_logged_accesses`.
 	  */
 
-	public function find_urls_logged_accesses (\Neosluger\URL $url): \Neosluger\Result
+	public function find_urls_logged_accesses (\Nsl\URL $url): \Nsl\Result
 	{
 		global $ERR_LOG_NOT_FOUND, $ERR_ZERO_RESULTS_LOG_PRE, $ERR_ZERO_RESULTS_POST;
 		$result = $accesses = $this->try_db_access(fn () => $this->find_log_command($url->handle()));
@@ -212,7 +212,7 @@ class MongoDBConnector implements \Neosluger\URLGateway
 				foreach ($accesses as $access)
 					array_push($log, new \Datetime($access));
 
-				$result = \Neosluger\Result::from_value($log);
+				$result = \Nsl\Result::from_value($log);
 			}
 			else
 				$result->push_back($ERR_ZERO_RESULTS_LOG_PRE()." '".$url->handle()."' ".$ERR_ZERO_RESULTS_POST());
@@ -225,18 +225,18 @@ class MongoDBConnector implements \Neosluger\URLGateway
 	}
 
 
-	/** @fn log_access_to_url (\Neosluger\URL $url, \DateTime $datetime): bool
-	  * @brief Implementation of `\Neosluger\URLRequestBoundary::log_access_to_url`.
+	/** @fn log_access_to_url (\Nsl\URL $url, \DateTime $datetime): bool
+	  * @brief Implementation of `\Nsl\URLRequestBoundary::log_access_to_url`.
 	  */
 
-	public function log_access_to_url (\Neosluger\URL $url, \DateTime $datetime): \Neosluger\Result
+	public function log_access_to_url (\Nsl\URL $url, \DateTime $datetime): \Nsl\Result
 	{
 		global $ERR_COULDNT_LOG;
 		$update_result = $this->try_db_access(fn () => $this->update_log_command($url, $datetime));
 		$result = $update_result;
 
 		if ($update_result->ok() && $update_result->unwrap()->getModifiedCount() === 1)
-			$result = \Neosluger\Result::from_value(true);
+			$result = \Nsl\Result::from_value(true);
 		else
 			$result->push_back($ERR_COULDNT_LOG()." '".$url->handle()."'!");
 
@@ -244,11 +244,11 @@ class MongoDBConnector implements \Neosluger\URLGateway
 	}
 
 
-	/** @fn register_new_url (\Neosluger\URL $url): bool
-	  * @brief Implementation of `\Neosluger\URLRequestBoundary::register_new_url`.
+	/** @fn register_new_url (\Nsl\URL $url): bool
+	  * @brief Implementation of `\Nsl\URLRequestBoundary::register_new_url`.
 	  */
 
-	public function register_new_url (\Neosluger\URL $url): \Neosluger\Result
+	public function register_new_url (\Nsl\URL $url): \Nsl\Result
 	{
 		global $ERR_COULDNT_REGISTER, $ERR_REGISTERING_FAILED_LOG_PRE, $ERR_REGISTERING_FAILED_URL_PRE, $ERR_REGISTERING_FAILED_POST;
 		$result = $found_url = $this->try_db_access(fn () => $this->find_url_command($url->handle()));
@@ -264,7 +264,7 @@ class MongoDBConnector implements \Neosluger\URLGateway
 					$result = $log_insertion = $this->try_db_access(fn () => $this->insert_log_command($url));
 
 					if ($log_insertion->ok() && $log_insertion->unwrap()->getInsertedCount() === 1)
-						$result = \Neosluger\Result::from_value(true);
+						$result = \Nsl\Result::from_value(true);
 					else
 						$result->push_back($ERR_REGISTERING_FAILED_LOG_PRE()." '".$url->handle()."' ".$ERR_REGISTERING_FAILED_POST());
 				}
@@ -272,7 +272,7 @@ class MongoDBConnector implements \Neosluger\URLGateway
 					$result->push_back($ERR_REGISTERING_FAILED_URL_PRE()." '".$url->handle()."' ".$ERR_REGISTERING_FAILED_POST());
 			}
 			else
-				$result = \Neosluger\Result::from_value(false);
+				$result = \Nsl\Result::from_value(false);
 		}
 
 		if (!$result->ok())
@@ -320,7 +320,7 @@ class MongoDBConnector implements \Neosluger\URLGateway
 		foreach ($urls_result as $url)
 		{
 			$log = $this->try_db_access(fn () => $this->find_log_command($url[URL_HANDLE_FIELD]))->unwrap();
-			array_push($urls, new \Neosluger\URL(
+			array_push($urls, new \Nsl\URL(
 				$url[URL_DESTINATION_FIELD],
 				new \DateTime($log[0]),
 				$url[URL_HANDLE_FIELD]

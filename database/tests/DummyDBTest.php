@@ -1,4 +1,4 @@
-<?php declare(strict_types=1); namespace NeoslugerDB;
+<?php declare(strict_types=1); namespace NslDB;
 
 
 require_once(__DIR__."/../dummy-db.php");
@@ -9,14 +9,14 @@ final class DummyDBTest extends \PHPUnit\Framework\TestCase
 {
 	private DummyDB $db;
 	private \DateTime $datetime;
-	private \Neosluger\URL $url;
+	private \Nsl\URL $url;
 
 
 	protected function setUp (): void
 	{
 		$this->db = new DummyDB;
 		$this->datetime = new \Datetime("NOW", new \DateTimeZone(date('T')));
-		$this->url = new \Neosluger\URL("https://ugr.es/", $this->datetime, "test-url");
+		$this->url = new \Nsl\URL("https://ugr.es/", $this->datetime, "test-url");
 	}
 
 
@@ -35,7 +35,7 @@ final class DummyDBTest extends \PHPUnit\Framework\TestCase
 		$this->assertNotEmpty($this->db->urls());
 		$this->assertNotEmpty($this->db->logs());
 
-		$this->assertContainsOnlyInstancesOf(\Neosluger\URL::class, $this->db->urls());
+		$this->assertContainsOnlyInstancesOf(\Nsl\URL::class, $this->db->urls());
 		foreach ($this->db->logs() as $log)
 			$this->assertContainsOnlyInstancesOf(\DateTime::class, $log);
 	}
@@ -46,7 +46,7 @@ final class DummyDBTest extends \PHPUnit\Framework\TestCase
 		$result = $this->db->register_new_url($this->url);
 		$this->assertTrue($result->ok());
 
-		$this->assertContainsOnlyInstancesOf(\Neosluger\URL::class, $this->db->urls());
+		$this->assertContainsOnlyInstancesOf(\Nsl\URL::class, $this->db->urls());
 		foreach ($this->db->logs() as $log)
 			$this->assertContainsOnlyInstancesOf(\DateTime::class, $log);
 
@@ -61,12 +61,12 @@ final class DummyDBTest extends \PHPUnit\Framework\TestCase
 	public function test_two_urls_can_be_inserted_and_retrieved (): void
 	{
 		$other_datetime = new \Datetime("NOW", new \DateTimeZone(date('T')));
-		$other_url = new \Neosluger\URL("https://ugr.es/", $other_datetime, "ello");
+		$other_url = new \Nsl\URL("https://ugr.es/", $other_datetime, "ello");
 
 		$this->db->register_new_url($this->url);
 		$this->db->register_new_url($other_url);
 
-		$this->assertContainsOnlyInstancesOf(\Neosluger\URL::class, $this->db->urls());
+		$this->assertContainsOnlyInstancesOf(\Nsl\URL::class, $this->db->urls());
 		foreach ($this->db->logs() as $log)
 			$this->assertContainsOnlyInstancesOf(\DateTime::class, $log);
 
@@ -87,7 +87,7 @@ final class DummyDBTest extends \PHPUnit\Framework\TestCase
 		$result = $this->db->log_access_to_url($this->url, $other_datetime);
 		$this->assertTrue($result->ok());
 
-		$this->assertContainsOnlyInstancesOf(\Neosluger\URL::class, $this->db->urls());
+		$this->assertContainsOnlyInstancesOf(\Nsl\URL::class, $this->db->urls());
 		foreach ($this->db->logs() as $log)
 			$this->assertContainsOnlyInstancesOf(\DateTime::class, $log);
 

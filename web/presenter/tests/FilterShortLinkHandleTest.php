@@ -1,4 +1,4 @@
-<?php declare(strict_types=1); namespace NeoslugerWeb;
+<?php declare(strict_types=1); namespace NslWeb;
 
 
 require_once(__DIR__."/../filter-short-link-handle.php");

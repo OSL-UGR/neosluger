@@ -1,4 +1,4 @@
-<?php declare(strict_types=1); namespace Neosluger;
+<?php declare(strict_types=1); namespace Nsl;
 
 
 require_once(__DIR__."/../url-interactor.php");
@@ -17,7 +17,7 @@ final class URLInteractorTest extends \PHPUnit\Framework\TestCase
 
 	protected function setUp (): void
 	{
-		$this->database   = new \NeoslugerDB\DummyDB();
+		$this->database   = new \NslDB\DummyDB();
 		$this->interactor = new URLInteractor($this->database);
 	}
 
@@ -39,10 +39,10 @@ final class URLInteractorTest extends \PHPUnit\Framework\TestCase
 		$short_handle = "";
 		$long_handle  = "";
 
-		for ($i = 0; $i < \NeoslugerSettings\MIN_HANDLE_LEN-1; ++$i)
+		for ($i = 0; $i < \NslSettings\MIN_HANDLE_LEN-1; ++$i)
 			$short_handle .= "s";
 
-		for ($i = 0; $i < \NeoslugerSettings\MAX_HANDLE_LEN+1; ++$i)
+		for ($i = 0; $i < \NslSettings\MAX_HANDLE_LEN+1; ++$i)
 			$long_handle .= "s";
 
 		$short_handle_result = $this->interactor->register_new_url(URLInteractorTest::DESTINATION, $short_handle);

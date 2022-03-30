@@ -1,4 +1,4 @@
-<?php declare(strict_types=1); namespace NeoslugerDB;
+<?php declare(strict_types=1); namespace NslDB;
 
 
 require_once(__DIR__."/strings.php");
@@ -8,7 +8,7 @@ require_once(__DIR__."/../core/url-gateway.php");
 
 
 /** @class DummyDB
-  * @brief `\Neosluger\URLGateway` implementation for testing purposes.
+  * @brief `\Nsl\URLGateway` implementation for testing purposes.
   *
   * DO NOT USE THIS DATABASE IN PRODUCTION! This is used to test the core logic
   * without the need to have a running database driver. This class mimics a
@@ -16,7 +16,7 @@ require_once(__DIR__."/../core/url-gateway.php");
   * no URLs will be saved in the system!
   */
 
-class DummyDB implements \Neosluger\URLGateway
+class DummyDB implements \Nsl\URLGateway
 {
 	/** URLs inserted in the database during the current execution. */
 	private array $urls = [];
@@ -25,58 +25,58 @@ class DummyDB implements \Neosluger\URLGateway
 	private array $logs = [];
 
 
-	/** @fn find_url_by_handle (string $handle): ?\Neosluger\URL
-	  * @brief Implementation of `\Neosluger\URLRequestBoundary::find_url_by_handle`.
+	/** @fn find_url_by_handle (string $handle): ?\Nsl\URL
+	  * @brief Implementation of `\Nsl\URLRequestBoundary::find_url_by_handle`.
 	  */
 
-	public function find_url_by_handle (string $handle): \Neosluger\Result
+	public function find_url_by_handle (string $handle): \Nsl\Result
 	{
 		global $ERR_URL_NOT_FOUND;
-		$result = \Neosluger\Result::from_error($ERR_URL_NOT_FOUND()." '".$handle."'!");
+		$result = \Nsl\Result::from_error($ERR_URL_NOT_FOUND()." '".$handle."'!");
 
 		if (array_key_exists($handle, $this->urls))
-			$result = \Neosluger\Result::from_value($this->urls[$handle]);
+			$result = \Nsl\Result::from_value($this->urls[$handle]);
 
 		return $result;
 	}
 
 
-	/** @fn find_urls_logged_accesses (\Neosluger\URL $url): ?array
-	  * @brief Implementation of `\Neosluger\URLRequestBoundary::find_urls_logged_accesses`.
+	/** @fn find_urls_logged_accesses (\Nsl\URL $url): ?array
+	  * @brief Implementation of `\Nsl\URLRequestBoundary::find_urls_logged_accesses`.
 	  */
 
-	public function find_urls_logged_accesses (\Neosluger\URL $url): \Neosluger\Result
+	public function find_urls_logged_accesses (\Nsl\URL $url): \Nsl\Result
 	{
 		global $ERR_LOG_NOT_FOUND;
-		$result = \Neosluger\Result::from_error($ERR_LOG_NOT_FOUND()." '".$url->handle()."'!");
+		$result = \Nsl\Result::from_error($ERR_LOG_NOT_FOUND()." '".$url->handle()."'!");
 
 		if (array_key_exists($url->handle(), $this->logs))
-			$result = \Neosluger\Result::from_value($this->logs[$url->handle()]);
+			$result = \Nsl\Result::from_value($this->logs[$url->handle()]);
 
 		return $result;
 	}
 
 
-	/** @fn log_access_to_url (\Neosluger\URL $url, \DateTime $datetime): bool
-	  * @brief Implementation of `\Neosluger\URLRequestBoundary::log_access_to_url`.
+	/** @fn log_access_to_url (\Nsl\URL $url, \DateTime $datetime): bool
+	  * @brief Implementation of `\Nsl\URLRequestBoundary::log_access_to_url`.
 	  */
 
-	public function log_access_to_url (\Neosluger\URL $url, \DateTime $datetime): \Neosluger\Result
+	public function log_access_to_url (\Nsl\URL $url, \DateTime $datetime): \Nsl\Result
 	{
 		array_push($this->logs[$url->handle()], $datetime);
-		return \Neosluger\Result::from_value(true);
+		return \Nsl\Result::from_value(true);
 	}
 
 
-	/** @fn register_new_url (\Neosluger\URL $url): bool
-	  * @brief Implementation of `\Neosluger\URLRequestBoundary::register_new_url`.
+	/** @fn register_new_url (\Nsl\URL $url): bool
+	  * @brief Implementation of `\Nsl\URLRequestBoundary::register_new_url`.
 	  */
 
-	public function register_new_url (\Neosluger\URL $url): \Neosluger\Result
+	public function register_new_url (\Nsl\URL $url): \Nsl\Result
 	{
 		$this->urls[$url->handle()] = $url;
 		$this->logs[$url->handle()] = [$url->creation_datetime()];
-		return \Neosluger\Result::from_value(true);
+		return \Nsl\Result::from_value(true);
 	}
 
 

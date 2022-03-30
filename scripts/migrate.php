@@ -1,4 +1,4 @@
-<?php declare(strict_types=1); namespace NeoslugerScripts;
+<?php declare(strict_types=1); namespace NslScripts;
 
 
 require_once(__DIR__."/../settings/settings.php");
@@ -54,13 +54,13 @@ function insert_log_in_mongodb (array $link_row, array $log_table): void
 		array_push($log_object["accesses"], $access_datetime->format("Y-m-d H:i:s.u"));
 	}
 
-	mongodb_collection(\NeoslugerSettings\LOGS_COLLECTION)->insertOne($log_object);
+	mongodb_collection(\NslSettings\LOGS_COLLECTION)->insertOne($log_object);
 }
 
 
 function insert_url_in_mongodb (array $link_row): void
 {
-	mongodb_collection(\NeoslugerSettings\URLS_COLLECTION)->insertOne([
+	mongodb_collection(\NslSettings\URLS_COLLECTION)->insertOne([
 		"handle"      => $link_row["id"],
 		"destination" => $link_row["url"],
 	]);
@@ -112,8 +112,8 @@ function reset_mongodb_database (): bool
 	if ($user_consents_destruction)
 	{
 		echo "Dropping collections...\n";
-		mongodb_collection(\NeoslugerSettings\URLS_COLLECTION)->drop();
-		mongodb_collection(\NeoslugerSettings\LOGS_COLLECTION)->drop();
+		mongodb_collection(\NslSettings\URLS_COLLECTION)->drop();
+		mongodb_collection(\NslSettings\LOGS_COLLECTION)->drop();
 	}
 	else
 	{
@@ -184,8 +184,8 @@ function generate_indices ()
 {
 	echo "Generating indices...\n";
 
-	mongodb_collection(\NeoslugerSettings\URLS_COLLECTION)->createIndex(['handle' => 1]);
-	mongodb_collection(\NeoslugerSettings\LOGS_COLLECTION)->createIndex(['handle' => 1]);
+	mongodb_collection(\NslSettings\URLS_COLLECTION)->createIndex(['handle' => 1]);
+	mongodb_collection(\NslSettings\LOGS_COLLECTION)->createIndex(['handle' => 1]);
 
 	echo "Indices were successfully generated!\n";
 }

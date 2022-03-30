@@ -1,4 +1,4 @@
-<?php declare(strict_types=1); namespace NeoslugerScripts;
+<?php declare(strict_types=1); namespace NslScripts;
 
 
 require_once(__DIR__."/../migrate.php");

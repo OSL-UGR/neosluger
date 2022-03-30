@@ -1,4 +1,4 @@
-<?php declare(strict_types=1); namespace NeoslugerWeb; ini_set("display_errors", '1');
+<?php declare(strict_types=1); namespace NslWeb; ini_set("display_errors", '1');
 
 
 require_once($_SERVER['DOCUMENT_ROOT']."/core/url.php");
@@ -27,13 +27,13 @@ function find_page (string $uri): string
 }
 
 
-/** @fn redirect_to (\Neosluger\URL $url): void
+/** @fn redirect_to (\Nsl\URL $url): void
   * @brief Redirectes the user from a short URL to their destination.
   *
   * @param $url The URL to redirect the user from.
   */
 
-function redirect_to (\Neosluger\URL $url): void
+function redirect_to (\Nsl\URL $url): void
 {
 	// Prevent the user from caching this page so that all accesses are logged
 	header('Expires: Fri, 25 Oct 1996 14:40:00 GMT'); // Happy birthday to me~
@@ -41,7 +41,7 @@ function redirect_to (\Neosluger\URL $url): void
 	header('Cache-Control: post-check=0, pre-check=0', FALSE);
 	header('Pragma: no-cache');
 
-	\NeoslugerSettings\url_boundary()->log_access_to_url($url);
+	\NslSettings\url_boundary()->log_access_to_url($url);
 	header("Location: " . $url->destination(), true,  301);
 }
 
@@ -74,14 +74,14 @@ function try_old_api_or_404 (): void
 
 function main (): void
 {
-	$uri = \NeoslugerSettings\parse_request_uri_nth_item($_SERVER["REQUEST_URI"], 1);
+	$uri = \NslSettings\parse_request_uri_nth_item($_SERVER["REQUEST_URI"], 1);
 	$web_path = find_page($uri);
 
 	if (!empty($web_path))
 		include($web_path);
 	else
 	{
-		$url = \NeoslugerSettings\url_boundary()->find_url_by_handle($uri);
+		$url = \NslSettings\url_boundary()->find_url_by_handle($uri);
 
 		if ($url->ok())
 			redirect_to($url->unwrap());

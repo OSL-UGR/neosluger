@@ -1,4 +1,4 @@
-<?php declare(strict_types=1); namespace NeoslugerDB;
+<?php declare(strict_types=1); namespace NslDB;
 
 
 require_once(__DIR__."/../mongodb-connector.php");
@@ -13,7 +13,7 @@ final class MongoDBTest extends \PHPUnit\Framework\TestCase
 
 	private MongoDBConnector $db;
 	private \DateTime $datetime;
-	private \Neosluger\URL $url;
+	private \Nsl\URL $url;
 
 
 	protected function setUp (): void
@@ -32,7 +32,7 @@ final class MongoDBTest extends \PHPUnit\Framework\TestCase
 		$this->db->set_urls_collection(MongoDBTest::URLS_COLLECTION);
 
 		$this->datetime = new \Datetime("NOW", new \DateTimeZone(date('T')));
-		$this->url = new \Neosluger\URL("https://ugr.es/", $this->datetime, "test-url");
+		$this->url = new \Nsl\URL("https://ugr.es/", $this->datetime, "test-url");
 	}
 
 
@@ -70,7 +70,7 @@ final class MongoDBTest extends \PHPUnit\Framework\TestCase
 		$this->assertNotEmpty($this->db->urls());
 		$this->assertNotEmpty($this->db->logs());
 
-		$this->assertContainsOnlyInstancesOf(\Neosluger\URL::class, $this->db->urls());
+		$this->assertContainsOnlyInstancesOf(\Nsl\URL::class, $this->db->urls());
 		foreach ($this->db->logs() as $log)
 			$this->assertContainsOnlyInstancesOf(\DateTime::class, $log);
 	}
@@ -97,7 +97,7 @@ final class MongoDBTest extends \PHPUnit\Framework\TestCase
 	public function test_two_urls_can_be_inserted_and_retrieved (): void
 	{
 		$other_datetime = new \Datetime("NOW", new \DateTimeZone(date('T')));
-		$other_url = new \Neosluger\URL("https://ugr.es/", $other_datetime, "ello");
+		$other_url = new \Nsl\URL("https://ugr.es/", $other_datetime, "ello");
 
 		$this->db->register_new_url($this->url);
 		$this->db->register_new_url($other_url);

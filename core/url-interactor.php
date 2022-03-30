@@ -1,4 +1,4 @@
-<?php declare(strict_types=1); namespace Neosluger;
+<?php declare(strict_types=1); namespace Nsl;
 
 
 require_once(__DIR__."/strings.php");
@@ -37,7 +37,7 @@ final class URLInteractor implements URLRequestBoundary
 
 	private function create_handle_with_hash (\DateTime $datetime, string $destination): string
 	{
-		return substr(sha1($datetime->format("Y-m-d H:i:s.u") . $destination), 0, \NeoslugerSettings\HANDLE_LENGTH);
+		return substr(sha1($datetime->format("Y-m-d H:i:s.u") . $destination), 0, \NslSettings\HANDLE_LENGTH);
 	}
 
 
@@ -63,7 +63,7 @@ final class URLInteractor implements URLRequestBoundary
 	private function handle_is_within_bounds (string $handle): bool
 	{
 		$length = strlen($handle);
-		return (\NeoslugerSettings\MIN_HANDLE_LEN <= $length && $length <= \NeoslugerSettings\MAX_HANDLE_LEN);
+		return (\NslSettings\MIN_HANDLE_LEN <= $length && $length <= \NslSettings\MAX_HANDLE_LEN);
 	}
 
 

@@ -22,7 +22,7 @@ Usage: benchmark.sh [-h] [[-a ADDR] [-i ITER]]
 
 Operational arguments:
   -h, --help                    Print a complete help text and exit.
-  -a ADDR, --address=ADDR       Set Neosluger's address.
+  -a ADDR, --address=ADDR       Set Nsl's address.
   -i ITER, --iterations=ITER    Set the number of iterations.
 EOF
 exit "$fabort"
@@ -38,12 +38,12 @@ print_help ()
 cat << EOF
 BENCHMARK
 =========
-Run a benchmark for Neosluger's URL creation API
+Run a benchmark for Nsl's URL creation API
 ------------------------------------------------
 
 :: DEPENDENCIES
 
-- Neosluger: It must be listening to the API before running the benchmark.
+- Nsl: It must be listening to the API before running the benchmark.
 - time: Must be the one present in /usr/bin/time, not the shell builtin command.
 
 :: USAGE
@@ -58,7 +58,7 @@ script's behaviour with the following arguments:
   ----------------------------------------------
   -h           --help              Print this help text and exit.
 
-  -a ADDR     --addres=ADDR        Set Neosluger's address to call its API.
+  -a ADDR     --addres=ADDR        Set Nsl's address to call its API.
                                    Defaults to localhost. Set it without the
                                    last '/' character.
 
@@ -70,7 +70,7 @@ original format. You are responsible for how you deal with the data.
 
 :: WHY THE API?
 
-Every time we call the API Neosluger generates a new URL and checks if its
+Every time we call the API Nsl generates a new URL and checks if its
 handle collides with the ones already in the database. It repeats the process
 until there are no collissions and then it inserts the URL in the database, so
 we know that each API call does at least one read and one write on the database,
@@ -163,7 +163,7 @@ parse_args ()
 
 
 # run_benchmark {{{1
-# Main loop of the program. Calls Neosluger's API $iterations times and logs the
+# Main loop of the program. Calls Nsl's API $iterations times and logs the
 # real time spent processing the call in "benchmark_result".
 
 run_benchmark ()

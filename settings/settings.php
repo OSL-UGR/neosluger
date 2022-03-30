@@ -1,8 +1,8 @@
-<?php declare(strict_types=1); namespace NeoslugerSettings;
+<?php declare(strict_types=1); namespace NslSettings;
 
 
 /*
- * Edit these constants to modify Neosluger's behaviours in your server.
+ * Edit these constants to modify Nsl's behaviours in your server.
  * You MUST at least change SITE_ADDRESS to your server address.
  */
 
@@ -15,7 +15,7 @@ const HASH_LENGTH     = 8; // The length of the hash QR codes are created with
 const LANGUAGE        = "EN"; // Language for the strings the user can read. Defaults to "EN".
 const MAX_HANDLE_LEN  = 50; // The maximum length a user-defined handle can be for an URL
 const MIN_HANDLE_LEN  = 5; // The minimum length a user-defined handle can be for an URL, must be lower than HANDLE_LENGTH
-const SITE_ADDRESS    = "localhost/"; // The address Neosluger is hosted on
+const SITE_ADDRESS    = "localhost/"; // The address Nsl is hosted on
 
 
 // IP addresses from which users are allowed to access certain parts of the service.

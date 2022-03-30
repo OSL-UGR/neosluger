@@ -1,4 +1,4 @@
-<?php declare(strict_types=1); namespace Neosluger;
+<?php declare(strict_types=1); namespace Nsl;
 
 
 require_once(__DIR__."/qr-request-boundary.php");
@@ -65,7 +65,7 @@ final class QRInteractor implements QRRequestBoundary
 
 	public function generate_qr_from_string (string $contents): string
 	{
-		$hash     = substr(sha1($contents), 0, \NeoslugerSettings\HASH_LENGTH);
+		$hash     = substr(sha1($contents), 0, \NslSettings\HASH_LENGTH);
 		$filename = $this->full_path_to_qr($hash);
 
 		(new \chillerlan\QRCode\QRCode($this->qr_options))->render($contents, $filename);

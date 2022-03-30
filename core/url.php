@@ -1,4 +1,4 @@
-<?php declare(strict_types=1); namespace Neosluger;
+<?php declare(strict_types=1); namespace Nsl;
 
 
 require_once(__DIR__."/../settings/settings.php");
@@ -20,7 +20,7 @@ final class URL
 	/** Website the user will be redirected to when accessing the URL. */
 	private string $destination;
 
-	/** String of characters that follow Neosluger's address to form the short URL. **/
+	/** String of characters that follow Nsl's address to form the short URL. **/
 	private string $handle;
 
 
@@ -65,12 +65,12 @@ final class URL
 
 
 	/** @fn full_handle (): string
-	  * @brief Composes the handle with Neosluger's site address.
+	  * @brief Composes the handle with Nsl's site address.
 	  */
 
 	public function full_handle (): string
 	{
-		return \NeoslugerSettings\SITE_ADDRESS . $this->handle;
+		return \NslSettings\SITE_ADDRESS . $this->handle;
 	}
 
 
