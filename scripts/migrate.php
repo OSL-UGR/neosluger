@@ -1,6 +1,7 @@
 <?php declare(strict_types=1); namespace NslScripts;
 
 
+require_once(__DIR__."/../database/mongodb-connector.php");
 require_once(__DIR__."/../settings/settings.php");
 require_once(__DIR__."/../vendor/autoload.php");
 
@@ -54,13 +55,13 @@ function insert_log_in_mongodb (array $link_row, array $log_table): void
 		array_push($log_object["accesses"], $access_datetime->format("Y-m-d H:i:s.u"));
 	}
 
-	mongodb_collection(\NslSettings\LOGS_COLLECTION)->insertOne($log_object);
+	mongodb_collection(\NslDB\DEFAULT_LOGS)->insertOne($log_object);
 }
 
 
 function insert_url_in_mongodb (array $link_row): void
 {
-	mongodb_collection(\NslSettings\URLS_COLLECTION)->insertOne([
+	mongodb_collection(\NslDB\DEFAULT_URLS)->insertOne([
 		"handle"      => $link_row["id"],
 		"destination" => $link_row["url"],
 	]);
@@ -102,7 +103,7 @@ function reset_mongodb_database (): bool
 		echo "\nAre you absolutely sure? You will LOSE EVERYTHING FOREVER (a long time!).\n";
 		echo "If you're sure, type the random string at the end of the message to continue.\n";
 		echo "We waive all responsibility on any lost records on your database.\n";
-		echo "Keep in mind that this is a decision you're taking as a grown up adult\n";
+		echo "Keep in mind that this is a decision you're taking as a grown up adult.\n";
 		echo "Type this string to continue: " . $random_string . "\n";
 
 		$input = readline("> ");
@@ -112,8 +113,8 @@ function reset_mongodb_database (): bool
 	if ($user_consents_destruction)
 	{
 		echo "Dropping collections...\n";
-		mongodb_collection(\NslSettings\URLS_COLLECTION)->drop();
-		mongodb_collection(\NslSettings\LOGS_COLLECTION)->drop();
+		mongodb_collection(\NslDB\DEFAULT_URLS)->drop();
+		mongodb_collection(\NslDB\DEFAULT_LOGS)->drop();
 	}
 	else
 	{
@@ -184,8 +185,8 @@ function generate_indices ()
 {
 	echo "Generating indices...\n";
 
-	mongodb_collection(\NslSettings\URLS_COLLECTION)->createIndex(['handle' => 1]);
-	mongodb_collection(\NslSettings\LOGS_COLLECTION)->createIndex(['handle' => 1]);
+	mongodb_collection(\NslDB\DEFAULT_URLS)->createIndex(['handle' => 1]);
+	mongodb_collection(\NslDB\DEFAULT_LOGS)->createIndex(['handle' => 1]);
 
 	echo "Indices were successfully generated!\n";
 }
