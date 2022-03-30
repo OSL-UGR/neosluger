@@ -1,10 +1,13 @@
-<?php declare(strict_types=1); namespace NslWeb; ini_set("display_errors", '1');
+<?php declare(strict_types=1); namespace NslWeb;
 
 
 require_once($_SERVER['DOCUMENT_ROOT']."/core/url.php");
 require_once($_SERVER['DOCUMENT_ROOT']."/settings/boundaries.php");
 require_once($_SERVER['DOCUMENT_ROOT']."/settings/server-helpers.php");
+require_once($_SERVER["DOCUMENT_ROOT"]."/settings/settings.php");
 require_once($_SERVER['DOCUMENT_ROOT']."/vendor/autoload.php");
+
+ini_set("display_errors", strval(\NslSettings\DEBUG));
 
 
 /** @fn find_page (string $uri): string
@@ -46,6 +49,12 @@ function redirect_to (\Nsl\URL $url): void
 }
 
 
+function respond_to_api_request (): void
+{
+	require_once($_SERVER["DOCUMENT_ROOT"]."/api/api.php");
+}
+
+
 /** @fn try_old_api_or_404 (): void
   * @brief Redirects the user to the 404 page if the request URI is not for the old API.
   *
@@ -75,18 +84,24 @@ function try_old_api_or_404 (): void
 function main (): void
 {
 	$uri = \NslSettings\parse_request_uri_nth_item($_SERVER["REQUEST_URI"], 1);
-	$web_path = find_page($uri);
 
-	if (!empty($web_path))
-		include($web_path);
+	if ($uri === "api")
+		respond_to_api_request();
 	else
 	{
-		$url = \NslSettings\url_boundary()->find_url_by_handle($uri);
+		$web_path = find_page($uri);
 
-		if ($url->ok())
-			redirect_to($url->unwrap());
+		if (!empty($web_path))
+			include($web_path);
 		else
-			try_old_api_or_404();
+		{
+			$url = \NslSettings\url_boundary()->find_url_by_handle($uri);
+
+			if ($url->ok())
+				redirect_to($url->unwrap());
+			else
+				try_old_api_or_404();
+		}
 	}
 }
 
