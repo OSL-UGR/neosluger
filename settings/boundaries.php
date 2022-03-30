@@ -23,7 +23,7 @@ function url_boundary (): \Neosluger\URLRequestBoundary
 	static $interactor = null;
 
 	if (is_null($interactor))
-		$interactor = new \Neosluger\URLInteractor(new \NeoslugerDB\MongoDBConnector(\NeoslugerSettings\DB_ADDRESS));
+		$interactor = new \Neosluger\URLInteractor(new \NeoslugerDB\MongoDBConnector());
 
 	return $interactor;
 }

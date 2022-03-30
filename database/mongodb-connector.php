@@ -5,8 +5,26 @@ require_once(__DIR__."/strings.php");
 require_once(__DIR__."/../core/result.php");
 require_once(__DIR__."/../core/url.php");
 require_once(__DIR__."/../core/url-gateway.php");
-require_once(__DIR__."/../settings/settings.php");
 require_once(__DIR__."/../vendor/autoload.php");
+
+
+/** Default datebase address. */
+const DEFAULT_ADDRESS = "mongodb://localhost:27017";
+
+/** Default collection name for the URLs' logs. */
+const DEFAULT_LOGS = "access_logs";
+
+/** Default collection name for the URLs. */
+const DEFAULT_URLS = "urls";
+
+/** Database field name for the logs' accesses. */
+const LOG_ACCESSES_FIELD = "accesses";
+
+/** Database field name for the URLs' handle. */
+const URL_HANDLE_FIELD = "handle";
+
+/** Database field name for the URLs' destination. */
+const URL_DESTINATION_FIELD = "destination";
 
 
 /** @class DummyDB
@@ -16,10 +34,10 @@ require_once(__DIR__."/../vendor/autoload.php");
 class MongoDBConnector implements \Neosluger\URLGateway
 {
 	/** Name of the access logs collection. **/
-	private string $logs = \NeoslugerSettings\LOGS_COLLECTION;
+	private string $logs = DEFAULT_LOGS;
 
 	/** Name of the urls collection. **/
-	private string $urls = \NeoslugerSettings\URLS_COLLECTION;
+	private string $urls = DEFAULT_URLS;
 
 	/** Database to works with. **/
 	private \MongoDB\Database $db;
@@ -31,7 +49,7 @@ class MongoDBConnector implements \Neosluger\URLGateway
 	  * @param $address The database address to connect to.
 	  */
 
-	public function __construct (string $address)
+	public function __construct (string $address = DEFAULT_ADDRESS)
 	{
 		$this->db = (new \MongoDB\Client($address))->neosluger;
 	}
@@ -71,8 +89,8 @@ class MongoDBConnector implements \Neosluger\URLGateway
 
 	private function find_log_command (string $handle): \MongoDB\Model\BSONArray | bool
 	{
-		$result = $this->db->selectCollection($this->logs)->find(["handle" => $handle])->toArray();
-		return (empty($result) ? false : $result[0]["accesses"]);
+		$result = $this->db->selectCollection($this->logs)->find([URL_HANDLE_FIELD => $handle])->toArray();
+		return (empty($result) ? false : $result[0][LOG_ACCESSES_FIELD]);
 	}
 
 
@@ -85,7 +103,7 @@ class MongoDBConnector implements \Neosluger\URLGateway
 
 	private function find_url_command (string $handle): \MongoDB\Model\BSONDocument | bool
 	{
-		$result = $this->db->selectCollection($this->urls)->find(["handle" => $handle])->toArray();
+		$result = $this->db->selectCollection($this->urls)->find([URL_HANDLE_FIELD => $handle])->toArray();
 		return (empty($result) ? false : $result[0]);
 	}
 
@@ -100,8 +118,8 @@ class MongoDBConnector implements \Neosluger\URLGateway
 	private function insert_log_command (\Neosluger\URL $url): \MongoDB\InsertOneResult
 	{
 		return $this->db->selectCollection($this->logs)->insertOne([
-			"handle"   => $url->handle(),
-			"accesses" => array($url->creation_datetime()->format("Y-m-d H:i:s.u"))
+			URL_HANDLE_FIELD   => $url->handle(),
+			LOG_ACCESSES_FIELD => array($url->creation_datetime()->format("Y-m-d H:i:s.u"))
 		]);
 	}
 
@@ -116,8 +134,8 @@ class MongoDBConnector implements \Neosluger\URLGateway
 	private function insert_url_command (\Neosluger\URL $url): \MongoDB\InsertOneResult
 	{
 		return $this->db->selectCollection($this->urls)->insertOne([
-			"handle"      => $url->handle(),
-			"destination" => $url->destination(),
+			URL_HANDLE_FIELD      => $url->handle(),
+			URL_DESTINATION_FIELD => $url->destination(),
 		]);
 	}
 
@@ -132,8 +150,8 @@ class MongoDBConnector implements \Neosluger\URLGateway
 
 	private function update_log_command (\Neosluger\URL $url, \DateTime $datetime): \MongoDB\UpdateResult
 	{
-		return $this->db->selectCollection($this->logs)->updateOne(["handle" => $url->handle()], [
-			'$push' => ["accesses" => $datetime->format("Y-m-d H:i:s.u")]
+		return $this->db->selectCollection($this->logs)->updateOne([URL_HANDLE_FIELD => $url->handle()], [
+			'$push' => [LOG_ACCESSES_FIELD => $datetime->format("Y-m-d H:i:s.u")]
 		]);
 	}
 
@@ -157,7 +175,11 @@ class MongoDBConnector implements \Neosluger\URLGateway
 				$log = $log->unwrap();
 
 				if ($url !== false && $log !== false)
-					$result = \Neosluger\Result::from_value(new \Neosluger\URL($url["destination"], new \Datetime($log[0]), $url["handle"]));
+					$result = \Neosluger\Result::from_value(new \Neosluger\URL(
+						$url[URL_DESTINATION_FIELD],
+						new \Datetime($log[0]),
+						$url[URL_HANDLE_FIELD]
+					));
 				else
 					$result->push_back($ERR_ZERO_RESULTS_URL_PRE()." '".$handle."' ".$ERR_ZERO_RESULTS_POST());
 			}
@@ -297,8 +319,12 @@ class MongoDBConnector implements \Neosluger\URLGateway
 
 		foreach ($urls_result as $url)
 		{
-			$log = $this->try_db_access(fn () => $this->find_log_command($url["handle"]))->unwrap();
-			array_push($urls, new \Neosluger\URL($url["destination"], new \DateTime($log[0]), $url["handle"]));
+			$log = $this->try_db_access(fn () => $this->find_log_command($url[URL_HANDLE_FIELD]))->unwrap();
+			array_push($urls, new \Neosluger\URL(
+				$url[URL_DESTINATION_FIELD],
+				new \DateTime($log[0]),
+				$url[URL_HANDLE_FIELD]
+			));
 		}
 
 		return $urls;
@@ -320,7 +346,7 @@ class MongoDBConnector implements \Neosluger\URLGateway
 		{
 			$log = [];
 
-			foreach ($logs["accesses"] as $access)
+			foreach ($logs[LOG_ACCESSES_FIELD] as $access)
 				array_push($log, new \DateTime($access));
 
 			array_push($all_logs, $log);

@@ -8,8 +8,8 @@ require_once(__DIR__."/../../settings/settings.php");
 
 final class MongoDBTest extends \PHPUnit\Framework\TestCase
 {
-	private const LOGS = "access_logs_tests";
-	private const URLS = "urls_tests";
+	private const LOGS_COLLECTION = "access_logs_tests";
+	private const URLS_COLLECTION = "urls_tests";
 
 	private MongoDBConnector $db;
 	private \DateTime $datetime;
@@ -18,21 +18,21 @@ final class MongoDBTest extends \PHPUnit\Framework\TestCase
 
 	protected function setUp (): void
 	{
-		$this->db = new MongoDBConnector(\NeoslugerSettings\DB_ADDRESS);
-		$this->db->set_logs_collection(MongoDBTest::LOGS);
-		$this->db->set_urls_collection(MongoDBTest::URLS);
+		/*
+		 * First of all, reset the testing tables on the database. We don't use
+		 * the connector here because god forbid the next maintainer drops all
+		 * collections in production.
+		 */
+		$client = new \MongoDB\Client(DEFAULT_ADDRESS);
+		$client->selectCollection("neosluger", MongoDBTest::LOGS_COLLECTION)->drop();
+		$client->selectCollection("neosluger", MongoDBTest::URLS_COLLECTION)->drop();
+
+		$this->db = new MongoDBConnector();
+		$this->db->set_logs_collection(MongoDBTest::LOGS_COLLECTION);
+		$this->db->set_urls_collection(MongoDBTest::URLS_COLLECTION);
 
 		$this->datetime = new \Datetime("NOW", new \DateTimeZone(date('T')));
 		$this->url = new \Neosluger\URL("https://ugr.es/", $this->datetime, "test-url");
-	}
-
-
-	protected function tearDown (): void
-	{
-		// We don't use the connector here because god forbid the next maintainer drops all collections in production
-		$client = new \MongoDB\Client(\NeoslugerSettings\DB_ADDRESS);
-		$client->selectCollection("neosluger", MongoDBTest::URLS)->drop();
-		$client->selectCollection("neosluger", MongoDBTest::LOGS)->drop();
 	}
 
 
