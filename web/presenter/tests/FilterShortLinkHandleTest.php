@@ -27,10 +27,10 @@ final class FilterShortLinkHandleTest extends \PHPUnit\Framework\TestCase
 
 	public function test_filtered_handle_removes_site_address (): void
 	{
-		$handle1 = filter_short_link_handle("\t ".FilterShortLinkHandleTest::SITE_ADDRESS."/handle         \t", FilterShortLinkHandleTest::SITE_ADDRESS);
-		$handle2 = filter_short_link_handle("\t ".FilterShortLinkHandleTest::SITE_ADDRESS."/handle         \t", FilterShortLinkHandleTest::SITE_ADDRESS);
-		$handle3 = filter_short_link_handle("\t https://".FilterShortLinkHandleTest::SITE_ADDRESS."/handle \t", FilterShortLinkHandleTest::SITE_ADDRESS);
-		$handle4 = filter_short_link_handle("\t http://".FilterShortLinkHandleTest::SITE_ADDRESS."/handle  \t", FilterShortLinkHandleTest::SITE_ADDRESS);
+		$handle1 = filter_short_link_handle("\t ".FilterShortLinkHandleTest::SITE_ADDRESS."handle         \t", FilterShortLinkHandleTest::SITE_ADDRESS);
+		$handle2 = filter_short_link_handle("\t ".FilterShortLinkHandleTest::SITE_ADDRESS."handle         \t", FilterShortLinkHandleTest::SITE_ADDRESS);
+		$handle3 = filter_short_link_handle("\t https://".FilterShortLinkHandleTest::SITE_ADDRESS."handle \t", FilterShortLinkHandleTest::SITE_ADDRESS);
+		$handle4 = filter_short_link_handle("\t http://".FilterShortLinkHandleTest::SITE_ADDRESS."handle  \t", FilterShortLinkHandleTest::SITE_ADDRESS);
 
 		$this->assertEquals("handle", $handle1);
 		$this->assertEquals("handle", $handle2);
