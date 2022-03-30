@@ -1,32 +1,18 @@
-<?php declare(strict_types=1); namespace NeoslugerWeb;
+<?php declare(strict_types=1); namespace NeoslugerWeb; ini_set("display_errors", '1');
 
 
-ini_set("display_errors", '1');
-require_once($_SERVER['DOCUMENT_ROOT']."/settings.php");
+require_once(__DIR__."/../presenter/filter-short-link-handle.php");
+require_once($_SERVER['DOCUMENT_ROOT']."/settings/settings.php");
 
 
-function filter_short_link_handle (string $query): string
+function page_main ()
 {
-	$handle = trim($query);
-	$query_no_https  = trim(preg_replace("/https?:\/\//", "", $query));
-
-	if (str_starts_with($query_no_https, \Neosluger\SITE_ADDRESS))
-		$handle = substr($query_no_https, strlen(\Neosluger\SITE_ADDRESS), strlen($query));
-
-	return trim($handle);
-}
-
-
-function goto_stats ()
-{
-	$query  = $_POST["neosluger-inspect-string"];
-	$handle = filter_short_link_handle($query);
-
+	$handle = filter_short_link_handle($_POST["neosluger-inspect-string"], \NeoslugerSettings\SITE_ADDRESS);
 	header("Location: /stats/".$handle, true, 301);
 }
 
 
-goto_stats();
+page_main();
 
 
 ?>

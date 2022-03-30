@@ -1,12 +1,11 @@
-<?php declare(strict_types=1); namespace NeoslugerWeb;
+<?php declare(strict_types=1); namespace NeoslugerWeb; ini_set("display_errors", '1');
 
 
-ini_set("display_errors", '1');
-require_once($_SERVER['DOCUMENT_ROOT']."/vendor/autoload.php");
-require_once($_SERVER['DOCUMENT_ROOT']."/core/qr.php");
+require_once(__DIR__."/../presenter/render.php");
+require_once($_SERVER['DOCUMENT_ROOT']."/settings/boundaries.php");
 
 
-function read_form ()
+function read_form (): array
 {
 	return array(
 		"qr-string" => $_POST["neosluger-qr-string"],
@@ -14,15 +13,12 @@ function read_form ()
 }
 
 
-function render ()
+function page_main (): void
 {
-	$loader = new \Twig\Loader\FilesystemLoader(__DIR__."/../templates");
-	$twig   = new \Twig\Environment($loader);
-
 	$form_fields = read_form();
-	$qr_path     = \Neosluger\QRWrapper::from_string($form_fields["qr-string"]);
+	$qr_path = \NeoslugerSettings\qr_boundary()->generate_qr_from_string($form_fields["qr-string"]);
 
-	echo $twig->render("qr-result.html", [
+	render("qr-result", [
 		"destination" => $form_fields["qr-string"],
 		"qr_path"     => substr($qr_path, strlen($_SERVER["DOCUMENT_ROOT"])),
 		"qr_tab"      => "active-tab",
@@ -30,7 +26,7 @@ function render ()
 }
 
 
-render();
+page_main();
 
 
 ?>

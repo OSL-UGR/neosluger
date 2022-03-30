@@ -1,29 +1,48 @@
-<?php declare(strict_types=1); namespace NeoslugerWeb;
+<?php declare(strict_types=1); namespace NeoslugerWeb; ini_set("display_errors", '1');
 
 
-ini_set("display_errors", '1');
-require_once($_SERVER['DOCUMENT_ROOT']."/vendor/autoload.php");
 require_once($_SERVER['DOCUMENT_ROOT']."/core/helper-functions.php");
 require_once($_SERVER['DOCUMENT_ROOT']."/core/url.php");
-require_once($_SERVER['DOCUMENT_ROOT']."/settings.php");
+require_once($_SERVER['DOCUMENT_ROOT']."/settings/boundaries.php");
+require_once($_SERVER['DOCUMENT_ROOT']."/vendor/autoload.php");
 
 
 /** @fn find_page (string $uri): string
   * @brief Finds the file `$uri.php` in `pages/*.php`.
-  * @return $result: Path to the file if found, empty string otherwise
+  *
+  * @param $uri The URI requested by the user from the web.
+  * @return string Path to the file if found, empty string otherwise
+  *
+  * To avoid web server shenanigans with `/` begin the index we transform the
+  * string agead of time and we don't have to mess with the server settings.
   */
 
 function find_page (string $uri): string
 {
+	if ($uri === "/")
+		$uri = "/index";
+
 	$path   = __DIR__."/pages/".$uri.".php";
-	$result = "";
+	return (file_exists($path) ? $path : "");
+}
 
-	if ($uri == "/")
-		$result = __DIR__."/pages/index.php";
-	else if (file_exists($path))
-		$result = $path;
 
-	return $result;
+/** @fn redirect_to (\Neosluger\URL $url): void
+  * @brief Redirectes the user from a short URL to their destination.
+  *
+  * @param $url The URL to redirect the user from.
+  */
+
+function redirect_to (\Neosluger\URL $url): void
+{
+	// Prevent the user from caching this page so that all accesses are logged
+	header('Expires: Fri, 25 Oct 1996 14:40:00 GMT'); // Happy birthday to me~
+	header('Cache-Control: no-store, no-cache, must-revalidate');
+	header('Cache-Control: post-check=0, pre-check=0', FALSE);
+	header('Pragma: no-cache');
+
+	\NeoslugerSettings\url_boundary()->log_access_to_url($url);
+	header("Location: " . $url->destination(), true,  301);
 }
 
 
@@ -45,7 +64,7 @@ function try_old_api_or_404 (): void
 			"text"  => "This API is deprecated. Read the docs to update it!"
 		]);
 	else
-		include(__DIR__."/pages/404.php");
+		include($_SERVER['DOCUMENT_ROOT']."/web/pages/404.php");
 }
 
 
@@ -55,32 +74,19 @@ function try_old_api_or_404 (): void
 
 function main (): void
 {
-	$uri  = \Neosluger\parse_request_uri_nth_item(1);
-	$path = find_page($uri);
+	$uri = \Neosluger\parse_request_uri_nth_item(1);
+	$web_path = find_page($uri);
 
-	if (!empty($path))
-	{
-		include($path);
-	}
+	if (!empty($web_path))
+		include($web_path);
 	else
 	{
-		$url = \Neosluger\URL::from_database($uri);
+		$url = \NeoslugerSettings\url_boundary()->find_url_by_handle($uri);
 
-		if ($url->is_null())
-		{
-			try_old_api_or_404();
-		}
+		if ($url->ok())
+			redirect_to($url->unwrap());
 		else
-		{
-			// Prevent the user from caching this page so that all accesses are logged
-			header('Expires: Fri, 25 Oct 1996 14:40:00 GMT'); // Happy birthday to me~
-			header('Cache-Control: no-store, no-cache, must-revalidate');
-			header('Cache-Control: post-check=0, pre-check=0', FALSE);
-			header('Pragma: no-cache');
-
-			$url->log_access();
-			header("Location: " . $url->destination(), true,  301);
-		}
+			try_old_api_or_404();
 	}
 }
 

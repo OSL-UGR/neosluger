@@ -26,7 +26,7 @@ function open_hamburger_menu ()
 	close_button.style.display = "block";
 	hamburger.onclick          = close_hamburger_menu;
 	hamburger_img.style.rotate = "180deg";
-	hamburger_img.src          = "/web/assets/material/close.svg";
+	hamburger_img.src          = "/assets/material/close.svg";
 	menu_items.style.width     = "50vw";
 
 	for (let link of item_links)

@@ -1,12 +1,11 @@
-<?php declare(strict_types=1); namespace NeoslugerWeb;
+<?php declare(strict_types=1); namespace NeoslugerWeb; ini_set("display_errors", '1');
 
 
-ini_set("display_errors", '1');
-require_once($_SERVER['DOCUMENT_ROOT']."/vendor/autoload.php");
-require_once($_SERVER['DOCUMENT_ROOT']."/core/qr.php");
+require_once(__DIR__."/../presenter/render.php");
+require_once($_SERVER['DOCUMENT_ROOT']."/settings/boundaries.php");
 
 
-function read_form ()
+function read_form (): array
 {
 	return array(
 		"handle" => empty($_POST["neosluger-handle"]) ? "" : $_POST["neosluger-handle"],
@@ -15,16 +14,20 @@ function read_form ()
 }
 
 
-function render ()
+function page_main (): void
 {
-	$loader = new \Twig\Loader\FilesystemLoader(__DIR__."/../templates");
-	$twig   = new \Twig\Environment($loader);
-
+	$qr_path = "";
+	$url = null;
 	$form_fields = read_form();
-	$url         = \Neosluger\URL::from_form($form_fields["url"], $form_fields["handle"]);
-	$qr_path     = \Neosluger\QRWrapper::from_url($url);
+	$register_result = \NeoslugerSettings\url_boundary()->register_new_url($form_fields["url"], $form_fields["handle"]);
 
-	echo $twig->render("url-result.html", [
+	if ($register_result->ok())
+	{
+		$url = $register_result->unwrap();
+		$qr_path = \NeoslugerSettings\qr_boundary()->generate_qr_from_string($url->full_handle());
+	}
+
+	render("url-result", [
 		"destination" => $form_fields["url"],
 		"handle"      => $form_fields["handle"],
 		"index_tab"   => "active-tab",
@@ -34,7 +37,7 @@ function render ()
 }
 
 
-render();
+page_main();
 
 
 ?>

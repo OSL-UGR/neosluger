@@ -11,8 +11,8 @@
 
 
 {% block head %}
-	<script type="text/javascript" src="/web/scripts/tabs.js" defer></script>
-	<script type="text/javascript" src="/web/scripts/url-form.js" defer></script>
+	<script type="text/javascript" src="/web/ui-scripts/tabs.js" defer></script>
+	{% if shortener_allowed %} <script type="text/javascript" src="/web/ui-scripts/url-form.js" defer></script> {% endif %}
 {% endblock %}
 
 

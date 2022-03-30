@@ -1,45 +1,40 @@
-<?php declare(strict_types=1); namespace NeoslugerWeb;
+<?php declare(strict_types=1); namespace NeoslugerWeb; ini_set("display_errors", '1');
 
 
-ini_set("display_errors", '1');
-require_once($_SERVER['DOCUMENT_ROOT']."/vendor/autoload.php");
-require_once($_SERVER['DOCUMENT_ROOT']."/core/helper-functions.php");
-require_once($_SERVER['DOCUMENT_ROOT']."/core/qr.php");
+require_once(__DIR__."/../presenter/render.php");
+require_once($_SERVER['DOCUMENT_ROOT']."/settings/boundaries.php");
 
 
-function render ()
+function render_stats (\Neosluger\URL $url, array $logs): void
 {
-	$loader = new \Twig\Loader\FilesystemLoader(__DIR__."/../templates");
-	$twig   = new \Twig\Environment($loader);
+	$qr_path = \NeoslugerSettings\qr_boundary()->generate_qr_from_url($url);
 
-	$handle = \Neosluger\parse_request_uri_nth_item(2);
-	$url    = \Neosluger\URL::from_database($handle);
-
-	if ($url->is_null())
-	{
-		echo $twig->render("stats.html", [
-			"error" => true,
-		]);
-	}
-	else
-	{
-		$qr_path  = \Neosluger\QRWrapper::from_url($url);
-		$url_logs = \Neosluger\LOG_COLLECTION()->find(["handle" => $url->handle()])->toArray()[0];
-		$accesses = $url_logs["accesses"];
-		$creation = new \DateTime($accesses[0]);
-
-		echo $twig->render("stats.html", [
-			"accesses"      => count($accesses) - 1,
-			"creation_date" => $creation->format("Y-m-d"),
-			"creation_time" => $creation->format("H:i:s"),
-			"url"           => $url,
-			"qr_path"       => $qr_path,
-		]);
-	}
+	render("stats", [
+		"accesses"      => count($logs) - 1,
+		"creation_date" => $logs[0]->format("Y-m-d"),
+		"creation_time" => $logs[0]->format("H:i:s"),
+		"url"           => $url,
+		"qr_path"       => substr($qr_path, strlen($_SERVER["DOCUMENT_ROOT"])),
+	]);
 }
 
 
-render();
+function page_main (): void
+{
+	$handle = \Neosluger\parse_request_uri_nth_item(2);
+	$find_result = \NeoslugerSettings\url_boundary()->find_url_by_handle($handle);
+
+	if ($find_result->ok())
+	{
+		$url = $find_result->unwrap();
+		render_stats($url, \NeoslugerSettings\url_boundary()->find_urls_logged_accesses($url)->unwrap());
+	}
+	else
+		render("stats", ["error" => true]);
+}
+
+
+page_main();
 
 
 ?>
