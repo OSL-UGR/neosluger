@@ -1,6 +1,7 @@
 <?php declare(strict_types=1); namespace NeoslugerDB;
 
 
+require_once(__DIR__."/strings.php");
 require_once(__DIR__."/../core/result.php");
 require_once(__DIR__."/../core/url.php");
 require_once(__DIR__."/../core/url-gateway.php");
@@ -30,7 +31,8 @@ class DummyDB implements \Neosluger\URLGateway
 
 	public function find_url_by_handle (string $handle): \Neosluger\Result
 	{
-		$result = \Neosluger\Result::from_error("Could not find URL '".$handle."'!");
+		global $ERR_URL_NOT_FOUND;
+		$result = \Neosluger\Result::from_error($ERR_URL_NOT_FOUND()." '".$handle."'!");
 
 		if (array_key_exists($handle, $this->urls))
 			$result = \Neosluger\Result::from_value($this->urls[$handle]);
@@ -45,7 +47,8 @@ class DummyDB implements \Neosluger\URLGateway
 
 	public function find_urls_logged_accesses (\Neosluger\URL $url): \Neosluger\Result
 	{
-		$result = \Neosluger\Result::from_error("Could not find logs for '".$url->handle()."'!");
+		global $ERR_LOG_NOT_FOUND;
+		$result = \Neosluger\Result::from_error($ERR_LOG_NOT_FOUND()." '".$url->handle()."'!");
 
 		if (array_key_exists($url->handle(), $this->logs))
 			$result = \Neosluger\Result::from_value($this->logs[$url->handle()]);

@@ -12,3 +12,4 @@ vendor/
 *.synctex.gz
 
 benchmark_result
+Session.vim

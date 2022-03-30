@@ -45,7 +45,8 @@ class MongoDBConnector implements \Neosluger\URLGateway
 
 	private function try_db_access (callable $command): \Neosluger\Result
 	{
-		$result = \Neosluger\Result::from_error("Critical error connecting to the database! Is it even on?");
+		global $ERR_DATABASE_OFFLINE;
+		$result = \Neosluger\Result::from_error($ERR_DATABASE_OFFLINE());
 
 		try
 		{
@@ -142,6 +143,7 @@ class MongoDBConnector implements \Neosluger\URLGateway
 
 	public function find_url_by_handle (string $handle): \Neosluger\Result
 	{
+		global $ERR_URL_NOT_FOUND, $ERR_ZERO_RESULTS_URL_PRE, $ERR_ZERO_RESULTS_POST;
 		$result = $url = $this->try_db_access(fn () => $this->find_url_command($handle));
 
 		if ($url->ok())
@@ -156,12 +158,12 @@ class MongoDBConnector implements \Neosluger\URLGateway
 				if ($url !== false && $log !== false)
 					$result = \Neosluger\Result::from_value(new \Neosluger\URL($url["destination"], new \Datetime($log[0]), $url["handle"]));
 				else
-					$result->push_back("URL lookup with handle '".$handle."' returned zero results!");
+					$result->push_back($ERR_ZERO_RESULTS_URL_PRE()." '".$handle."' ".$ERR_ZERO_RESULTS_POST());
 			}
 		}
 
 		if (!$result->ok())
-			$result->push_back("Could not find URL with handle '".$handle."'!");
+			$result->push_back($ERR_URL_NOT_FOUND()." '".$handle."'!");
 
 		return $result;
 	}
@@ -173,6 +175,7 @@ class MongoDBConnector implements \Neosluger\URLGateway
 
 	public function find_urls_logged_accesses (\Neosluger\URL $url): \Neosluger\Result
 	{
+		global $ERR_LOG_NOT_FOUND, $ERR_ZERO_RESULTS_LOG_PRE, $ERR_ZERO_RESULTS_POST;
 		$result = $accesses = $this->try_db_access(fn () => $this->find_log_command($url->handle()));
 
 		if ($accesses->ok())
@@ -189,11 +192,11 @@ class MongoDBConnector implements \Neosluger\URLGateway
 				$result = \Neosluger\Result::from_value($log);
 			}
 			else
-				$result->push_back("Logs lookup for URL '".$url->handle()."' returned zero results!");
+				$result->push_back($ERR_ZERO_RESULTS_LOG_PRE()." '".$url->handle()."' ".$ERR_ZERO_RESULTS_POST());
 		}
 
 		if (!$result->ok())
-			$result->push_back("Could not find URL logs for '".$url->handle()."'!");
+			$result->push_back($ERR_LOG_NOT_FOUND()." '".$url->handle()."'!");
 
 		return $result;
 	}
@@ -205,13 +208,14 @@ class MongoDBConnector implements \Neosluger\URLGateway
 
 	public function log_access_to_url (\Neosluger\URL $url, \DateTime $datetime): \Neosluger\Result
 	{
+		global $ERR_COULDNT_LOG;
 		$update_result = $this->try_db_access(fn () => $this->update_log_command($url, $datetime));
 		$result = $update_result;
 
 		if ($update_result->ok() && $update_result->unwrap()->getModifiedCount() === 1)
 			$result = \Neosluger\Result::from_value(true);
 		else
-			$result->push_back("Could not log URL access for '".$url->handle()."'!");
+			$result->push_back($ERR_COULDNT_LOG()." '".$url->handle()."'!");
 
 		return $result;
 	}
@@ -223,6 +227,7 @@ class MongoDBConnector implements \Neosluger\URLGateway
 
 	public function register_new_url (\Neosluger\URL $url): \Neosluger\Result
 	{
+		global $ERR_COULDNT_REGISTER, $ERR_REGISTERING_FAILED_LOG_PRE, $ERR_REGISTERING_FAILED_URL_PRE, $ERR_REGISTERING_FAILED_POST;
 		$result = $found_url = $this->try_db_access(fn () => $this->find_url_command($url->handle()));
 
 		if ($found_url->ok())
@@ -238,17 +243,17 @@ class MongoDBConnector implements \Neosluger\URLGateway
 					if ($log_insertion->ok() && $log_insertion->unwrap()->getInsertedCount() === 1)
 						$result = \Neosluger\Result::from_value(true);
 					else
-						$result->push_back("Insertion of logs for URL '".$url->handle()."' failed!");
+						$result->push_back($ERR_REGISTERING_FAILED_LOG_PRE()." '".$url->handle()."' ".$ERR_REGISTERING_FAILED_POST());
 				}
 				else
-					$result->push_back("Insertion of URL '".$url->handle()."' failed!");
+					$result->push_back($ERR_REGISTERING_FAILED_URL_PRE()." '".$url->handle()."' ".$ERR_REGISTERING_FAILED_POST());
 			}
 			else
 				$result = \Neosluger\Result::from_value(false);
 		}
 
 		if (!$result->ok())
-			$result->push_back("Could not register URL '".$url->handle()."'!");
+			$result->push_back($ERR_COULDNT_REGISTER()." '".$url->handle()."'!");
 
 		return $result;
 	}

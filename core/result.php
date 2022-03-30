@@ -1,6 +1,8 @@
 <?php declare(strict_types=1); namespace Neosluger;
 
 
+require_once(__DIR__."/strings.php");
+
 final class Result
 {
 	private mixed $value = null;
@@ -75,10 +77,12 @@ final class Result
 
 	public function unwrap (): mixed
 	{
+		global $ERR_UNWRAP;
+
 		if (!$this->ok())
 		{
 			$result = $this;
-			$error = "Fatal error when unwrapping!\n - ".$result->error;
+			$error = $ERR_UNWRAP()."\n - ".$result->error;
 
 			while (!is_null($result->next))
 			{

@@ -1,16 +1,8 @@
 <?php declare(strict_types=1); namespace Neosluger;
 
 
+require_once(__DIR__."/strings.php");
 require_once(__DIR__."/url-request-boundary.php");
-
-
-const ERR_URL_NOT_FOUND      = "The URL wasn't found in the system!";
-const ERR_URL_NOT_INSERTED   = "There was an error inserting the URL in the system!";
-const ERR_DUPLICATE_HANDLE   = "A URL with your handle already exists!";
-const ERR_INVALID_HANDLE_LEN = "Custom handles must be between 5 and 50 characters long!";
-const ERR_INVALID_IP         = "Only users from the University of Granada can create short URLs!";
-const ERR_INVALID_URL        = "The URL string is not an actual URL!";
-const ERR_NO_URL             = "A URL is required!";
 
 
 /** @class QRInteractor
@@ -81,10 +73,11 @@ final class URLInteractor implements URLRequestBoundary
 
 	public function find_url_by_handle (string $handle): Result
 	{
+		global $ERR_URL_NOT_FOUND;
 		$result = $this->gateway->find_url_by_handle($handle);
 
 		if (!$result->ok())
-			$result->push_back(ERR_URL_NOT_FOUND);
+			$result->push_back($ERR_URL_NOT_FOUND());
 
 		return $result;
 	}
@@ -96,6 +89,7 @@ final class URLInteractor implements URLRequestBoundary
 
 	public function find_urls_logged_accesses (URL $url): Result
 	{
+		global $ERR_EMPTY_LOG_PRE, $ERR_EMPTY_LOG_POST, $ERR_LOG_NOT_FOUND;
 		$result = $this->gateway->find_urls_logged_accesses($url);
 
 		if ($result->ok())
@@ -105,11 +99,11 @@ final class URLInteractor implements URLRequestBoundary
 			if (!empty($log))
 				$result = Result::from_value($log);
 			else
-				$result->push_back("Logs for '".$url->full_handle()."' are empty!");
+				$result->push_back($ERR_EMPTY_LOG_PRE()." '".$url->full_handle()."' ".$ERR_EMPTY_LOG_POST());
 		}
 
 		if (!$result->ok())
-			$result->push_back("Could not find logs for '".$url->full_handle()."'!");
+			$result->push_back($ERR_LOG_NOT_FOUND()." '".$url->full_handle()."'!");
 
 		return $result;
 	}
@@ -124,8 +118,9 @@ final class URLInteractor implements URLRequestBoundary
 
 	public function log_access_to_url (URL $url): Result
 	{
+		global $ERR_COULDNT_LOG;
 		$datetime = $this->current_datetime();
-		$result = Result::from_error("Could not log access to '".$url->full_handle()."'!");
+		$result = Result::from_error($ERR_COULDNT_LOG()." '".$url->full_handle()."'!");
 
 		if ($this->gateway->log_access_to_url($url, $datetime)->ok())
 			$result = Result::from_value($datetime);
@@ -145,7 +140,8 @@ final class URLInteractor implements URLRequestBoundary
 
 	public function register_new_url (string $destination, string $handle = ""): Result
 	{
-		$result = Result::from_error(ERR_INVALID_HANDLE_LEN);
+		global $ERR_INVALID_HANDLE_LEN, $ERR_URL_NOT_INSERTED;
+		$result = Result::from_error($ERR_INVALID_HANDLE_LEN());
 
 		$datetime = $this->current_datetime();
 
@@ -168,7 +164,7 @@ final class URLInteractor implements URLRequestBoundary
 				$result = $found_url = $this->gateway->find_url_by_handle($handle);
 
 				if (!$found_url->ok())
-					$result->push_back(ERR_URL_NOT_INSERTED);
+					$result->push_back($ERR_URL_NOT_INSERTED());
 			}
 		}
 
