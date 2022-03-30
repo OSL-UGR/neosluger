@@ -72,7 +72,7 @@ class DummyDB implements \Nsl\URLGateway
 	  * @brief Implementation of `\Nsl\URLRequestBoundary::register_new_url`.
 	  */
 
-	public function register_new_url (\Nsl\URL $url): \Nsl\Result // <bool>
+	public function register_new_url (\Nsl\URL $url, string $authors_ip): \Nsl\Result // <bool>
 	{
 		$this->urls[$url->handle()] = $url;
 		$this->logs[$url->handle()] = [$url->creation_datetime()];

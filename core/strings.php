@@ -38,6 +38,12 @@ $ERR_ILLEGAL_HANDLE_LEN = fn () => \NslSettings\localise([
 ]);
 
 
+$ERR_ILLEGAL_IP = fn () => \NslSettings\localise([
+	"EN" => "Only users from the University of Granada can create short URLs!",
+	"ES" => "¡Sólo pueden crear enlaces los usuarios de la Universidad de Granada!",
+]);
+
+
 $ERR_LOG_NOT_FOUND = fn () => \NslSettings\localise([
 	"EN" => "Could not find log for URL",
 	"ES" => "No se pudo encontrar el historial del enlace",

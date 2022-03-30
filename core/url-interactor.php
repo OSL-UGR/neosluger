@@ -3,6 +3,7 @@
 
 require_once(__DIR__."/strings.php");
 require_once(__DIR__."/url-request-boundary.php");
+require_once(__DIR__."/../settings/server-helpers.php");
 
 
 /** @class QRInteractor
@@ -76,12 +77,12 @@ final class URLInteractor implements URLRequestBoundary
 	 * has been correctly inserted.
 	 */
 
-	public function register_new_url (string $destination, string $handle = ""): Result
+	public function register_new_url (string $destination, string $handle, string $authors_ip): Result
 	{
-		$result = $this->url_registration_is_valid($destination, $handle);
+		$result = $this->url_registration_is_valid($destination, $handle, $authors_ip);
 
 		if ($result->ok())
-			$result = $this->create_url_and_send_for_registration($destination, $handle);
+			$result = $this->create_url_and_send_for_registration($destination, $handle, $authors_ip);
 
 		return $result;
 	}
@@ -101,7 +102,7 @@ final class URLInteractor implements URLRequestBoundary
 	}
 
 
-	private function create_url_and_send_for_registration (string $destination, string $handle): Result
+	private function create_url_and_send_for_registration (string $destination, string $handle, string $authors_ip): Result
 	{
 		if (empty($handle))
 			do
@@ -109,7 +110,7 @@ final class URLInteractor implements URLRequestBoundary
 			while ($this->gateway->find_url_by_handle($handle)->ok());
 
 		$url    = new URL($destination, $this->current_datetime(), $handle);
-		$result = $this->gateway->register_new_url($url);
+		$result = $this->gateway->register_new_url($url, $authors_ip);
 
 		if ($result->ok())
 			$result = Result::from_value($url);
@@ -144,14 +145,16 @@ final class URLInteractor implements URLRequestBoundary
 	}
 
 
-	private function url_registration_is_valid (string $destination, string $handle): Result
+	private function url_registration_is_valid (string $destination, string $handle, string $authors_ip): Result
 	{
-		global $ERR_DUPLICATE_HANDLE, $ERR_ILLEGAL_DESTINATION, $ERR_ILLEGAL_HANDLE_LEN, $ERR_NO_DESTINATION;
-		$result = Result::from_error($ERR_NO_DESTINATION());
+		global $ERR_DUPLICATE_HANDLE, $ERR_ILLEGAL_DESTINATION, $ERR_ILLEGAL_HANDLE_LEN, $ERR_ILLEGAL_IP, $ERR_NO_DESTINATION;
+		$result = Result::from_error($ERR_ILLEGAL_IP());
 
-		if (!empty($destination))
+		if (\NslSettings\user_ip_is_allowed($authors_ip))
 		{
-			if (!filter_var($destination, FILTER_VALIDATE_URL))
+			if (empty($destination))
+				$result = Result::from_error($ERR_NO_DESTINATION());
+			else if (!filter_var($destination, FILTER_VALIDATE_URL))
 				$result = Result::from_error($ERR_ILLEGAL_DESTINATION());
 			else if (!$this->custom_handle_is_within_bounds($handle))
 				$result = Result::from_error($ERR_ILLEGAL_HANDLE_LEN());

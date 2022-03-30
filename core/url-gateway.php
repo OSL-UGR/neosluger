@@ -57,7 +57,7 @@ interface URLGateway
 	  * @return Result Optionally `true` if the URL was registered, `false` if it already existed.
 	  */
 
-	public function register_new_url (URL $url): Result; // <bool>
+	public function register_new_url (URL $url, string $authors_ip): Result; // <bool>
 }
 
 

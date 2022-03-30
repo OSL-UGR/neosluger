@@ -54,11 +54,11 @@ interface URLRequestBoundary
 	  * @brief Inserts a new URL in the system.
 	  *
 	  * @param $destination The new URL's destination.
-	  * @param $handle (Optional) The new URL's handle.
+	  * @param $handle The new URL's handle. Can be empty.
 	  * @return Result The optionally newly inserted URL.
 	  */
 
-	public function register_new_url (string $destination, string $handle = ""): Result;
+	public function register_new_url (string $destination, string $handle, string $authors_ip): Result;
 }
 
 

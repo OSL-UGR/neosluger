@@ -23,6 +23,9 @@ const LOG_ACCESSES_FIELD = "accesses";
 /** Database field name for the URLs' handle. */
 const URL_HANDLE_FIELD = "handle";
 
+/** Database field name for the URL author's IP. Only visible from the database. */
+const URL_IP_FIELD = "ip";
+
 /** Database field name for the URLs' destination. */
 const URL_DESTINATION_FIELD = "destination";
 
@@ -119,7 +122,7 @@ class MongoDBConnector implements \Nsl\URLGateway
 	{
 		return $this->db->selectCollection($this->logs)->insertOne([
 			URL_HANDLE_FIELD   => $url->handle(),
-			LOG_ACCESSES_FIELD => array($url->creation_datetime()->format("Y-m-d H:i:s.u"))
+			LOG_ACCESSES_FIELD => array($url->creation_datetime()->format("Y-m-d H:i:s.u")),
 		]);
 	}
 
@@ -131,11 +134,12 @@ class MongoDBConnector implements \Nsl\URLGateway
 	  * @return \MongoDB\InsertOneResult The insertion result from the database.
 	  */
 
-	private function insert_url_command (\Nsl\URL $url): \MongoDB\InsertOneResult
+	private function insert_url_command (\Nsl\URL $url, string $authors_ip): \MongoDB\InsertOneResult
 	{
 		return $this->db->selectCollection($this->urls)->insertOne([
 			URL_HANDLE_FIELD      => $url->handle(),
 			URL_DESTINATION_FIELD => $url->destination(),
+			URL_IP_FIELD          => $authors_ip,
 		]);
 	}
 
@@ -250,11 +254,11 @@ class MongoDBConnector implements \Nsl\URLGateway
 	  * @brief Implementation of `\Nsl\URLRequestBoundary::register_new_url`.
 	  */
 
-	public function register_new_url (\Nsl\URL $url): \Nsl\Result
+	public function register_new_url (\Nsl\URL $url, string $authors_ip): \Nsl\Result
 	{
 		global $ERR_REGISTERING_FAILED_LOG, $ERR_REGISTERING_FAILED_URL;
 
-		$result = $url_insertion = $this->try_db_access(fn () => $this->insert_url_command($url));
+		$result = $url_insertion = $this->try_db_access(fn () => $this->insert_url_command($url, $authors_ip));
 
 		if ($url_insertion->ok() && $url_insertion->unwrap()->getInsertedCount() === 1)
 		{

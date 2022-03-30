@@ -21,7 +21,7 @@ function read_form (): array
 function page_main (): void
 {
 	$form_fields = read_form();
-	$register_result = \NslSettings\url_boundary()->register_new_url($form_fields["url"], $form_fields["handle"]);
+	$register_result = \NslSettings\url_boundary()->register_new_url($form_fields["url"], $form_fields["handle"], $_SERVER["REMOTE_ADDR"]);
 
 	if ($register_result->ok())
 	{
