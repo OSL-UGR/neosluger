@@ -1,9 +1,9 @@
 <?php declare(strict_types=1); namespace NeoslugerWeb; ini_set("display_errors", '1');
 
 
-require_once($_SERVER['DOCUMENT_ROOT']."/core/helper-functions.php");
 require_once($_SERVER['DOCUMENT_ROOT']."/core/url.php");
 require_once($_SERVER['DOCUMENT_ROOT']."/settings/boundaries.php");
+require_once($_SERVER['DOCUMENT_ROOT']."/settings/server-helpers.php");
 require_once($_SERVER['DOCUMENT_ROOT']."/vendor/autoload.php");
 
 
@@ -74,7 +74,7 @@ function try_old_api_or_404 (): void
 
 function main (): void
 {
-	$uri = \Neosluger\parse_request_uri_nth_item(1);
+	$uri = \NeoslugerSettings\parse_request_uri_nth_item($_SERVER["REQUEST_URI"], 1);
 	$web_path = find_page($uri);
 
 	if (!empty($web_path))

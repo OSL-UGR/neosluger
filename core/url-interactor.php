@@ -1,7 +1,6 @@
 <?php declare(strict_types=1); namespace Neosluger;
 
 
-require_once(__DIR__."/helper-functions.php");
 require_once(__DIR__."/url-request-boundary.php");
 
 
@@ -146,33 +145,30 @@ final class URLInteractor implements URLRequestBoundary
 
 	public function register_new_url (string $destination, string $handle = ""): Result
 	{
-		$result = Result::from_error(ERR_INVALID_IP);
+		$result = Result::from_error(ERR_INVALID_HANDLE_LEN);
 
-		if (user_ip_is_allowed())
+		$datetime = $this->current_datetime();
+
+		if (empty($handle))
 		{
-			$datetime = $this->current_datetime();
+			$handle = $this->create_handle_with_hash($this->current_datetime(), $destination);
 
-			if (empty($handle))
-			{
+			while ($this->gateway->find_url_by_handle($handle)->ok())
 				$handle = $this->create_handle_with_hash($this->current_datetime(), $destination);
+		}
 
-				while ($this->gateway->find_url_by_handle($handle)->ok())
-					$handle = $this->create_handle_with_hash($this->current_datetime(), $destination);
-			}
+		$handle_is_valid = $this->handle_is_within_bounds($handle) && !$this->gateway->find_url_by_handle($handle)->ok();
 
-			$handle_is_valid = $this->handle_is_within_bounds($handle) && !$this->gateway->find_url_by_handle($handle)->ok();
+		if ($handle_is_valid)
+		{
+			$result = $register = $this->gateway->register_new_url(new URL($destination, $datetime, $handle));
 
-			if ($handle_is_valid)
+			if ($register->ok() && $register->unwrap() === true)
 			{
-				$result = $register = $this->gateway->register_new_url(new URL($destination, $datetime, $handle));
+				$result = $found_url = $this->gateway->find_url_by_handle($handle);
 
-				if ($register->ok() && $register->unwrap() === true)
-				{
-					$result = $found_url = $this->gateway->find_url_by_handle($handle);
-
-					if (!$found_url->ok())
-						$result->push_back(ERR_URL_NOT_INSERTED);
-				}
+				if (!$found_url->ok())
+					$result->push_back(ERR_URL_NOT_INSERTED);
 			}
 		}
 

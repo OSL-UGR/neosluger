@@ -24,7 +24,7 @@ function render_stats (\Neosluger\URL $url, array $logs): void
 
 function page_main (): void
 {
-	$handle = \Neosluger\parse_request_uri_nth_item(2);
+	$handle = \NeoslugerSettings\parse_request_uri_nth_item($_SERVER["REQUEST_URI"], 2);
 	$find_result = \NeoslugerSettings\url_boundary()->find_url_by_handle($handle);
 
 	if ($find_result->ok())
