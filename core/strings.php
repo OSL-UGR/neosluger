@@ -10,6 +10,12 @@ $ERR_COULDNT_LOG = fn () => \NslSettings\localise([
 ]);
 
 
+$ERR_DUPLICATE_HANDLE = fn () => \NslSettings\localise([
+	"EN" => "There exists already a URL with handle",
+	"ES" => "¡Ya existe un enlace con nombre",
+]);
+
+
 $ERR_EMPTY_LOG_PRE = fn () => \NslSettings\localise([
 	"EN" => "Log for",
 	"ES" => "¡El historial de",
@@ -20,9 +26,15 @@ $ERR_EMPTY_LOG_POST = fn () => \NslSettings\localise([
 ]);
 
 
-$ERR_INVALID_HANDLE_LEN = fn () => \NslSettings\localise([
+$ERR_ILLEGAL_DESTINATION = fn () => \NslSettings\localise([
+	"EN" => "The URL string is not an actual URL!",
+	"ES" => "¡La cadena del enlace no representa un enlace!",
+]);
+
+
+$ERR_ILLEGAL_HANDLE_LEN = fn () => \NslSettings\localise([
 	"EN" => "Custom handles must be between 5 and 50 characters long!",
-	"ES" => "¡Los nombre de los enlaces deben tener entre 5 y 50 caracteres!",
+	"ES" => "¡Los nombres personalizados de los enlaces deben tener entre 5 y 50 caracteres!",
 ]);
 
 
@@ -32,15 +44,15 @@ $ERR_LOG_NOT_FOUND = fn () => \NslSettings\localise([
 ]);
 
 
-$ERR_UNWRAP = fn () => \NslSettings\localise([
-	"EN" => "Fatal error when unwrapping a Result object!",
-	"ES" => "¡Error fatal desempaquetando un objeto Result!",
+$ERR_NO_DESTINATION = fn () => \NslSettings\localise([
+	"EN" => "A destination URL is required!",
+	"ES" => "¡Se require un enlace de destino!",
 ]);
 
 
-$ERR_URL_NOT_FOUND = fn () => \NslSettings\localise([
-	"EN" => "The URL wasn't found in the system!",
-	"ES" => "¡No se encontró el enlace en el sistema!",
+$ERR_UNWRAP = fn () => \NslSettings\localise([
+	"EN" => "Fatal error when unwrapping a Result object!",
+	"ES" => "¡Error fatal desempaquetando un objeto Result!",
 ]);
 
 

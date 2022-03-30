@@ -28,48 +28,6 @@ final class ProcessAPIQueryTest extends \PHPUnit\Framework\TestCase
 		$this->assertFalse($response->success());
 		$this->assertEquals($ERR_INVALID_IP(), $response->error());
 	}
-
-
-	public function test_queries_without_url_return_an_error (): void
-	{
-		global $ERR_NO_URL;
-		$query    = new APIQuery("", "");
-		$response = process_api_query($query);
-
-		$this->assertFalse($response->success());
-		$this->assertEquals($ERR_NO_URL(), $response->error());
-	}
-
-
-	public function test_queries_with_an_invalid_url_return_an_error (): void
-	{
-		global $ERR_INVALID_URL;
-		$query    = new APIQuery("invalid-url", "");
-		$response = process_api_query($query);
-
-		$this->assertFalse($response->success());
-		$this->assertEquals($ERR_INVALID_URL(), $response->error());
-	}
-
-
-	public function test_queries_with_an_excesively_short_handle_return_an_error (): void
-	{
-		global $ERR_INVALID_HANDLE_LEN;
-		$query    = new APIQuery(ProcessAPIQueryTest::URL, "ey");
-		$response = process_api_query($query);
-
-		$this->assertFalse($response->success());
-		$this->assertEquals($ERR_INVALID_HANDLE_LEN(), $response->error());
-	}
-
-
-	public function test_queries_with_a_valid_url_dont_return_an_error (): void
-	{
-		$query    = new APIQuery(ProcessAPIQueryTest::URL, "");
-		$response = process_api_query($query);
-
-		$this->assertTrue($response->success());
-	}
 }
 
 

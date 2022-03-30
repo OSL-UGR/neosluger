@@ -27,6 +27,66 @@ final class URLInteractor implements URLRequestBoundary
 	}
 
 
+	/* @fn find_url_by_handle (string $handle): ?URL
+	 * @brief Implementation of `URLRequestBoundary::find_url_by_handle`.
+	 */
+
+	public function find_url_by_handle (string $handle): Result
+	{
+		return $this->gateway->find_url_by_handle($handle);
+	}
+
+
+	/* @fn find_urls_logged_accesses (URL $url): ?array
+	 * @brief Implementation of `URLRequestBoundary::find_urls_logged_accesses`.
+	 */
+
+	public function find_urls_logged_accesses (URL $url): Result
+	{
+		return $this->gateway->find_urls_logged_accesses($url);
+	}
+
+
+	/* @fn log_access_to_url (URL $url): ?\DateTime
+	 * @brief Implementation of `URLRequestBoundary::log_access_to_url`.
+	 *
+	 * The access datetime is calculated by the interactor to remove that
+	 * responsibility from the caller.
+	 */
+
+	public function log_access_to_url (URL $url): Result
+	{
+		$datetime = $this->current_datetime();
+		$result   = $this->gateway->log_access_to_url($url, $datetime);
+
+		if ($result->ok())
+			$result = Result::from_value($datetime);
+
+		return $result;
+	}
+
+
+	/* @fn register_new_url (string $destination, string $handle = ""): ?URL
+	 * @brief Implementation of `URLRequestBoundary::register_new_url`.
+	 *
+	 * We first check whether the user is allowed to perform this operation.
+	 * In an affirmative case, we generate a random handle if none is passed.
+	 * Checking whether the handle is valid always succeeds for empty handles.
+	 * We return the URL Result by querying the gateway for it to ensure that it¡
+	 * has been correctly inserted.
+	 */
+
+	public function register_new_url (string $destination, string $handle = ""): Result
+	{
+		$result = $this->url_registration_is_valid($destination, $handle);
+
+		if ($result->ok())
+			$result = $this->create_url_and_send_for_registration($destination, $handle);
+
+		return $result;
+	}
+
+
 	/** @fn create_handle_with_hash (\DateTime $datetime, string $destination): string
 	  * @brief Generates a random handle for an URL by hashing a datetime its destination.
 	  *
@@ -38,6 +98,23 @@ final class URLInteractor implements URLRequestBoundary
 	private function create_handle_with_hash (\DateTime $datetime, string $destination): string
 	{
 		return substr(sha1($datetime->format("Y-m-d H:i:s.u") . $destination), 0, \NslSettings\HANDLE_LENGTH);
+	}
+
+
+	private function create_url_and_send_for_registration (string $destination, string $handle): Result
+	{
+		if (empty($handle))
+			do
+				$handle = $this->create_handle_with_hash($this->current_datetime(), $destination);
+			while ($this->gateway->find_url_by_handle($handle)->ok());
+
+		$url    = new URL($destination, $this->current_datetime(), $handle);
+		$result = $this->gateway->register_new_url($url);
+
+		if ($result->ok())
+			$result = Result::from_value($url);
+
+		return $result;
 	}
 
 
@@ -60,112 +137,28 @@ final class URLInteractor implements URLRequestBoundary
 	  * @returh bool Whether the handle's length is valid.
 	  */
 
-	private function handle_is_within_bounds (string $handle): bool
+	private function custom_handle_is_within_bounds (string $handle): bool
 	{
 		$length = strlen($handle);
-		return (\NslSettings\MIN_HANDLE_LEN <= $length && $length <= \NslSettings\MAX_HANDLE_LEN);
+		return ($length === 0 || (\NslSettings\MIN_HANDLE_LEN <= $length && $length <= \NslSettings\MAX_HANDLE_LEN));
 	}
 
 
-	/* @fn find_url_by_handle (string $handle): ?URL
-	 * @brief Implementation of `URLRequestBoundary::find_url_by_handle`.
-	 */
-
-	public function find_url_by_handle (string $handle): Result
+	private function url_registration_is_valid (string $destination, string $handle): Result
 	{
-		global $ERR_URL_NOT_FOUND;
-		$result = $this->gateway->find_url_by_handle($handle);
+		global $ERR_DUPLICATE_HANDLE, $ERR_ILLEGAL_DESTINATION, $ERR_ILLEGAL_HANDLE_LEN, $ERR_NO_DESTINATION;
+		$result = Result::from_error($ERR_NO_DESTINATION());
 
-		if (!$result->ok())
-			$result->push_back($ERR_URL_NOT_FOUND());
-
-		return $result;
-	}
-
-
-	/* @fn find_urls_logged_accesses (URL $url): ?array
-	 * @brief Implementation of `URLRequestBoundary::find_urls_logged_accesses`.
-	 */
-
-	public function find_urls_logged_accesses (URL $url): Result
-	{
-		global $ERR_EMPTY_LOG_PRE, $ERR_EMPTY_LOG_POST, $ERR_LOG_NOT_FOUND;
-		$result = $this->gateway->find_urls_logged_accesses($url);
-
-		if ($result->ok())
+		if (!empty($destination))
 		{
-			$log = $result->unwrap();
-
-			if (!empty($log))
-				$result = Result::from_value($log);
+			if (!filter_var($destination, FILTER_VALIDATE_URL))
+				$result = Result::from_error($ERR_ILLEGAL_DESTINATION());
+			else if (!$this->custom_handle_is_within_bounds($handle))
+				$result = Result::from_error($ERR_ILLEGAL_HANDLE_LEN());
+			else if ($this->gateway->find_url_by_handle($handle)->ok())
+				$result = Result::from_error($ERR_DUPLICATE_HANDLE());
 			else
-				$result->push_back($ERR_EMPTY_LOG_PRE()." '".$url->full_handle()."' ".$ERR_EMPTY_LOG_POST());
-		}
-
-		if (!$result->ok())
-			$result->push_back($ERR_LOG_NOT_FOUND()." '".$url->full_handle()."'!");
-
-		return $result;
-	}
-
-
-	/* @fn log_access_to_url (URL $url): ?\DateTime
-	 * @brief Implementation of `URLRequestBoundary::log_access_to_url`.
-	 *
-	 * The access datetime is calculated by the interactor to remove that
-	 * responsibility from the caller.
-	 */
-
-	public function log_access_to_url (URL $url): Result
-	{
-		global $ERR_COULDNT_LOG;
-		$datetime = $this->current_datetime();
-		$result = Result::from_error($ERR_COULDNT_LOG()." '".$url->full_handle()."'!");
-
-		if ($this->gateway->log_access_to_url($url, $datetime)->ok())
-			$result = Result::from_value($datetime);
-
-		return $result;
-	}
-
-	/* @fn register_new_url (string $destination, string $handle = ""): ?URL
-	 * @brief Implementation of `URLRequestBoundary::register_new_url`.
-	 *
-	 * We first check whether the user is allowed to perform this operation.
-	 * In an affirmative case, we generate a random handle if none is passed.
-	 * Checking whether the handle is valid always succeeds for empty handles.
-	 * We return the URL Result by querying the gateway for it to ensure that it¡
-	 * has been correctly inserted.
-	 */
-
-	public function register_new_url (string $destination, string $handle = ""): Result
-	{
-		global $ERR_INVALID_HANDLE_LEN, $ERR_URL_NOT_INSERTED;
-		$result = Result::from_error($ERR_INVALID_HANDLE_LEN());
-
-		$datetime = $this->current_datetime();
-
-		if (empty($handle))
-		{
-			$handle = $this->create_handle_with_hash($this->current_datetime(), $destination);
-
-			while ($this->gateway->find_url_by_handle($handle)->ok())
-				$handle = $this->create_handle_with_hash($this->current_datetime(), $destination);
-		}
-
-		$handle_is_valid = $this->handle_is_within_bounds($handle) && !$this->gateway->find_url_by_handle($handle)->ok();
-
-		if ($handle_is_valid)
-		{
-			$result = $register = $this->gateway->register_new_url(new URL($destination, $datetime, $handle));
-
-			if ($register->ok() && $register->unwrap() === true)
-			{
-				$result = $found_url = $this->gateway->find_url_by_handle($handle);
-
-				if (!$found_url->ok())
-					$result->push_back($ERR_URL_NOT_INSERTED());
-			}
+				$result = Result::from_value(true);
 		}
 
 		return $result;
