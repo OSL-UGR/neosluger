@@ -1,6 +1,7 @@
 <?php declare(strict_types=1); namespace NeoslugerDB;
 
 
+require_once(__DIR__."/strings.php");
 require_once(__DIR__."/../core/result.php");
 require_once(__DIR__."/../core/url.php");
 require_once(__DIR__."/../core/url-gateway.php");

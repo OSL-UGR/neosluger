@@ -1,0 +1,32 @@
+{% extends "main.html" %}
+{% use "main-panel.html" %}
+
+
+{% block title %}Error fatal!{% endblock %}
+
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="/web/styles/404.css">
+{% endblock %}
+
+
+{% block main_panel_title %}ERROR DEL SISTEMA{% endblock %}
+
+
+{% block main_panel_content %}
+	<h2>
+		Un fallo en el sistema nos ha impedido procesar tu petición.
+	</h2>
+
+	<p>
+		Por favor, <a href="https://osl.ugr.es/contacto/">ponte en contacto con nosotros</a> para que podamos solucionar el problema lo antes posible.
+		Incluye en el mensaje la siguiente traza del error:
+	</p>
+
+	<tt>
+		{% for e in errors %}
+			- {{ e }}<br>
+		{% endfor %}
+	</tt>
+{% endblock %}

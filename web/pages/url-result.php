@@ -1,6 +1,7 @@
 <?php declare(strict_types=1); namespace NeoslugerWeb;
 
 
+require_once(__DIR__."/error.php");
 require_once(__DIR__."/../presenter/render.php");
 require_once($_SERVER['DOCUMENT_ROOT']."/settings/boundaries.php");
 require_once($_SERVER["DOCUMENT_ROOT"]."/settings/settings.php");
@@ -19,8 +20,6 @@ function read_form (): array
 
 function page_main (): void
 {
-	$qr_path = "";
-	$url = null;
 	$form_fields = read_form();
 	$register_result = \NeoslugerSettings\url_boundary()->register_new_url($form_fields["url"], $form_fields["handle"]);
 
@@ -28,15 +27,17 @@ function page_main (): void
 	{
 		$url = $register_result->unwrap();
 		$qr_path = \NeoslugerSettings\qr_boundary()->generate_qr_from_string($url->full_handle());
-	}
 
-	render("url-result", [
-		"destination" => $form_fields["url"],
-		"handle"      => $form_fields["handle"],
-		"index_tab"   => "active-tab",
-		"url"         => $url,
-		"qr_path"     => substr($qr_path, strlen($_SERVER["DOCUMENT_ROOT"])),
-	]);
+		render("url-result", [
+			"destination" => $form_fields["url"],
+			"handle"      => $form_fields["handle"],
+			"index_tab"   => "active-tab",
+			"url"         => $url,
+			"qr_path"     => substr($qr_path, strlen($_SERVER["DOCUMENT_ROOT"])),
+		]);
+	}
+	else
+		error_page_main($register_result);
 }
 
 
