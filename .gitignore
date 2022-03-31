@@ -1,4 +1,4 @@
-cache/
+cache*/
 vendor/
 
 *.aux
@@ -12,3 +12,4 @@ vendor/
 *.synctex.gz
 
 benchmark_result
+Session.vim

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+	<meta charset="UTF-8">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="/web/styles/main.css">
+	{% block stylesheets %} <!-- Additional stylesheets --> {% endblock %}
+
+	<link rel="shortcut icon" href="/web/assets/favicon.ico" />
+	<title>{% block title %} Short Link UGR {% endblock %}</title>
+
+	<script type="text/javascript" src="/web/ui-scripts/header.js" defer></script>
+	{% block head %} <!-- <head> additions --> {% endblock %}
+</head>
+
+
+<body>
+	<header>
+		<button id="hamburger-menu" onclick="open_hamburger_menu()">
+			<img src="/web/assets/material/menu.svg" alt="Menu">
+		</button>
+
+		<div id="menu-items">
+			<a href="/" class="text-button {{ index_tab ?? "inactive-tab"}}" id="header-index">Inicio</a>
+			<a href="/man" class="text-button {{ man_tab ?? "inactive-tab"}}" id="header-man">Manual</a>
+			<a href="/licence" class="text-button {{ licence_tab ?? "inactive-tab"}}" id="header-licence">Licencia</a>
+		</div>
+
+		<div id="header-spacer"></div>
+		<a href="https://www.ugr.es/" target="_blank" id="header-ugr">
+			<img src="/web/assets/logo-ugr-negativo.svg" alt="Logo UGR">
+		</a>
+	</header>
+
+	<button id="close-vertical-menu" onclick="close_hamburger_menu()"></button>
+
+	<main>
+		{% block main %} <!-- <main> additions --> {% endblock %}
+	</main>
+
+	<a id="report" href="/report">Reportar un problema</a>
+
+	{% block body %} <!-- <body> additions --> {% endblock %}
+</body>
+
+
+{% block html %} <!-- <html> additions --> {% endblock %}
+</html>

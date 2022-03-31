@@ -1,0 +1,30 @@
+image: php:8.0
+
+services:
+  - mongo:latest
+
+variables:
+  MONGO_DATA_DIR: /data/db
+  MONGO_LOG_DIR: /dev/null
+
+before_script:
+- apt-get update -qq
+- apt-get install -qq libpng-dev zip zlib1g-dev
+- pecl install mongodb
+- echo "extension=mongodb.so" >> /usr/local/etc/php/conf.d/mongodb.ini
+- docker-php-ext-install gd
+- curl -sS https://getcomposer.org/installer | php
+- php composer.phar install
+
+
+PHPUnit Tests:
+  only:
+    - merge-requests
+    - pushes
+  script:
+    - sed -i 's/localhost:27017/mongo:27017/g' database/mongodb-connector.php
+    - php vendor/bin/phpunit api/tests
+    - php vendor/bin/phpunit core/tests
+    - php vendor/bin/phpunit database/tests
+    - php vendor/bin/phpunit settings/tests
+    - php vendor/bin/phpunit web/presenter/tests

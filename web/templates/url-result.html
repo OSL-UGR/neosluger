@@ -1,0 +1,85 @@
+{% extends "main.html" %}
+{% use "main-panel.html" %}
+
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="/web/styles/popup.css">
+	<link rel="stylesheet" href="/web/styles/qr.css">
+	<link rel="stylesheet" href="/web/styles/result.css">
+{% endblock %}
+
+
+{% block head %}
+	<script type="text/javascript" src="/web/ui-scripts/click-copy.js" defer></script>
+{% endblock %}
+
+
+{% block main_panel_title %}
+	{% if url.is_null() %}
+		Error al acortar el enlace
+	{% else %}
+		Enlace acortado con éxito
+	{% endif %}
+{% endblock %}
+
+
+{% block main_panel_content %}
+	{% if url.is_null() %}
+		<p>
+			No hemos podido procesar tu enlace corto para esta dirección:
+		</p>
+
+		<a href="{{ destination }}" id="destination">
+			{{ destination }}
+		</a>
+
+		<p>
+			{% if url.is_duplicate() %}
+				Esto se debe a que ya existe un enlace corto llamado <tt>{{ handle }}</tt>.
+				Por favor, utiliza otro nombre para tu enlace corto.
+			{% else %}
+				El error se ha producido por una causa que desconocemos.
+				Por favor, inténtalo de nuevo y, si vuelve a fallar, <a href="https://osl.ugr.es/contacto/">ponte en contacto con nosotros</a>
+			{% endif %}
+		</p>
+	{% else %}
+		<p>
+			Gracias por usar nuestro servicio.
+			Aquí tienes tu enlace corto.
+		</p>
+		<center>Pulsa sobre él para copiarlo:</center>
+
+		<a id="short-url" onclick="copy_on_click('to-copy', 'url-popup')">
+			<div id="to-copy">{{ url.full_handle() }}</div>
+			<div id="url-popup" class="popup">¡Enlace copiado!</div>
+		</a>
+
+		<p>
+			Este enlace redirigirá a todos sus usuarios a la siguiente dirección:
+		</p>
+
+		<a href="{{ url.destination() }}" target="_blank" id="destination">
+			{{ url.destination() }}
+		</a>
+
+		{% if qr_path %}
+			<p>
+				También puedes usar este código QR para acceder al enlace corto:
+			</p>
+
+			<a href="{{ qr_path }}" download id="qr-img">
+				<img src="{{ qr_path }}" alt="Código QR">
+			</a>
+
+			<a href="{{ qr_path }}" download id="save-qr">
+				Descargar QR
+			</a>
+		{% else %}
+			<p>
+				Un error en nuestro servicio nos ha impedido generar el QR asociado a tu enlace.
+				Por favor, <a href="/report">reporta el problema</a> para que lo solucionemos.
+			</p>
+		{% endif %}
+	{% endif %}
+{% endblock %}

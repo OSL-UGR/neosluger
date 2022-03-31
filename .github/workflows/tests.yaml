@@ -15,11 +15,13 @@ jobs:
           mongodb-db: neosluger
 
       - name: Install composer dependencies
-        working-directory: src
         run: |
           composer install
 
       - name: Run PHPUnit tests suites
-        working-directory: src
         run: |
-          vendor/bin/phpunit tests
+          vendor/bin/phpunit api/tests
+          vendor/bin/phpunit core/tests
+          vendor/bin/phpunit database/tests
+          vendor/bin/phpunit settings/tests
+          vendor/bin/phpunit web/presenter/tests

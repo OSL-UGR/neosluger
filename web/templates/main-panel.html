@@ -1,0 +1,22 @@
+{% block stylesheets %}
+	<link rel="stylesheet" href="/web/styles/main-panel.css">
+{% endblock %}
+
+
+{% block main %}
+	<div id="main-panel">
+		<h1 id="main-panel-title">
+			{% block main_panel_title %} <!-- Main panel title --> {% endblock %}
+		</h1>
+
+		<div id="main-panel-content">
+			{% block main_panel_content %} <!-- Main panel content --> {% endblock %}
+		</div>
+
+		{% block main_panel_logo_osl %}
+			<a href="https://osl.ugr.es/" target="_blank" id="logo-osl">
+				<img src="/web/assets/logo-osl.svg" alt="Logo OSL">
+			</a>
+		{% endblock %}
+	</div>
+{% endblock %}
